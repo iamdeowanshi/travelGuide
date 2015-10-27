@@ -1,5 +1,7 @@
 package com.ithakatales.android.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -9,20 +11,26 @@ import io.realm.annotations.PrimaryKey;
 public class City extends RealmObject {
 
     @PrimaryKey
-    private int id;
+    @SerializedName("id")
+    private long id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("featuredImageUrl")
     private String featuredImageUrl;
-    private String featuredImagePath;
-    private boolean isPublished;
+    @SerializedName("isPublished")
+    private Boolean isPublished;
+    @SerializedName("createdAt")
     private String createdAt;
+    @SerializedName("updatedAt")
     private String updatedAt;
+    @SerializedName("deletedAt")
     private String deletedAt;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -42,19 +50,11 @@ public class City extends RealmObject {
         this.featuredImageUrl = featuredImageUrl;
     }
 
-    public String getFeaturedImagePath() {
-        return featuredImagePath;
-    }
-
-    public void setFeaturedImagePath(String featuredImagePath) {
-        this.featuredImagePath = featuredImagePath;
-    }
-
-    public boolean isPublished() {
+    public Boolean getIsPublished() {
         return isPublished;
     }
 
-    public void setIsPublished(boolean isPublished) {
+    public void setIsPublished(Boolean isPublished) {
         this.isPublished = isPublished;
     }
 

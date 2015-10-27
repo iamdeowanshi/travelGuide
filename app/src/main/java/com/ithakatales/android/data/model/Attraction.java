@@ -1,5 +1,7 @@
 package com.ithakatales.android.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -10,39 +12,65 @@ import io.realm.annotations.PrimaryKey;
 public class Attraction extends RealmObject {
 
     @PrimaryKey
-    private int id;
+    @SerializedName("id")
+    private long id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("duration")
     private long duration;
-    private String bluePrintUrl;
-    private String bluePrintPath;
+    @SerializedName("blueprintUrl")
+    private String blueprintUrl;
+    @SerializedName("featuredImageUrl")
     private String featuredImageUrl;
-    private String featuredImagePath;
+    @SerializedName("previewAudioUrl")
     private String previewAudioUrl;
-    private String previewAudioPath;
-    private double latitude;
-    private double longitude;
+    @SerializedName("shortDescription")
     private String shortDescription;
+    @SerializedName("longDescription")
     private String longDescription;
+    @SerializedName("beforeYouGo")
     private String beforeYouGo;
+    @SerializedName("credits")
     private String credits;
-    private double price;
+    @SerializedName("price")
+    private long price;
+    @SerializedName("addressLine1")
     private String addressLine1;
-    private String addressLine2;
-    private String addressLine3;
+    @SerializedName("addressLine2")
+    private Object addressLine2;
+    @SerializedName("addressLine3")
+    private Object addressLine3;
+    @SerializedName("latitude")
+    private double latitude;
+    @SerializedName("longitude")
+    private double longitude;
+    @SerializedName("isPublished")
     private boolean isPublished;
+    @SerializedName("createdAt")
     private String createdAt;
+    @SerializedName("updatedAt")
     private String updatedAt;
+    @SerializedName("deletedAt")
     private String deletedAt;
 
-    private AttractionType type;
+    @SerializedName("city")
     private City city;
+    @SerializedName("type")
+    private AttractionType type;
+    @SerializedName("tagTypes")
     private RealmList<TagType> tagTypes;
+    @SerializedName("pois")
+    private RealmList<Poi> pois;
+    @SerializedName("audios")
+    private RealmList<Audio> audios;
+    @SerializedName("images")
+    private RealmList<Image> images;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -62,20 +90,12 @@ public class Attraction extends RealmObject {
         this.duration = duration;
     }
 
-    public String getBluePrintUrl() {
-        return bluePrintUrl;
+    public String getBlueprintUrl() {
+        return blueprintUrl;
     }
 
-    public void setBluePrintUrl(String bluePrintUrl) {
-        this.bluePrintUrl = bluePrintUrl;
-    }
-
-    public String getBluePrintPath() {
-        return bluePrintPath;
-    }
-
-    public void setBluePrintPath(String bluePrintPath) {
-        this.bluePrintPath = bluePrintPath;
+    public void setBlueprintUrl(String blueprintUrl) {
+        this.blueprintUrl = blueprintUrl;
     }
 
     public String getFeaturedImageUrl() {
@@ -86,44 +106,12 @@ public class Attraction extends RealmObject {
         this.featuredImageUrl = featuredImageUrl;
     }
 
-    public String getFeaturedImagePath() {
-        return featuredImagePath;
-    }
-
-    public void setFeaturedImagePath(String featuredImagePath) {
-        this.featuredImagePath = featuredImagePath;
-    }
-
     public String getPreviewAudioUrl() {
         return previewAudioUrl;
     }
 
     public void setPreviewAudioUrl(String previewAudioUrl) {
         this.previewAudioUrl = previewAudioUrl;
-    }
-
-    public String getPreviewAudioPath() {
-        return previewAudioPath;
-    }
-
-    public void setPreviewAudioPath(String previewAudioPath) {
-        this.previewAudioPath = previewAudioPath;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 
     public String getShortDescription() {
@@ -158,11 +146,11 @@ public class Attraction extends RealmObject {
         this.credits = credits;
     }
 
-    public double getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 
@@ -174,20 +162,36 @@ public class Attraction extends RealmObject {
         this.addressLine1 = addressLine1;
     }
 
-    public String getAddressLine2() {
+    public Object getAddressLine2() {
         return addressLine2;
     }
 
-    public void setAddressLine2(String addressLine2) {
+    public void setAddressLine2(Object addressLine2) {
         this.addressLine2 = addressLine2;
     }
 
-    public String getAddressLine3() {
+    public Object getAddressLine3() {
         return addressLine3;
     }
 
-    public void setAddressLine3(String addressLine3) {
+    public void setAddressLine3(Object addressLine3) {
         this.addressLine3 = addressLine3;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public boolean isPublished() {
@@ -222,14 +226,6 @@ public class Attraction extends RealmObject {
         this.deletedAt = deletedAt;
     }
 
-    public AttractionType getType() {
-        return type;
-    }
-
-    public void setType(AttractionType type) {
-        this.type = type;
-    }
-
     public City getCity() {
         return city;
     }
@@ -238,12 +234,44 @@ public class Attraction extends RealmObject {
         this.city = city;
     }
 
+    public AttractionType getType() {
+        return type;
+    }
+
+    public void setType(AttractionType type) {
+        this.type = type;
+    }
+
     public RealmList<TagType> getTagTypes() {
         return tagTypes;
     }
 
     public void setTagTypes(RealmList<TagType> tagTypes) {
         this.tagTypes = tagTypes;
+    }
+
+    public RealmList<Poi> getPois() {
+        return pois;
+    }
+
+    public void setPois(RealmList<Poi> pois) {
+        this.pois = pois;
+    }
+
+    public RealmList<Audio> getAudios() {
+        return audios;
+    }
+
+    public void setAudios(RealmList<Audio> audios) {
+        this.audios = audios;
+    }
+
+    public RealmList<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(RealmList<Image> images) {
+        this.images = images;
     }
 
 }
