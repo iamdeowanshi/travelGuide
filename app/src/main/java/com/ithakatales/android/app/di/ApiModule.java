@@ -10,10 +10,11 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.ithakatales.android.app.Config;
-import com.ithakatales.android.data.api.AppApi;
+import com.ithakatales.android.data.api.IthakaApi;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
@@ -42,8 +43,8 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public AppApi provideApi(RestAdapter restAdapter) {
-        return restAdapter.create(AppApi.class);
+    public IthakaApi provideApi(RestAdapter restAdapter) {
+        return restAdapter.create(IthakaApi.class);
     }
 
     @Provides
@@ -82,7 +83,9 @@ public class ApiModule {
         return new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                request.addHeader("User-Agent", Config.USER_AGENT);
+                for (Map.Entry<String, String> header : Config.HEADERS.entrySet()) {
+                    request.addHeader(header.getKey(), header.getValue());
+                }
             }
         };
     }

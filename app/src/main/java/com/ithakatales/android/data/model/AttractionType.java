@@ -1,5 +1,7 @@
 package com.ithakatales.android.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -9,16 +11,20 @@ import io.realm.annotations.PrimaryKey;
 public class AttractionType extends RealmObject {
 
     @PrimaryKey
-    private int id;
+    @SerializedName("id")
+    private long id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("createdAt")
     private String createdAt;
+    @SerializedName("updatedAt")
     private String updatedAt;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

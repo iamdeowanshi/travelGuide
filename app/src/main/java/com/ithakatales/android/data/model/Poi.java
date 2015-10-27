@@ -1,5 +1,7 @@
 package com.ithakatales.android.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -10,33 +12,36 @@ import io.realm.annotations.PrimaryKey;
 public class Poi extends RealmObject {
 
     @PrimaryKey
-    private int id;
-    private int attractionId;
+    @SerializedName("id")
+    private long id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("description")
     private String description;
-    private float xPercent;
-    private float yPercent;
+    @SerializedName("xPercent")
+    private double xPercent;
+    @SerializedName("yPercent")
+    private double yPercent;
+    @SerializedName("isPublished")
     private boolean isPublished;
+    @SerializedName("createdAt")
     private String createdAt;
+    @SerializedName("updatedAt")
     private String updatedAt;
+    @SerializedName("deletedAt")
     private String deletedAt;
 
-    private RealmList<TagType> tagTypes;
+    @SerializedName("audio")
+    private Audio audio;
+    @SerializedName("images")
+    private RealmList<Image> images;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
-    }
-
-    public int getAttractionId() {
-        return attractionId;
-    }
-
-    public void setAttractionId(int attractionId) {
-        this.attractionId = attractionId;
     }
 
     public String getName() {
@@ -55,19 +60,19 @@ public class Poi extends RealmObject {
         this.description = description;
     }
 
-    public float getxPercent() {
+    public double getxPercent() {
         return xPercent;
     }
 
-    public void setxPercent(float xPercent) {
+    public void setxPercent(double xPercent) {
         this.xPercent = xPercent;
     }
 
-    public float getyPercent() {
+    public double getyPercent() {
         return yPercent;
     }
 
-    public void setyPercent(float yPercent) {
+    public void setyPercent(double yPercent) {
         this.yPercent = yPercent;
     }
 
@@ -103,12 +108,20 @@ public class Poi extends RealmObject {
         this.deletedAt = deletedAt;
     }
 
-    public RealmList<TagType> getTagTypes() {
-        return tagTypes;
+    public Audio getAudio() {
+        return audio;
     }
 
-    public void setTagTypes(RealmList<TagType> tagTypes) {
-        this.tagTypes = tagTypes;
+    public void setAudio(Audio audio) {
+        this.audio = audio;
+    }
+
+    public RealmList<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(RealmList<Image> images) {
+        this.images = images;
     }
 
 }

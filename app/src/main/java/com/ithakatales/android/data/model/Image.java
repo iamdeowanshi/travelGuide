@@ -1,5 +1,7 @@
 package com.ithakatales.android.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -9,51 +11,31 @@ import io.realm.annotations.PrimaryKey;
 public class Image extends RealmObject {
 
     @PrimaryKey
-    private int id;
-    private int attractionId;
-    private int poiId;
-    private int audioId;
+    @SerializedName("id")
+    private long id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("url")
     private String url;
-    private String path;
+    @SerializedName("caption")
     private String caption;
-    private boolean isFeatured;
-    private int priority;
+    @SerializedName("priority")
+    private long priority;
+    @SerializedName("isPublished")
     private boolean isPublished;
+    @SerializedName("createdAt")
     private String createdAt;
+    @SerializedName("updatedAt")
     private String updatedAt;
+    @SerializedName("deletedAt")
     private String deletedAt;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
-    }
-
-    public int getAttractionId() {
-        return attractionId;
-    }
-
-    public void setAttractionId(int attractionId) {
-        this.attractionId = attractionId;
-    }
-
-    public int getPoiId() {
-        return poiId;
-    }
-
-    public void setPoiId(int poiId) {
-        this.poiId = poiId;
-    }
-
-    public int getAudioId() {
-        return audioId;
-    }
-
-    public void setAudioId(int audioId) {
-        this.audioId = audioId;
     }
 
     public String getName() {
@@ -72,14 +54,6 @@ public class Image extends RealmObject {
         this.url = url;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public String getCaption() {
         return caption;
     }
@@ -88,19 +62,11 @@ public class Image extends RealmObject {
         this.caption = caption;
     }
 
-    public boolean isFeatured() {
-        return isFeatured;
-    }
-
-    public void setIsFeatured(boolean isFeatured) {
-        this.isFeatured = isFeatured;
-    }
-
-    public int getPriority() {
+    public long getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(long priority) {
         this.priority = priority;
     }
 
