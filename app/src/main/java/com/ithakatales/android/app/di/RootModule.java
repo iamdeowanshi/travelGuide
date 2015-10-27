@@ -3,6 +3,8 @@ package com.ithakatales.android.app.di;
 import android.content.Context;
 
 import com.ithakatales.android.app.IthakaApplication;
+import com.ithakatales.android.presenter.SamplePresenter;
+import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
 import com.ithakatales.android.ui.activity.SampleActivity;
 
 import javax.inject.Singleton;
@@ -19,13 +21,17 @@ import dagger.Provides;
 @Module(
         includes = {
                 PresenterModule.class,
-                ApiModule.class
+                ApiModule.class,
+                OrmModule.class
         },
         injects = {
                 IthakaApplication.class,
 
                 // View specific classes - activities, fragments, adapters etc
                 SampleActivity.class,
+
+                // Presenters
+                SamplePresenterImpl.class
         }
 )
 public class RootModule {

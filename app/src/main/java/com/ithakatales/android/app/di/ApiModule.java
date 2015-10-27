@@ -2,6 +2,8 @@ package com.ithakatales.android.app.di;
 
 import android.content.Context;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +21,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.RealmObject;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.RequestInterceptor;
@@ -87,7 +90,20 @@ public class ApiModule {
     @Provides
     @Singleton
     public Gson provideGson() {
+        ExclusionStrategy realmExclusionStrategy = new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                return f.getDeclaringClass().equals(RealmObject.class);
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        };
+
         return new GsonBuilder()
+                .setExclusionStrategies(realmExclusionStrategy)
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .serializeNulls()
                 .create();

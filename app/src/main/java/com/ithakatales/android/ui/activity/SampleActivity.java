@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 public class SampleActivity extends BaseActivity implements SampleViewInteractor {
 
