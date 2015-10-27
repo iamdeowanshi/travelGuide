@@ -3,9 +3,8 @@ package com.ithakatales.android.app.di;
 import android.content.Context;
 
 import com.ithakatales.android.app.IthakaApplication;
-import com.ithakatales.android.presenter.SamplePresenter;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
-import com.ithakatales.android.ui.activity.SampleActivity;
+import com.ithakatales.android.ui.activity.ApiTestActivity;
 
 import javax.inject.Singleton;
 
@@ -28,7 +27,7 @@ import dagger.Provides;
                 IthakaApplication.class,
 
                 // View specific classes - activities, fragments, adapters etc
-                SampleActivity.class,
+                ApiTestActivity.class,
 
                 // Presenters
                 SamplePresenterImpl.class
