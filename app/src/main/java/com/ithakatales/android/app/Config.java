@@ -14,7 +14,7 @@ public class Config {
     // API related constants/configurations - used in ApiModule & Api class
     //--------------------------------------------------------------------------------
     public static final String BASE_URL_PRODUCTION      = "";
-    public static final String BASE_URL_DEVELOP         = "http://ithaka.getsandbox.com";
+    public static final String BASE_URL_DEVELOP         = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
     public static final String BASE_URL                 = BASE_URL_DEVELOP;
