@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MVP Quick Starter</string>
-    <string name="app_description">Project to start with MVP architecture</string>
+    <string name="app_name">Ithakatales</string>
+    <string name="app_description">Audio tour assistant system.</string>
     <string name="action_settings">Settings</string>
 </resources>
