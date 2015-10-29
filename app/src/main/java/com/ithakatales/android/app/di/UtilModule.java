@@ -1,7 +1,6 @@
 package com.ithakatales.android.app.di;
 
 import com.ithakatales.android.util.PreferenceUtil;
-import com.mtvindia.connect.util.PreferenceUtil;
 
 import javax.inject.Singleton;
 

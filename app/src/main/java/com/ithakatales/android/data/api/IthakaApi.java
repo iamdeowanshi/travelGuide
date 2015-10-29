@@ -2,11 +2,11 @@ package com.ithakatales.android.data.api;
 
 import com.ithakatales.android.app.Config;
 import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.data.model.AttractionUpdate;
-import com.ithakatales.android.data.model.City;
 import com.ithakatales.android.data.model.AttractionDownload;
 import com.ithakatales.android.data.model.AttractionRating;
+import com.ithakatales.android.data.model.AttractionUpdate;
 import com.ithakatales.android.data.model.AttractionView;
+import com.ithakatales.android.data.model.City;
 
 import java.util.List;
 
