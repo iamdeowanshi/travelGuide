@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.view.View;
 
 import com.ithakatales.android.app.di.Injector;
 
@@ -31,7 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Binds the viewInteractor objects within the activity.
+     * Binds the ViewInteractor objects within the activity.
      */
     protected void bindViews() {
         ButterKnife.bind(this);
@@ -52,40 +52,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows a LENGTH_SHORT toast message.
+     * Get the content view of an activity.
      *
-     * @param message
+     * @return
      */
-    protected void toastShort(String message) {
-        toast(message, Toast.LENGTH_SHORT);
-    }
-
-    /**
-     * Shows a LENGTH_LONG toast message.
-     *
-     * @param message
-     */
-    protected void toastLong(String message) {
-        toast(message, Toast.LENGTH_LONG);
-    }
-
-    /**
-     * Shows a toast message.
-     *
-     * @param message
-     * @param length
-     */
-    protected void toast(String message, int length) {
-        Toast.makeText(this, message, length).show();
-    }
-
-    /**
-     * Return class name as TAG.
-     *
-     * @return String tag
-     */
-    public String tag() {
-        return getClass().getName();
+    protected View getContentView() {
+        return findViewById(android.R.id.content);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ithakatales.android.app.di;
 
+import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.PreferenceUtil;
 
 import javax.inject.Singleton;
@@ -22,6 +23,12 @@ public class UtilModule {
     @Singleton
     public PreferenceUtil providePreferenceUtil() {
         return new PreferenceUtil();
+    }
+
+    @Provides
+    @Singleton
+    public Bakery provideBakery() {
+        return new Bakery();
     }
 
 }

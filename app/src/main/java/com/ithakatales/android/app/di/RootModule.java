@@ -22,6 +22,7 @@ import dagger.Provides;
                 PresenterModule.class,
                 ApiModule.class,
                 OrmModule.class
+                UtilModule.class
         },
         injects = {
                 IthakaApplication.class,
