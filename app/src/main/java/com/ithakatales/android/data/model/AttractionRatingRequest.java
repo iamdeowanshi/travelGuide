@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Farhan Ali
  */
-public class AttractionRating {
+public class AttractionRatingRequest {
 
     @SerializedName("userId")
     private long userId;
@@ -14,10 +14,10 @@ public class AttractionRating {
     @SerializedName("value")
     private int rating;
 
-    public AttractionRating() {
+    public AttractionRatingRequest() {
     }
 
-    public AttractionRating(long userId, long attractionId, int rating) {
+    public AttractionRatingRequest(long userId, long attractionId, int rating) {
         this.userId = userId;
         this.attractionId = attractionId;
         this.rating = rating;

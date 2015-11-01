@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Farhan Ali
  */
-public class AttractionUpdate {
+public class AttractionUpdateResponse {
 
     @SerializedName("attractionId")
     private long attractionId;

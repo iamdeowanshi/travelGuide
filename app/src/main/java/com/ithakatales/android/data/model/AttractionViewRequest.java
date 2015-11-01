@@ -5,17 +5,17 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Farhan Ali
  */
-public class AttractionView {
+public class AttractionViewRequest {
 
     @SerializedName("userId")
     private long userId;
     @SerializedName("attractionId")
     private long attractionId;
 
-    public AttractionView() {
+    public AttractionViewRequest() {
     }
 
-    public AttractionView(long userId, long attractionId) {
+    public AttractionViewRequest(long userId, long attractionId) {
         this.userId = userId;
         this.attractionId = attractionId;
     }
