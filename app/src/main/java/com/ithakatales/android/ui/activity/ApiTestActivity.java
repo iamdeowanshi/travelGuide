@@ -7,9 +7,9 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
-import com.ithakatales.android.data.model.AttractionDownload;
-import com.ithakatales.android.data.model.AttractionRating;
-import com.ithakatales.android.data.model.AttractionView;
+import com.ithakatales.android.data.model.AttractionDownloadRequest;
+import com.ithakatales.android.data.model.AttractionRatingRequest;
+import com.ithakatales.android.data.model.AttractionViewRequest;
 import com.ithakatales.android.util.RxUtil;
 
 import javax.inject.Inject;
@@ -73,19 +73,19 @@ public class ApiTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_create_download)
     void createAttractionDownload() {
-        AttractionDownload body = new AttractionDownload(1, 1);
+        AttractionDownloadRequest body = new AttractionDownloadRequest(1, 1);
         subscribeForNetwork(ithakaApi.attractionDownloaded(AUTHORIZATION, body), observer);
     }
 
     @OnClick(R.id.btn_create_view)
     void createAttractionView() {
-        AttractionView body = new AttractionView(1, 1);
+        AttractionViewRequest body = new AttractionViewRequest(1, 1);
         subscribeForNetwork(ithakaApi.attractionViewed(AUTHORIZATION, body), observer);
     }
 
     @OnClick(R.id.btn_rate_attraction)
     void rateAttraction() {
-        AttractionRating body = new AttractionRating(1, 1, 4);
+        AttractionRatingRequest body = new AttractionRatingRequest(1, 1, 4);
         subscribeForNetwork(ithakaApi.rateAttraction(AUTHORIZATION, body), observer);
     }
 
@@ -99,8 +99,8 @@ public class ApiTestActivity extends BaseActivity {
         RxUtil.subscribeForNetwork(subscriptions, resultObservable, apiObserver);
     }
 
-    private String formatJson(String text){
-
+    // code copied from internet
+    private String formatJson(String text) {
         StringBuilder json = new StringBuilder();
         String indentString = "";
 
@@ -121,7 +121,6 @@ public class ApiTestActivity extends BaseActivity {
                 case ',':
                     json.append(letter + "\n" + indentString);
                     break;
-
                 default:
                     json.append(letter);
                     break;
