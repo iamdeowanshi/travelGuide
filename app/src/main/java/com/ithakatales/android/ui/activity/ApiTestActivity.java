@@ -10,6 +10,7 @@ import com.ithakatales.android.data.api.IthakaApi;
 import com.ithakatales.android.data.model.AttractionDownloadRequest;
 import com.ithakatales.android.data.model.AttractionRatingRequest;
 import com.ithakatales.android.data.model.AttractionViewRequest;
+import com.ithakatales.android.util.JsonUtil;
 import com.ithakatales.android.util.RxUtil;
 
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ public class ApiTestActivity extends BaseActivity {
         @Override
         public void onResult(Object result) {
             String response = gson.toJson(result);
-            startResponseActivity(formatJson(response));
+            startResponseActivity(JsonUtil.formatJson(response));
         }
 
         @Override
@@ -97,37 +98,6 @@ public class ApiTestActivity extends BaseActivity {
 
     private void subscribeForNetwork(Observable resultObservable, ApiObserver apiObserver) {
         RxUtil.subscribeForNetwork(subscriptions, resultObservable, apiObserver);
-    }
-
-    // code copied from internet
-    private String formatJson(String text) {
-        StringBuilder json = new StringBuilder();
-        String indentString = "";
-
-        for (int i = 0; i < text.length(); i++) {
-            char letter = text.charAt(i);
-            switch (letter) {
-                case '{':
-                case '[':
-                    json.append("\n" + indentString + letter + "\n");
-                    indentString = indentString + "\t";
-                    json.append(indentString);
-                    break;
-                case '}':
-                case ']':
-                    indentString = indentString.replaceFirst("\t", "");
-                    json.append("\n" + indentString + letter);
-                    break;
-                case ',':
-                    json.append(letter + "\n" + indentString);
-                    break;
-                default:
-                    json.append(letter);
-                    break;
-            }
-        }
-
-        return json.toString();
     }
 
 }
