@@ -11,13 +11,13 @@ import java.util.Map;
 public class Config {
 
     //--------------------------------------------------------------------------------
-    // API related constants/configurations - used in ApiModule & Api class
+    // API related constants/configurations - used in ApiModule & Api class, prefix with API_
     //--------------------------------------------------------------------------------
-    public static final String BASE_URL_PRODUCTION      = "";
-    public static final String BASE_URL_DEVELOP         = "http://ithaka-mobile.getsandbox.com";
+    public static final String API_BASE_URL_PRODUCTION = "";
+    public static final String API_BASE_URL_DEVELOP = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
-    public static final String BASE_URL                 = BASE_URL_DEVELOP;
+    public static final String API_BASE_URL = API_BASE_URL_DEVELOP;
 
     /**
      * GET: all cities as a list
@@ -61,20 +61,28 @@ public class Config {
     public static final String API_RATINGS_CREATE       = "/attraction_ratings";
 
     // Cache size in bytes, 50 MB = 50 * 1024 KB, 1 KB  = 1024 Bytes
-    public static final int HTTP_DISK_CACHE_SIZE        = (int) 50 * 1024 * 1024;
+    public static final int API_HTTP_DISK_CACHE_SIZE = (int) 50 * 1024 * 1024;
 
     // Headers required to be added by interceptor
-    public static final Map<String, String> HEADERS = new HashMap<String, String>() {{
+    public static final Map<String, String> API_HEADERS = new HashMap<String, String>() {{
         put("User-Agent", "Ithaka-Tales-App");
         put("Content-Type", "application/json");
     }};
 
     //--------------------------------------------------------------------------------
-    // ORM related constants/configurations - used in OrmModule
+    // ORM related constants/configurations - used in OrmModule, prefix with DB_
     //--------------------------------------------------------------------------------
 
     public static final String DB_NAME = "ithaka.realm";
 
-    public static final int DB_VERSION = 2;
+    public static final int DB_VERSION = 1;
+
+    //--------------------------------------------------------------------------------
+    // Storage related constants/configurations, prefix with STORAGE_
+    //--------------------------------------------------------------------------------
+
+    public static final String STORAGE_DATA_FOLDER      = "Ithaka";
+    public static final boolean STORAGE_USE_INTERNAL    = false;
+    public static final boolean STORAGE_HIDE_FILES      = false;
 
 }

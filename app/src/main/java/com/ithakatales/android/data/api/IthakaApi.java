@@ -2,10 +2,10 @@ package com.ithakatales.android.data.api;
 
 import com.ithakatales.android.app.Config;
 import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.data.model.AttractionDownload;
-import com.ithakatales.android.data.model.AttractionRating;
-import com.ithakatales.android.data.model.AttractionUpdate;
-import com.ithakatales.android.data.model.AttractionView;
+import com.ithakatales.android.data.model.AttractionDownloadRequest;
+import com.ithakatales.android.data.model.AttractionRatingRequest;
+import com.ithakatales.android.data.model.AttractionUpdateResponse;
+import com.ithakatales.android.data.model.AttractionViewRequest;
 import com.ithakatales.android.data.model.City;
 
 import java.util.List;
@@ -35,18 +35,18 @@ public interface IthakaApi {
 
     @POST(Config.API_DOWNLOADS_SAVE)
     Observable<Response> attractionDownloaded(
-            @Header("Authorization") String authorization,@Body AttractionDownload downloadBody);
+            @Header("Authorization") String authorization,@Body AttractionDownloadRequest downloadBody);
 
     @GET(Config.API_DOWNLOADS_UPDATED)
-    Observable<List<AttractionUpdate>> getAttractionUpdates(
+    Observable<List<AttractionUpdateResponse>> getAttractionUpdates(
             @Header("Authorization") String authorization, @Query("user_id") long userId);
 
     @POST(Config.API_VIEWS_CREATE)
     Observable<Response> attractionViewed(
-            @Header("Authorization") String authorization, @Body AttractionView viewBody);
+            @Header("Authorization") String authorization, @Body AttractionViewRequest viewBody);
 
     @POST(Config.API_RATINGS_CREATE)
     Observable<Response> rateAttraction(
-            @Header("Authorization") String authorization, @Body AttractionRating ratingBody);
+            @Header("Authorization") String authorization, @Body AttractionRatingRequest ratingBody);
 
 }

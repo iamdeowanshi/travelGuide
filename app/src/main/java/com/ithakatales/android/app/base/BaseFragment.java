@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.Toast;
 
 import com.ithakatales.android.app.di.Injector;
 
@@ -56,32 +55,14 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * Shows a LENGTH_SHORT toast message.
+     * Get the content view of fragment.
      *
-     * @param message
+     * @return
      */
-    protected void toastShort(String message) {
-        toast(message, Toast.LENGTH_SHORT);
+    protected View getContentView() {
+        return getView();
     }
 
-    /**
-     * Shows a LENGTH_LONG toast message.
-     *
-     * @param message
-     */
-    protected void toastLong(String message) {
-        toast(message, Toast.LENGTH_LONG);
-    }
-
-    /**
-     * Shows a toast message.
-     *
-     * @param message
-     * @param length
-     */
-    protected void toast(String message, int length) {
-        Toast.makeText(getActivity(), message, length).show();
-    }
 
     /**
      * Return class name as TAG.

@@ -20,6 +20,7 @@ public class Audio extends RealmObject {
     private String encUrl;
     @SerializedName("encDigest")
     private String encDigest;
+    private String path;
     @SerializedName("duration")
     private long duration;
     @SerializedName("isPublished")
@@ -63,6 +64,14 @@ public class Audio extends RealmObject {
 
     public void setEncDigest(String encDigest) {
         this.encDigest = encDigest;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public long getDuration() {
