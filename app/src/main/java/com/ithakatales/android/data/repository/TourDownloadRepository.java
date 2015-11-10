@@ -1,11 +1,12 @@
 package com.ithakatales.android.data.repository;
 
-import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.download.TourDownload;
+import com.ithakatales.android.data.model.TourDownload;
 
 /**
  * @author Farhan Ali
  */
 public interface TourDownloadRepository extends BaseRepository<TourDownload> {
+
+    TourDownload findByAttractionId(long attractionId);
 
 }

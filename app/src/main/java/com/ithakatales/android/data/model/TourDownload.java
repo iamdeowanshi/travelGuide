@@ -1,4 +1,4 @@
-package com.ithakatales.android.download;
+package com.ithakatales.android.data.model;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -15,6 +15,7 @@ public class TourDownload extends RealmObject {
     private int progress;
     private String status;
     private RealmList<AudioDownload> audioDownloads;
+    private RealmList<ImageDownload> imageDownloads;
 
     public long getId() {
         return id;
@@ -54,6 +55,14 @@ public class TourDownload extends RealmObject {
 
     public void setAudioDownloads(RealmList<AudioDownload> audioDownloads) {
         this.audioDownloads = audioDownloads;
+    }
+
+    public RealmList<ImageDownload> getImageDownloads() {
+        return imageDownloads;
+    }
+
+    public void setImageDownloads(RealmList<ImageDownload> imageDownloads) {
+        this.imageDownloads = imageDownloads;
     }
 
 }

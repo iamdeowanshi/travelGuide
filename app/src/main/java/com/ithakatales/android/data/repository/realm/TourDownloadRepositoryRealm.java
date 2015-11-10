@@ -1,11 +1,7 @@
 package com.ithakatales.android.data.repository.realm;
 
+import com.ithakatales.android.data.model.TourDownload;
 import com.ithakatales.android.data.repository.TourDownloadRepository;
-import com.ithakatales.android.download.TourDownload;
-
-import javax.inject.Inject;
-
-import io.realm.Realm;
 
 /**
  * @author Farhan Ali
@@ -14,6 +10,11 @@ public class TourDownloadRepositoryRealm extends BaseRepositoryRealm<TourDownloa
 
     public TourDownloadRepositoryRealm() {
         super(TourDownload.class);
+    }
+
+    @Override
+    public TourDownload findByAttractionId(long attractionId) {
+        return realm.where(modelType).equalTo("attractionId", attractionId).findFirst();
     }
 
 }

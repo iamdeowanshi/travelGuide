@@ -62,7 +62,7 @@ public class ApiModule {
     @Provides
     @Named("api_base_url")
     public String provideBaseUrl() {
-        return Config.BASE_URL;
+        return Config.API_BASE_URL;
     }
 
     @Provides
@@ -83,7 +83,7 @@ public class ApiModule {
         return new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                for (Map.Entry<String, String> header : Config.HEADERS.entrySet()) {
+                for (Map.Entry<String, String> header : Config.API_HEADERS.entrySet()) {
                     request.addHeader(header.getKey(), header.getValue());
                 }
             }
@@ -128,7 +128,7 @@ public class ApiModule {
         File cacheDir = new File(context.getCacheDir(), "http");
         Cache cache = null;
         try {
-            cache = new Cache(cacheDir, Config.HTTP_DISK_CACHE_SIZE);
+            cache = new Cache(cacheDir, Config.API_HTTP_DISK_CACHE_SIZE);
             client.setCache(cache);
         } catch (IOException e) {
             e.printStackTrace();

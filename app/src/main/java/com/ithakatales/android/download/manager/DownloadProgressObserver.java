@@ -30,15 +30,20 @@ public class DownloadProgressObserver extends ContentObserver {
         query.setFilterById(downloadable.getId());
 
         Cursor cursor = downloadManager.query(query);
-        cursor.moveToFirst();
 
-        int bytesDownloaded = cursor.getInt(cursor
-                .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-        int bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+        try {
+            cursor.moveToFirst();
 
-        final int progress = (int) ((bytesDownloaded * 100l) / bytesTotal);
+            int bytesDownloaded = cursor.getInt(cursor
+                    .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+            int bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
 
-        progressListener.progressUpdated(downloadable, progress);
+            final int progress = (int) ((bytesDownloaded * 100l) / bytesTotal);
+
+            progressListener.progressUpdated(downloadable, progress);
+        } catch (Exception e) {
+            cursor.close();
+        }
     }
 
 }

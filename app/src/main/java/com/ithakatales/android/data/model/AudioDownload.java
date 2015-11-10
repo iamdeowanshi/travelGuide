@@ -1,4 +1,4 @@
-package com.ithakatales.android.download;
+package com.ithakatales.android.data.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

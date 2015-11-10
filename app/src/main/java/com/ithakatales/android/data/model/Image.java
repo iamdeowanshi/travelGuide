@@ -17,6 +17,7 @@ public class Image extends RealmObject {
     private String name;
     @SerializedName("url")
     private String url;
+    private String path;
     @SerializedName("caption")
     private String caption;
     @SerializedName("priority")
@@ -52,6 +53,14 @@ public class Image extends RealmObject {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getCaption() {

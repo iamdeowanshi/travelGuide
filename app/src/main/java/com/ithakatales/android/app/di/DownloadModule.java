@@ -1,8 +1,7 @@
 package com.ithakatales.android.app.di;
 
-import android.content.Context;
-
 import com.ithakatales.android.download.DownloadBuilder;
+import com.ithakatales.android.download.TourStorage;
 import com.ithakatales.android.download.manager.DefaultDownloader;
 import com.ithakatales.android.download.manager.Downloader;
 
@@ -10,7 +9,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.realm.Realm;
 
 /**
  * Provides all presenter class dependencies.
@@ -33,6 +31,12 @@ public class DownloadModule {
     @Singleton
     public DownloadBuilder provideDownloadBuilder() {
         return new DownloadBuilder();
+    }
+
+    @Provides
+    @Singleton
+    public TourStorage provideTourStorage() {
+        return new TourStorage();
     }
 
 }

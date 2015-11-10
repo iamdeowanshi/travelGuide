@@ -21,6 +21,8 @@ public interface Downloader {
 
     void removeStatusListener();
 
+    void unregisterProgressObserver(Downloadable downloadable);
+
     void setProgressListener(DownloadProgressListener listener);
 
     void removeProgressListener();

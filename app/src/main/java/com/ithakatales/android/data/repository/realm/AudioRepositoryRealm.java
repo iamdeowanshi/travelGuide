@@ -1,8 +1,6 @@
 package com.ithakatales.android.data.repository.realm;
 
-import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.Audio;
-import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.data.repository.AudioRepository;
 
 /**
@@ -12,6 +10,13 @@ public class AudioRepositoryRealm extends BaseRepositoryRealm<Audio> implements 
 
     public AudioRepositoryRealm() {
         super(Audio.class);
+    }
+
+    @Override
+    public void updatePath(long id, String path) {
+        realm.beginTransaction();
+        find(id).setPath(path);
+        realm.commitTransaction();
     }
 
 }

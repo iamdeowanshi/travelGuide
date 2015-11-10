@@ -1,12 +1,9 @@
 package com.ithakatales.android.ui.activity;
 
 import android.os.Bundle;
-import android.widget.TextView;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
-
-import butterknife.Bind;
 
 public class MyToursTestActivity extends BaseActivity {
 

@@ -104,14 +104,8 @@ public class DefaultDownloader implements Downloader {
                         | android.app.DownloadManager.Request.NETWORK_MOBILE);
     }
 
-    private void registerProgressObserver(Downloadable downloadable) {
-        Uri myDownloads = Uri.parse( "content://downloads/my_downloads/" + downloadable.getId());
-        DownloadProgressObserver observer = new DownloadProgressObserver(downloadable, downloadManager, progressListener);
-        context.getContentResolver().registerContentObserver(myDownloads, true, observer);
-        progressObserverMap.put(downloadable, observer);
-    }
-
-    private void unregisterProgressObserver(Downloadable downloadable) {
+    @Override
+    public void unregisterProgressObserver(Downloadable downloadable) {
         DownloadProgressObserver observer = progressObserverMap.get(downloadable);
 
         if (observer != null) {
@@ -119,9 +113,16 @@ public class DefaultDownloader implements Downloader {
         }
     }
 
+    private void registerProgressObserver(Downloadable downloadable) {
+        Uri myDownloads = Uri.parse("content://downloads/my_downloads/" + downloadable.getId());
+        DownloadProgressObserver observer = new DownloadProgressObserver(downloadable, downloadManager, progressListener);
+        context.getContentResolver().registerContentObserver(myDownloads, true, observer);
+        progressObserverMap.put(downloadable, observer);
+    }
+
     // TODO: 15/10/15 Refactor
 
-    private void registerNotificationClickReciever() {
+    public void registerNotificationClickReciever() {
         // filter for notifications - only acts on notification while download busy
         IntentFilter filter = new IntentFilter(android.app.DownloadManager
                 .ACTION_NOTIFICATION_CLICKED);

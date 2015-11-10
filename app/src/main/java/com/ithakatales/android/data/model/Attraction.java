@@ -20,10 +20,13 @@ public class Attraction extends RealmObject {
     private long duration;
     @SerializedName("blueprintUrl")
     private String blueprintUrl;
+    private String bluePrintPath;
     @SerializedName("featuredImageUrl")
     private String featuredImageUrl;
+    private String featuredImagePath;
     @SerializedName("previewAudioUrl")
     private String previewAudioUrl;
+    private String previewAudioPath;
     @SerializedName("shortDescription")
     private String shortDescription;
     @SerializedName("longDescription")
@@ -98,6 +101,14 @@ public class Attraction extends RealmObject {
         this.blueprintUrl = blueprintUrl;
     }
 
+    public String getBluePrintPath() {
+        return bluePrintPath;
+    }
+
+    public void setBluePrintPath(String bluePrintPath) {
+        this.bluePrintPath = bluePrintPath;
+    }
+
     public String getFeaturedImageUrl() {
         return featuredImageUrl;
     }
@@ -106,12 +117,28 @@ public class Attraction extends RealmObject {
         this.featuredImageUrl = featuredImageUrl;
     }
 
+    public String getFeaturedImagePath() {
+        return featuredImagePath;
+    }
+
+    public void setFeaturedImagePath(String featuredImagePath) {
+        this.featuredImagePath = featuredImagePath;
+    }
+
     public String getPreviewAudioUrl() {
         return previewAudioUrl;
     }
 
     public void setPreviewAudioUrl(String previewAudioUrl) {
         this.previewAudioUrl = previewAudioUrl;
+    }
+
+    public String getPreviewAudioPath() {
+        return previewAudioPath;
+    }
+
+    public void setPreviewAudioPath(String previewAudioPath) {
+        this.previewAudioPath = previewAudioPath;
     }
 
     public String getShortDescription() {

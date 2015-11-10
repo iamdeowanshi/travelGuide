@@ -1,9 +1,9 @@
 package com.ithakatales.android.data.repository.realm;
 
+import com.ithakatales.android.data.model.AudioDownload;
 import com.ithakatales.android.data.repository.AudioDownloadRepository;
-import com.ithakatales.android.data.repository.TourDownloadRepository;
-import com.ithakatales.android.download.AudioDownload;
-import com.ithakatales.android.download.TourDownload;
+
+import java.util.List;
 
 import io.realm.RealmResults;
 
@@ -17,14 +17,26 @@ public class AudioDownloadRepositoryRealm extends BaseRepositoryRealm<AudioDownl
     }
 
     @Override
-    public int getTourDownloadProgress(long tourId) {
-        RealmResults<AudioDownload> audioDownloads = realm.where(modelType)
-                .equalTo("tourId", tourId)
-                .findAll();
+    public int getTotalProgressByTour(long tourId) {
+        RealmResults<AudioDownload> audioDownloads = (RealmResults<AudioDownload>) readByTourId(tourId);
 
         int progressAggregate = audioDownloads.sum("progress").intValue();
 
-        return 100 * (progressAggregate / audioDownloads.size());
+        return progressAggregate / audioDownloads.size();
     }
 
+    @Override
+    public List<AudioDownload> readByTourAndStatus(long tourId, String status) {
+        return realm.where(modelType)
+                .equalTo("tourId", tourId)
+                .equalTo("status", status)
+                .findAll();
+    }
+
+    @Override
+    public List<AudioDownload> readByTourId(long tourId) {
+        return realm.where(modelType)
+                .equalTo("tourId", tourId)
+                .findAll();
+    }
 }
