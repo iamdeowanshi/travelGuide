@@ -1,4 +1,4 @@
-package com.ithakatales.android.ui.activity;
+package com.ithakatales.android.ui.activity.test;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -15,7 +15,7 @@ public class ApiTestResultActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_api_test_result);
+        setContentView(R.layout.test_activity_api_result);
 
         Bundle bundle = getIntent().getExtras();
         String response = bundle.getString("response");

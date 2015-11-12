@@ -12,16 +12,16 @@
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name=".ui.activity.TestActivity">
+        <activity android:name=".ui.activity.test.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.ApiTestActivity"/>
-        <activity android:name=".ui.activity.ApiTestResultActivity"/>
-        <activity android:name=".ui.activity.DownloadTourTestActivity"/>
-        <activity android:name=".ui.activity.MyToursTestActivity"/>
+        <activity android:name=".ui.activity.test.ApiTestActivity"/>
+        <activity android:name=".ui.activity.test.ApiTestResultActivity"/>
+        <activity android:name=".ui.activity.test.DownloadTourTestActivity"/>
+        <activity android:name=".ui.activity.test.MyToursTestActivity"/>
 
         <service android:name=".download.TourDownloadService"/>
 
