@@ -33,7 +33,7 @@ public class Audio extends RealmObject {
     private String deletedAt;
     @SerializedName("images")
     private RealmList<Image> images;
-    private boolean isPlayed;
+    private boolean isPlayed = false;
 
     public long getId() {
         return id;
