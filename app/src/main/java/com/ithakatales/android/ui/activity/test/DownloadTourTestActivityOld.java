@@ -1,4 +1,4 @@
-package com.ithakatales.android.ui.activity;
+package com.ithakatales.android.ui.activity.test;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -74,7 +74,7 @@ public class DownloadTourTestActivityOld extends BaseActivity implements TourDow
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_download_tour_test);
+        setContentView(R.layout.test_activity_download_tour);
 
         injectDependencies();
 
