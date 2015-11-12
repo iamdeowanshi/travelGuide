@@ -13,23 +13,9 @@ public class AttractionRepositoryRealm extends BaseRepositoryRealm<Attraction> i
     }
 
     @Override
-    public void updatePreviewPath(long id, String path) {
-        realm.beginTransaction();
-        find(id).setPreviewAudioPath(path);
-        realm.commitTransaction();
-    }
-
-    @Override
     public void updateBlueprintPath(long id, String path) {
         realm.beginTransaction();
         find(id).setBluePrintPath(path);
-        realm.commitTransaction();
-    }
-
-    @Override
-    public void updateFeaturedImagePath(long id, String path) {
-        realm.beginTransaction();
-        find(id).setFeaturedImagePath(path);
         realm.commitTransaction();
     }
 

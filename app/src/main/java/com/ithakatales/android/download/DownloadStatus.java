@@ -6,14 +6,9 @@ package com.ithakatales.android.download;
 
 public class DownloadStatus {
 
-    public static final String WAITING_FOR_NETWORK  = "Waiting for network";
-    public static final String WAITING_TO_START     = "Waiting to start";
-
     public static final String DOWNLOADING  = "Downloading";
-    public static final String PAUSED       = "Paused";
     public static final String SUCCESS      = "Success";
     public static final String FAILED       = "Failed";
-    public static final String CANCELLED    = "Cancelled";
 
 }
 

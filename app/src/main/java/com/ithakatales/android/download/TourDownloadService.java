@@ -76,10 +76,10 @@ public class TourDownloadService extends Service implements DownloadProgressList
 
         List<Downloadable> downloadables = downloadBuilder.getDownloadablesForTourAudios(tourDownload);
         downloadables.addAll(downloadBuilder.getDownloadablesForTourImages(tourDownload));
-
-        downloadables.add(downloadBuilder.getFeaturedImageDownloadable(attraction));
+        downloadables.add(downloadBuilder.getPreviewAudioDownloadable(tourDownload));
+        downloadables.add(downloadBuilder.getFeaturedImageDownloadable(tourDownload));
         downloadables.add(downloadBuilder.getBluePrintImageDownloadable(attraction));
-        downloadables.add(downloadBuilder.getPreviewAudioDownloadable(attraction));
+
         downloader.download(downloadables);
 
         return tourDownload;

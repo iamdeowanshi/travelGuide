@@ -14,6 +14,8 @@ public class TourDownload extends RealmObject {
     private long attractionId;
     private int progress;
     private String status;
+    private AudioDownload previewAudioDownload;
+    private ImageDownload featuredImageDownload;
     private RealmList<AudioDownload> audioDownloads;
     private RealmList<ImageDownload> imageDownloads;
 
@@ -47,6 +49,22 @@ public class TourDownload extends RealmObject {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public AudioDownload getPreviewAudioDownload() {
+        return previewAudioDownload;
+    }
+
+    public void setPreviewAudioDownload(AudioDownload previewAudioDownload) {
+        this.previewAudioDownload = previewAudioDownload;
+    }
+
+    public ImageDownload getFeaturedImageDownload() {
+        return featuredImageDownload;
+    }
+
+    public void setFeaturedImageDownload(ImageDownload featuredImageDownload) {
+        this.featuredImageDownload = featuredImageDownload;
     }
 
     public RealmList<AudioDownload> getAudioDownloads() {
