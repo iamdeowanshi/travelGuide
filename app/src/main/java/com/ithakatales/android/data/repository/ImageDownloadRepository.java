@@ -15,4 +15,6 @@ public interface ImageDownloadRepository extends BaseRepository<ImageDownload> {
 
     List<ImageDownload> readByTourId(long tourId);
 
+    void updateProgressAndStatus(long downloadId, int progress, String status);
+
 }

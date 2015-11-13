@@ -39,4 +39,14 @@ public class AudioDownloadRepositoryRealm extends BaseRepositoryRealm<AudioDownl
                 .equalTo("tourId", tourId)
                 .findAll();
     }
+
+    @Override
+    public void updateProgressAndStatus(long downloadId, int progress, String status) {
+        realm.beginTransaction();
+        AudioDownload audioDownload = find(downloadId);
+        audioDownload.setProgress(progress);
+        audioDownload.setStatus(status);
+        realm.commitTransaction();
+    }
+
 }

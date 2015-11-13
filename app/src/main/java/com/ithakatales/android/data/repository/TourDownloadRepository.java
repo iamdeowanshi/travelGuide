@@ -9,4 +9,6 @@ public interface TourDownloadRepository extends BaseRepository<TourDownload> {
 
     TourDownload findByAttractionId(long attractionId);
 
+    void updateProgressAndStatus(long tourId, int progress, String status);
+
 }

@@ -40,4 +40,13 @@ public class ImageDownloadRepositoryRealm extends BaseRepositoryRealm<ImageDownl
                 .findAll();
     }
 
+    @Override
+    public void updateProgressAndStatus(long downloadId, int progress, String status) {
+        realm.beginTransaction();
+        ImageDownload imageDownload = find(downloadId);
+        imageDownload.setProgress(progress);
+        imageDownload.setStatus(status);
+        realm.commitTransaction();
+    }
+
 }

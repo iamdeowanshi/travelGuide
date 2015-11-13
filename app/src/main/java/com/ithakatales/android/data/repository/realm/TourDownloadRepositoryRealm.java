@@ -17,4 +17,13 @@ public class TourDownloadRepositoryRealm extends BaseRepositoryRealm<TourDownloa
         return realm.where(modelType).equalTo("attractionId", attractionId).findFirst();
     }
 
+    @Override
+    public void updateProgressAndStatus(long tourId, int progress, String status) {
+        realm.beginTransaction();
+        TourDownload tourDownload = find(tourId);
+        tourDownload.setProgress(progress);
+        tourDownload.setStatus(status);
+        realm.commitTransaction();
+    }
+
 }
