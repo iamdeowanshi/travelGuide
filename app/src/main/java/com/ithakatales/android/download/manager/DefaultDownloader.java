@@ -187,7 +187,7 @@ public class DefaultDownloader implements Downloader {
                             statusListener.interrupted(downloadable, "Pending");
                             break;
                         case android.app.DownloadManager.STATUS_RUNNING:
-                            progressListener.progressUpdated(downloadable, 20);
+                            progressListener.progressUpdated(downloadable);
                             break;
                     }
                     cursor.close();

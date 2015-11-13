@@ -43,7 +43,7 @@ public class DownloadProgressObserver extends ContentObserver {
             final int progress = (int) ((bytesDownloaded * 100l) / bytesTotal);
 
             downloadable.setProgress(progress);
-            progressListener.progressUpdated(downloadable, progress);
+            progressListener.progressUpdated(downloadable);
         } catch (Exception e) {
             Timber.e(e.getMessage(), e);
         } finally {

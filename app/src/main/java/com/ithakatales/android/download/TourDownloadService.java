@@ -86,37 +86,27 @@ public class TourDownloadService extends Service implements DownloadProgressList
     }
 
     @Override
-    public void progressUpdated(Downloadable downloadable, int progress) {
-        // update audio progress if audio download
-        String status = (progress == 100)
+    public void progressUpdated(Downloadable downloadable) {
+        // get status, if completed
+        String status = (downloadable.getProgress() == 100)
                 ? getStatusAfterChecksumVerification(downloadable)
                 : DownloadStatus.DOWNLOADING;
 
+        // unregister progress observer for completed or failed downloads
         if (status.equals(DownloadStatus.SUCCESS) || status.equals(DownloadStatus.FAILED)) {
             downloader.unregisterProgressObserver(downloadable);
         }
 
-        AudioDownload audioDownload = downloadBuilder.getAudioDownloadFromMap(downloadable);
-        if (audioDownload != null) {
-            audioDownload.setStatus(status);
-            audioDownload.setProgress(progress);
-            audioDownloadRepo.save(audioDownload);
-            updateTourDownloadAndNotify(audioDownload.getTourId());
-            return;
-        }
-
-        // update image progress if image download
-        ImageDownload imageDownload = downloadBuilder.getImageDownloadFromMap(downloadable);
-        if (imageDownload != null) {
-            imageDownload.setStatus(status);
-            imageDownload.setProgress(progress);
-            imageDownloadRepo.save(imageDownload);
-            updateTourDownloadAndNotify(imageDownload.getTourId());
-        }
+        // update download progress & status
+        long tourId = updateDownload(downloadable, status);
+        updateTourDownloadAndNotify(tourId);
     }
 
     @Override
-    public void success(Downloadable downloadable) {}
+    public void success(Downloadable downloadable) {
+        String status = getStatusAfterChecksumVerification(downloadable);
+        updateDownload(downloadable, status);
+    }
 
     @Override
     public void failed(Downloadable downloadable, String message) {}
@@ -127,26 +117,44 @@ public class TourDownloadService extends Service implements DownloadProgressList
     @Override
     public void interrupted(Downloadable downloadable, String message) {}
 
+    private long updateDownload(Downloadable downloadable, String status) {
+        // update progress and status if audio download
+        AudioDownload audioDownload = downloadBuilder.getAudioDownloadFromMap(downloadable);
+        if (audioDownload != null) {
+            audioDownloadRepo.updateProgressAndStatus(audioDownload.getId(), downloadable.getProgress(), status);
+
+            return audioDownload.getTourId();
+        }
+
+        // update progress and status if image download
+        ImageDownload imageDownload = downloadBuilder.getImageDownloadFromMap(downloadable);
+        if (imageDownload != null) {
+            imageDownloadRepo.updateProgressAndStatus(imageDownload.getId(), downloadable.getProgress(), status);
+
+            return imageDownload.getTourId();
+        }
+
+        return 0;
+    }
+
     private void updateTourDownloadAndNotify(long tourId) {
-        TourDownload tourDownload = tourDownloadRepo.find(tourId);
+        updateTourDownload(tourId);
+        notifyTourDownloadStatusChange(tourId);
+    }
 
-        TourDownload tourDownloadUpdate = new TourDownload();
-        tourDownloadUpdate.setId(tourDownload.getId());
-        tourDownloadUpdate.setAttractionId(tourDownload.getId());
-
+    private void updateTourDownload(long tourId) {
         int totalAudioProgress  = audioDownloadRepo.getTotalProgressByTour(tourId);
         int totalImageProgress  = imageDownloadRepo.getTotalProgressByTour(tourId);
         int totalTourProgress   = (totalAudioProgress + totalImageProgress) / 2;
-        tourDownloadUpdate.setProgress(totalTourProgress);
 
-        tourDownloadUpdate.setStatus(getTourDownloadStatus(tourId));
-        tourDownloadUpdate.setAudioDownloads(tourDownload.getAudioDownloads());
+        String status = getTourDownloadStatus(tourId);
 
-        tourDownloadRepo.save(tourDownloadUpdate);
+        tourDownloadRepo.updateProgressAndStatus(tourId, totalAudioProgress, status);
+    }
 
-        // TODO: 05/11/15 Hardcoded attraction id
+    private void notifyTourDownloadStatusChange(long tourId) {
+        TourDownload tourDownload = tourDownloadRepo.find(tourId);
         TourDownloadObserver observer = tourDownloadObserverMap.get(tourDownload.getAttractionId());
-
         if (observer != null) {
             observer.downloadStatusChanged(tourDownload);
         }
@@ -184,13 +192,15 @@ public class TourDownloadService extends Service implements DownloadProgressList
 
     private String getCheckSumFromUrl(String url) {
         try {
-            return url.split("-")[1];//url.substring(url.indexOf("-") + 1);
+            return url.split("-")[1];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
     }
 
-    // Service binder class
+    /**
+     * Service binder class
+     */
     public class DownloadServiceBinder extends Binder {
 
         public TourDownloadService getService() {
