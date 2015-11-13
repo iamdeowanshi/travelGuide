@@ -109,13 +109,19 @@ public class TourDownloadService extends Service implements DownloadProgressList
     }
 
     @Override
-    public void failed(Downloadable downloadable, String message) {}
+    public void failed(Downloadable downloadable, String message) {
+        updateDownload(downloadable, DownloadStatus.FAILED);
+    }
 
     @Override
-    public void cancelled(Downloadable downloadable, String message) {}
+    public void cancelled(Downloadable downloadable, String message) {
+        updateDownload(downloadable, DownloadStatus.FAILED);
+    }
 
     @Override
-    public void interrupted(Downloadable downloadable, String message) {}
+    public void interrupted(Downloadable downloadable, String message) {
+        updateDownload(downloadable, DownloadStatus.FAILED);
+    }
 
     private long updateDownload(Downloadable downloadable, String status) {
         // update progress and status if audio download
