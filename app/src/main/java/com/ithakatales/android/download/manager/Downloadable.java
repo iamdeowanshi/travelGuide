@@ -10,6 +10,7 @@ public class Downloadable {
     private String title;
     private String description;
     private String destination;
+    private int progress;
 
     public Downloadable() {
     }
@@ -71,6 +72,15 @@ public class Downloadable {
 
     public Downloadable setDestination(String destination) {
         this.destination = destination;
+        return this;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public Downloadable setProgress(int progress) {
+        this.progress = progress;
         return this;
     }
 
