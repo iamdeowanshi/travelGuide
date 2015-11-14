@@ -234,7 +234,12 @@ public class DownloadBuilder {
 
     private String getExtensionFromUrl(String url) {
         try {
-            return url.substring(url.lastIndexOf("."));
+            String extension = url.substring(url.lastIndexOf("."));
+            int ampersandIndex = extension.indexOf("&");
+
+            return ampersandIndex != -1
+                    ? extension.substring(0, ampersandIndex)
+                    : extension;
         } catch (StringIndexOutOfBoundsException e) {
             return "";
         }
