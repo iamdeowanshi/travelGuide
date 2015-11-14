@@ -17,6 +17,7 @@ import com.ithakatales.android.download.manager.DownloadProgressListener;
 import com.ithakatales.android.download.manager.DownloadStatusListener;
 import com.ithakatales.android.download.manager.Downloadable;
 import com.ithakatales.android.download.manager.Downloader;
+import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.Checksum;
 
 import java.io.File;
@@ -37,6 +38,8 @@ public class TourDownloadService extends Service implements DownloadProgressList
     @Inject TourDownloadRepository tourDownloadRepo;
     @Inject AudioDownloadRepository audioDownloadRepo;
     @Inject ImageDownloadRepository imageDownloadRepo;
+
+    @Inject Bakery bakery;
 
     private final IBinder downloadServiceBinder = new DownloadServiceBinder();
 
@@ -92,11 +95,6 @@ public class TourDownloadService extends Service implements DownloadProgressList
                 ? getStatusAfterChecksumVerification(downloadable)
                 : DownloadStatus.DOWNLOADING;
 
-        // unregister progress observer for completed or failed downloads
-        if (status.equals(DownloadStatus.SUCCESS) || status.equals(DownloadStatus.FAILED)) {
-            downloader.unregisterProgressObserver(downloadable);
-        }
-
         // update download progress & status
         long tourId = updateDownload(downloadable, status);
         updateTourDownloadAndNotify(tourId);
@@ -104,23 +102,26 @@ public class TourDownloadService extends Service implements DownloadProgressList
 
     @Override
     public void success(Downloadable downloadable) {
-        String status = getStatusAfterChecksumVerification(downloadable);
-        updateDownload(downloadable, status);
+        // updating success status is done in progress updated because some unexpected call-
+        // is coming to progressUpdated method even after success of a download
+        downloader.unregisterProgressObserver(downloadable);
     }
 
     @Override
     public void failed(Downloadable downloadable, String message) {
         updateDownload(downloadable, DownloadStatus.FAILED);
+        downloader.unregisterProgressObserver(downloadable);
     }
 
     @Override
     public void cancelled(Downloadable downloadable, String message) {
         updateDownload(downloadable, DownloadStatus.FAILED);
+        downloader.unregisterProgressObserver(downloadable);
     }
 
     @Override
-    public void interrupted(Downloadable downloadable, String message) {
-        updateDownload(downloadable, DownloadStatus.FAILED);
+    public void paused(Downloadable downloadable, String message) {
+        updateDownload(downloadable, DownloadStatus.PAUSED);
     }
 
     private long updateDownload(Downloadable downloadable, String status) {
@@ -155,7 +156,7 @@ public class TourDownloadService extends Service implements DownloadProgressList
 
         String status = getTourDownloadStatus(tourId);
 
-        tourDownloadRepo.updateProgressAndStatus(tourId, totalAudioProgress, status);
+        tourDownloadRepo.updateProgressAndStatus(tourId, totalTourProgress, status);
     }
 
     private void notifyTourDownloadStatusChange(long tourId) {

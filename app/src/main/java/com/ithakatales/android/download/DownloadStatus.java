@@ -7,6 +7,7 @@ package com.ithakatales.android.download;
 public class DownloadStatus {
 
     public static final String DOWNLOADING  = "Downloading";
+    public static final String PAUSED       = "Paused";
     public static final String SUCCESS      = "Success";
     public static final String FAILED       = "Failed";
 
