@@ -15,10 +15,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 /**
  * @author Farhan Ali
  */
-public class DefaultDownloader implements Downloader, DownloadStatusReceiver.DownloadableProvider {
+public class DefaultDownloader implements Downloader, DownloadableProvider {
 
     @Inject Context context;
 

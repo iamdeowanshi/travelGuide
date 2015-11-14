@@ -102,17 +102,4 @@ public class DownloadStatusReceiver extends BroadcastReceiver {
 
     }
 
-    static interface DownloadableProvider {
-
-        DownloadableProvider DEFAULT = new DownloadableProvider() {
-            @Override
-            public Downloadable getDownloadableById(long downloadId) {
-                return null;
-            }
-        };
-
-        Downloadable getDownloadableById(long downloadId);
-
-    }
-
 }
