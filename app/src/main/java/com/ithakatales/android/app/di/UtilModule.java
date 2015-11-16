@@ -3,7 +3,6 @@ package com.ithakatales.android.app.di;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.PreferenceUtil;
-import com.ithakatales.android.util.StorageUtil;
 
 import javax.inject.Singleton;
 
@@ -25,12 +24,6 @@ public class UtilModule {
     @Singleton
     public PreferenceUtil providePreferenceUtil() {
         return new PreferenceUtil();
-    }
-
-    @Provides
-    @Singleton
-    public StorageUtil provideStorageUtil() {
-        return new StorageUtil();
     }
 
     @Provides
