@@ -7,10 +7,6 @@ import com.ithakatales.android.data.model.Attraction;
  */
 public interface AttractionRepository extends BaseRepository<Attraction> {
 
-    void updatePreviewPath(long id, String path);
-
     void updateBlueprintPath(long id, String path);
-
-    void updateFeaturedImagePath(long id, String path);
 
 }

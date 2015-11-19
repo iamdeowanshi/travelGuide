@@ -45,9 +45,11 @@ public class DownloadBuilder {
 
         tourDownload.setId(attraction.getId());
         tourDownload.setAttractionId(attraction.getId());
-        tourDownload.setStatus(DownloadStatus.WAITING_TO_START);
+        tourDownload.setStatus(DownloadStatus.DOWNLOADING);
         tourDownload.setAudioDownloads(createAudioDownloads(attraction, tourDownload));
         tourDownload.setImageDownloads(createImageDownloads(attraction, tourDownload));
+        tourDownload.setPreviewAudioDownload(createAudioDownload(attraction.getPreviewAudio(), tourDownload));
+        tourDownload.setFeaturedImageDownload(createImageDownload(attraction.getFeaturedImage(), tourDownload));
         tourDownload.setProgress(0);
 
         return tourDownload;
@@ -59,6 +61,16 @@ public class DownloadBuilder {
 
     public ImageDownload getImageDownloadFromMap(Downloadable downloadable) {
         return imageDownloadableMap.get(downloadable);
+    }
+
+    public long getTourIdByDownloadable(Downloadable downloadable) {
+        AudioDownload audioDownload = getAudioDownloadFromMap(downloadable);
+        if (audioDownload != null) return audioDownload.getTourId();
+
+        ImageDownload imageDownload = getImageDownloadFromMap(downloadable);
+        if (imageDownload != null) return imageDownload.getTourId();
+
+        return 0;
     }
 
     public boolean removeFromMap(Downloadable downloadable) {
@@ -106,14 +118,17 @@ public class DownloadBuilder {
         return downloadables;
     }
 
-    public Downloadable getFeaturedImageDownloadable(Attraction attraction) {
-        Downloadable downloadable = new Downloadable();
-        downloadable.setUrl(attraction.getFeaturedImageUrl());
-        downloadable.setTitle(attraction.getName() + " featured");
-        String fileName = "/featured" + getExtensionFromUrl(attraction.getFeaturedImageUrl());
-        downloadable.setDestination(tourStorage.getTourDir(attraction.getId()).getAbsolutePath() + fileName);
+    public Downloadable getFeaturedImageDownloadable(TourDownload tourDownload) {
+        Image featuredImage = imageRepo.find(tourDownload.getFeaturedImageDownload().getImageId());
 
-        attractionRepo.updateFeaturedImagePath(attraction.getId(), downloadable.getDestination());
+        Downloadable downloadable = new Downloadable();
+        downloadable.setTitle(featuredImage.getName());
+        downloadable.setUrl(featuredImage.getUrl());
+        String fileName = "/featured" + getExtensionFromUrl(featuredImage.getUrl());
+        downloadable.setDestination(tourStorage.getTourDir(tourDownload.getAttractionId()).getAbsolutePath() + fileName);
+
+        imageDownloadableMap.put(downloadable, tourDownload.getFeaturedImageDownload());
+        imageRepo.updatePath(featuredImage.getId(), downloadable.getDestination());
 
         return downloadable;
     }
@@ -130,14 +145,17 @@ public class DownloadBuilder {
         return downloadable;
     }
 
-    public Downloadable getPreviewAudioDownloadable(Attraction attraction) {
-        Downloadable downloadable = new Downloadable();
-        downloadable.setUrl(attraction.getPreviewAudioUrl());
-        downloadable.setTitle(attraction.getName() + " preview");
-        String fileName = "/preview" + getExtensionFromUrl(attraction.getPreviewAudioUrl());
-        downloadable.setDestination(tourStorage.getTourDir(attraction.getId()).getAbsolutePath() + fileName);
+    public Downloadable getPreviewAudioDownloadable(TourDownload tourDownload) {
+        Audio previewAudio = audioRepo.find(tourDownload.getPreviewAudioDownload().getAudioId());
 
-        attractionRepo.updatePreviewPath(attraction.getId(), downloadable.getDestination());
+        Downloadable downloadable = new Downloadable();
+        downloadable.setUrl(previewAudio.getEncUrl());
+        downloadable.setTitle(previewAudio.getName());
+        String fileName = "/preview" + getExtensionFromUrl(previewAudio.getEncUrl());
+        downloadable.setDestination(tourStorage.getTourDir(tourDownload.getAttractionId()).getAbsolutePath() + fileName);
+
+        audioDownloadableMap.put(downloadable, tourDownload.getPreviewAudioDownload());
+        audioRepo.updatePath(previewAudio.getId(), downloadable.getDestination());
 
         return downloadable;
     }
@@ -164,7 +182,7 @@ public class DownloadBuilder {
         audioDownload.setId(audio.getId());
         audioDownload.setAudioId(audio.getId());
         audioDownload.setTourId(tourDownload.getId());
-        audioDownload.setStatus(DownloadStatus.WAITING_TO_START);
+        audioDownload.setStatus(DownloadStatus.DOWNLOADING);
         audioDownload.setProgress(0);
 
         return audioDownload;
@@ -206,7 +224,7 @@ public class DownloadBuilder {
         imageDownload.setId(image.getId());
         imageDownload.setImageId(image.getId());
         imageDownload.setTourId(tourDownload.getId());
-        imageDownload.setStatus(DownloadStatus.WAITING_TO_START);
+        imageDownload.setStatus(DownloadStatus.DOWNLOADING);
         imageDownload.setProgress(0);
 
         return imageDownload;
@@ -226,7 +244,12 @@ public class DownloadBuilder {
 
     private String getExtensionFromUrl(String url) {
         try {
-            return url.substring(url.lastIndexOf("."));
+            String extension = url.substring(url.lastIndexOf("."));
+            int ampersandIndex = extension.indexOf("&");
+
+            return ampersandIndex != -1
+                    ? extension.substring(0, ampersandIndex)
+                    : extension;
         } catch (StringIndexOutOfBoundsException e) {
             return "";
         }

@@ -14,28 +14,21 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Ref: http://stackoverflow.com/questions/13152736/how-to-generate-an-md5-checksum-for-a-file-in-android
- *      https://gist.github.com/decnorton/5835420
+ * https://gist.github.com/decnorton/5835420
  */
 
 public class Checksum {
+
     private static final String TAG = "Checksum";
 
     public static boolean checkMD5(String md5, File updateFile) {
         if (TextUtils.isEmpty(md5) || updateFile == null) {
-            Log.e(TAG, "Checksum string empty or updateFile null");
             return false;
         }
 
         String calculatedDigest = calculateMD5(updateFile);
-        if (calculatedDigest == null) {
-            Log.e(TAG, "calculatedDigest null");
-            return false;
-        }
 
-        Log.v(TAG, "Calculated digest: " + calculatedDigest);
-        Log.v(TAG, "Provided digest: " + md5);
-
-        return calculatedDigest.equalsIgnoreCase(md5);
+        return calculatedDigest != null && calculatedDigest.equalsIgnoreCase(md5);
     }
 
     public static String calculateMD5(File updateFile) {
@@ -106,9 +99,6 @@ public class Checksum {
             String output = bigInt.toString(16);
             // Fill to 40 chars
             output = String.format("%40s", output).replace(' ', '0');
-
-            Log.i(TAG, "Test: " + sha1);
-            Log.i(TAG, "Generated: " + output);
 
             return (sha1.equals(output));
         } catch (IOException e) {

@@ -1,10 +1,7 @@
 package com.ithakatales.android.download.manager;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.Uri;
 
 import com.ithakatales.android.app.di.Injector;
@@ -19,24 +16,23 @@ import javax.inject.Inject;
 /**
  * @author Farhan Ali
  */
-public class DefaultDownloader implements Downloader {
+public class DefaultDownloader implements Downloader, DownloadableProvider {
 
     @Inject Context context;
 
-    private DownloadStatusListener statusListener       = DownloadStatusListener.DEFAULT_STATUS_LISTENER;
     private DownloadProgressListener progressListener   = DownloadProgressListener.DEFAULT__PROGRESS_LISTENER;
 
     private Map<Long, Downloadable> runningDownloadsMap = new HashMap<>();
     private Map<Downloadable, DownloadProgressObserver> progressObserverMap = new HashMap<>();
 
     private android.app.DownloadManager downloadManager;
-    private BroadcastReceiver downloadStatusReceiver;
-    private BroadcastReceiver notificationClickReceiver;
+    private DownloadStatusReceiver downloadStatusReceiver;
+    private DownloadNotificationClickReceiver notificationClickReceiver;
 
     public DefaultDownloader() {
         Injector.instance().inject(this);
         downloadManager = (android.app.DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        registerNotificationClickReciever();
+        registerNotificationClickReceiver();
         registerDownloadStatusReceiver();
     }
 
@@ -72,16 +68,17 @@ public class DefaultDownloader implements Downloader {
     @Override
     public void cancelAll() {
         // TODO: 15/10/15 CancelAll implementation
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setStatusListener(DownloadStatusListener listener) {
-        statusListener = listener;
+        downloadStatusReceiver.setStatusListener(listener);
     }
 
     @Override
     public void removeStatusListener() {
-        statusListener = DownloadStatusListener.DEFAULT_STATUS_LISTENER;
+        downloadStatusReceiver.setStatusListener(DownloadStatusListener.DEFAULT_STATUS_LISTENER);
     }
 
     @Override
@@ -94,6 +91,33 @@ public class DefaultDownloader implements Downloader {
         progressListener = DownloadProgressListener.DEFAULT__PROGRESS_LISTENER;
     }
 
+    @Override
+    public void unregisterProgressObserver(Downloadable downloadable) {
+        DownloadProgressObserver observer = progressObserverMap.get(downloadable);
+
+        if (observer != null) {
+            context.getContentResolver().unregisterContentObserver(observer);
+        }
+    }
+
+    @Override
+    public Downloadable getDownloadableById(long downloadId) {
+        return runningDownloadsMap.get(downloadId);
+    }
+
+    public void registerNotificationClickReceiver() {
+        IntentFilter filter = new IntentFilter(android.app.DownloadManager
+                .ACTION_NOTIFICATION_CLICKED);
+        notificationClickReceiver = new DownloadNotificationClickReceiver(this);
+        context.registerReceiver(notificationClickReceiver, filter);
+    }
+
+    private void registerDownloadStatusReceiver() {
+        IntentFilter intentFilter = new IntentFilter(android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        downloadStatusReceiver = new DownloadStatusReceiver(downloadManager, this);
+        context.registerReceiver(downloadStatusReceiver, intentFilter);
+    }
+
     private android.app.DownloadManager.Request createRequest(Downloadable downloadable) {
         return new android.app.DownloadManager.Request(Uri.parse(downloadable.getUrl()))
                 .setTitle(downloadable.getTitle())
@@ -104,97 +128,11 @@ public class DefaultDownloader implements Downloader {
                         | android.app.DownloadManager.Request.NETWORK_MOBILE);
     }
 
-    @Override
-    public void unregisterProgressObserver(Downloadable downloadable) {
-        DownloadProgressObserver observer = progressObserverMap.get(downloadable);
-
-        if (observer != null) {
-            context.getContentResolver().unregisterContentObserver(observer);
-        }
-    }
-
     private void registerProgressObserver(Downloadable downloadable) {
         Uri myDownloads = Uri.parse("content://downloads/my_downloads/" + downloadable.getId());
         DownloadProgressObserver observer = new DownloadProgressObserver(downloadable, downloadManager, progressListener);
         context.getContentResolver().registerContentObserver(myDownloads, true, observer);
         progressObserverMap.put(downloadable, observer);
-    }
-
-    // TODO: 15/10/15 Refactor
-
-    public void registerNotificationClickReciever() {
-        // filter for notifications - only acts on notification while download busy
-        IntentFilter filter = new IntentFilter(android.app.DownloadManager
-                .ACTION_NOTIFICATION_CLICKED);
-
-        notificationClickReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                long[] references = intent.getLongArrayExtra(android.app.DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS);
-                for (long reference : references) {
-                    Downloadable downloadable = runningDownloadsMap.get(reference);
-                    if (downloadable != null) {
-                        // do something with the downloaded onclick
-                    }
-                }
-            }
-        };
-        context.registerReceiver(notificationClickReceiver, filter);
-    }
-
-    private void registerDownloadStatusReceiver() {
-        IntentFilter intentFilter = new IntentFilter(android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-
-        downloadStatusReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                long reference = intent.getLongExtra(android.app.DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-
-                Downloadable downloadable = runningDownloadsMap.get(reference);
-
-                if (downloadable != null) {
-                    // do something with the download file
-                    android.app.DownloadManager.Query query = new android.app.DownloadManager.Query();
-                    query.setFilterById(reference);
-                    Cursor cursor = downloadManager.query(query);
-
-                    cursor.moveToFirst();
-                    //        get the status of the download
-                    int columnIndex = cursor.getColumnIndex(android.app.DownloadManager
-                            .COLUMN_STATUS);
-                    int status = cursor.getInt(columnIndex);
-
-                    int fileNameIndex = cursor.getColumnIndex(android.app.DownloadManager
-                            .COLUMN_LOCAL_FILENAME);
-                    String savedFilePath = cursor.getString(fileNameIndex);
-
-                    //        get the reason - more detail on the status
-                    int columnReason = cursor.getColumnIndex(android.app.DownloadManager
-                            .COLUMN_REASON);
-                    int reason = cursor.getInt(columnReason);
-
-                    switch (status) {
-                        case android.app.DownloadManager.STATUS_SUCCESSFUL:
-                            statusListener.success(downloadable);
-                            break;
-                        case android.app.DownloadManager.STATUS_FAILED:
-                            statusListener.failed(downloadable, "Failed");
-                            break;
-                        case android.app.DownloadManager.STATUS_PAUSED:
-                            statusListener.interrupted(downloadable, "Paused");
-                            break;
-                        case android.app.DownloadManager.STATUS_PENDING:
-                            statusListener.interrupted(downloadable, "Pending");
-                            break;
-                        case android.app.DownloadManager.STATUS_RUNNING:
-                            progressListener.progressUpdated(downloadable, 20);
-                            break;
-                    }
-                    cursor.close();
-                }
-            }
-        };
-        context.registerReceiver(downloadStatusReceiver, intentFilter);
     }
 
 }

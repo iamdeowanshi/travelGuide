@@ -15,4 +15,6 @@ public interface AudioDownloadRepository extends BaseRepository<AudioDownload> {
 
     List<AudioDownload> readByTourId(long tourId);
 
+    void updateProgressAndStatus(long downloadId, int progress, String status);
+
 }

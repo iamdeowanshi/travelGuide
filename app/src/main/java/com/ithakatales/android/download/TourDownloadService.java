@@ -1,7 +1,10 @@
 package com.ithakatales.android.download;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -17,6 +20,7 @@ import com.ithakatales.android.download.manager.DownloadProgressListener;
 import com.ithakatales.android.download.manager.DownloadStatusListener;
 import com.ithakatales.android.download.manager.Downloadable;
 import com.ithakatales.android.download.manager.Downloader;
+import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.Checksum;
 
 import java.io.File;
@@ -29,7 +33,11 @@ import javax.inject.Inject;
 /**
  * @author Farhan Ali
  */
-public class TourDownloadService extends Service implements DownloadProgressListener, DownloadStatusListener {
+public class TourDownloadService extends Service
+        implements DownloadProgressListener, DownloadStatusListener, TourDownloadClickReceiver.TourIdProvider {
+
+    public static final String ACTION_VIEW_TOUR = "com.ithakatales.android.download.VIEW_TOUR_ACTION";
+    public static final String EXTRA_TOUR_ID    = "tour_id";
 
     @Inject Downloader downloader;
     @Inject DownloadBuilder downloadBuilder;
@@ -37,6 +45,8 @@ public class TourDownloadService extends Service implements DownloadProgressList
     @Inject TourDownloadRepository tourDownloadRepo;
     @Inject AudioDownloadRepository audioDownloadRepo;
     @Inject ImageDownloadRepository imageDownloadRepo;
+
+    @Inject Bakery bakery;
 
     private final IBinder downloadServiceBinder = new DownloadServiceBinder();
 
@@ -50,6 +60,7 @@ public class TourDownloadService extends Service implements DownloadProgressList
 
         downloader.setProgressListener(this);
         downloader.setStatusListener(this);
+        registerNotificationClickReceiver();
     }
 
     @Override
@@ -76,77 +87,100 @@ public class TourDownloadService extends Service implements DownloadProgressList
 
         List<Downloadable> downloadables = downloadBuilder.getDownloadablesForTourAudios(tourDownload);
         downloadables.addAll(downloadBuilder.getDownloadablesForTourImages(tourDownload));
-
-        downloadables.add(downloadBuilder.getFeaturedImageDownloadable(attraction));
+        downloadables.add(downloadBuilder.getPreviewAudioDownloadable(tourDownload));
+        downloadables.add(downloadBuilder.getFeaturedImageDownloadable(tourDownload));
         downloadables.add(downloadBuilder.getBluePrintImageDownloadable(attraction));
-        downloadables.add(downloadBuilder.getPreviewAudioDownloadable(attraction));
+
         downloader.download(downloadables);
 
         return tourDownload;
     }
 
     @Override
-    public void progressUpdated(Downloadable downloadable, int progress) {
-        // update audio progress if audio download
-        String status = (progress == 100)
+    public void progressUpdated(Downloadable downloadable) {
+        // get status, if completed
+        String status = (downloadable.getProgress() == 100)
                 ? getStatusAfterChecksumVerification(downloadable)
                 : DownloadStatus.DOWNLOADING;
 
-        if (status.equals(DownloadStatus.SUCCESS) || status.equals(DownloadStatus.FAILED)) {
-            downloader.unregisterProgressObserver(downloadable);
-        }
-
-        AudioDownload audioDownload = downloadBuilder.getAudioDownloadFromMap(downloadable);
-        if (audioDownload != null) {
-            audioDownload.setStatus(status);
-            audioDownload.setProgress(progress);
-            audioDownloadRepo.save(audioDownload);
-            updateTourDownloadAndNotify(audioDownload.getTourId());
-            return;
-        }
-
-        // update image progress if image download
-        ImageDownload imageDownload = downloadBuilder.getImageDownloadFromMap(downloadable);
-        if (imageDownload != null) {
-            imageDownload.setStatus(status);
-            imageDownload.setProgress(progress);
-            imageDownloadRepo.save(imageDownload);
-            updateTourDownloadAndNotify(imageDownload.getTourId());
-        }
+        // update download progress & status
+        long tourId = updateDownload(downloadable, status);
+        updateTourDownloadAndNotify(tourId);
     }
 
     @Override
-    public void success(Downloadable downloadable) {}
+    public void success(Downloadable downloadable) {
+        // updating success status is done in progress updated because some unexpected call-
+        // is coming to progressUpdated method even after success of a download
+        downloader.unregisterProgressObserver(downloadable);
+    }
 
     @Override
-    public void failed(Downloadable downloadable, String message) {}
+    public void failed(Downloadable downloadable, String message) {
+        updateDownload(downloadable, DownloadStatus.FAILED);
+        downloader.unregisterProgressObserver(downloadable);
+    }
 
     @Override
-    public void cancelled(Downloadable downloadable, String message) {}
+    public void cancelled(Downloadable downloadable, String message) {
+        updateDownload(downloadable, DownloadStatus.FAILED);
+        downloader.unregisterProgressObserver(downloadable);
+    }
 
     @Override
-    public void interrupted(Downloadable downloadable, String message) {}
+    public void paused(Downloadable downloadable, String message) {
+        updateDownload(downloadable, DownloadStatus.PAUSED);
+    }
+
+    @Override
+    public long getTourIdByDownloadable(Downloadable downloadable) {
+        return downloadBuilder.getTourIdByDownloadable(downloadable);
+    }
+
+    private void registerNotificationClickReceiver() {
+        IntentFilter intentFilter = new IntentFilter(Downloader.ACTION_NOTIFICATION_CLICKED);
+        TourDownloadClickReceiver receiver = new TourDownloadClickReceiver(this);
+        registerReceiver(receiver, intentFilter);
+    }
+
+    private long updateDownload(Downloadable downloadable, String status) {
+        // update progress and status if audio download
+        AudioDownload audioDownload = downloadBuilder.getAudioDownloadFromMap(downloadable);
+        if (audioDownload != null) {
+            audioDownloadRepo.updateProgressAndStatus(audioDownload.getId(), downloadable.getProgress(), status);
+
+            return audioDownload.getTourId();
+        }
+
+        // update progress and status if image download
+        ImageDownload imageDownload = downloadBuilder.getImageDownloadFromMap(downloadable);
+        if (imageDownload != null) {
+            imageDownloadRepo.updateProgressAndStatus(imageDownload.getId(), downloadable.getProgress(), status);
+
+            return imageDownload.getTourId();
+        }
+
+        return 0;
+    }
 
     private void updateTourDownloadAndNotify(long tourId) {
-        TourDownload tourDownload = tourDownloadRepo.find(tourId);
+        updateTourDownload(tourId);
+        notifyTourDownloadStatusChange(tourId);
+    }
 
-        TourDownload tourDownloadUpdate = new TourDownload();
-        tourDownloadUpdate.setId(tourDownload.getId());
-        tourDownloadUpdate.setAttractionId(tourDownload.getId());
-
+    private void updateTourDownload(long tourId) {
         int totalAudioProgress  = audioDownloadRepo.getTotalProgressByTour(tourId);
         int totalImageProgress  = imageDownloadRepo.getTotalProgressByTour(tourId);
         int totalTourProgress   = (totalAudioProgress + totalImageProgress) / 2;
-        tourDownloadUpdate.setProgress(totalTourProgress);
 
-        tourDownloadUpdate.setStatus(getTourDownloadStatus(tourId));
-        tourDownloadUpdate.setAudioDownloads(tourDownload.getAudioDownloads());
+        String status = getTourDownloadStatus(tourId);
 
-        tourDownloadRepo.save(tourDownloadUpdate);
+        tourDownloadRepo.updateProgressAndStatus(tourId, totalTourProgress, status);
+    }
 
-        // TODO: 05/11/15 Hardcoded attraction id
+    private void notifyTourDownloadStatusChange(long tourId) {
+        TourDownload tourDownload = tourDownloadRepo.find(tourId);
         TourDownloadObserver observer = tourDownloadObserverMap.get(tourDownload.getAttractionId());
-
         if (observer != null) {
             observer.downloadStatusChanged(tourDownload);
         }
@@ -184,13 +218,15 @@ public class TourDownloadService extends Service implements DownloadProgressList
 
     private String getCheckSumFromUrl(String url) {
         try {
-            return url.split("-")[1];//url.substring(url.indexOf("-") + 1);
+            return url.split("-")[1];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
     }
 
-    // Service binder class
+    /**
+     * Service binder class
+     */
     public class DownloadServiceBinder extends Binder {
 
         public TourDownloadService getService() {

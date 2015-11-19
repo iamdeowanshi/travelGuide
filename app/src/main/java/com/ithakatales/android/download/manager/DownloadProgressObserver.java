@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 
+import timber.log.Timber;
+
 /**
  * @author Farhan Ali
  */
@@ -40,8 +42,11 @@ public class DownloadProgressObserver extends ContentObserver {
 
             final int progress = (int) ((bytesDownloaded * 100l) / bytesTotal);
 
-            progressListener.progressUpdated(downloadable, progress);
+            downloadable.setProgress(progress);
+            progressListener.progressUpdated(downloadable);
         } catch (Exception e) {
+            Timber.e(e.getMessage(), e);
+        } finally {
             cursor.close();
         }
     }

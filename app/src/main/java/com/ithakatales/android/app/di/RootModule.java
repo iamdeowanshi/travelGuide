@@ -15,7 +15,6 @@ import com.ithakatales.android.download.manager.DefaultDownloader;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
 import com.ithakatales.android.ui.activity.test.DownloadTourTestActivity;
-import com.ithakatales.android.ui.activity.test.DownloadTourTestActivityOld;
 import com.ithakatales.android.ui.activity.test.TestActivity;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
@@ -46,7 +45,6 @@ import dagger.Provides;
                 // View specific classes - activities, fragments, adapters etc
                 TestActivity.class,
                 ApiTestActivity.class,
-                DownloadTourTestActivityOld.class,
                 DownloadTourTestActivity.class,
 
                 // Presenters

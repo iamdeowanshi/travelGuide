@@ -21,12 +21,6 @@ public class Attraction extends RealmObject {
     @SerializedName("blueprintUrl")
     private String blueprintUrl;
     private String bluePrintPath;
-    @SerializedName("featuredImageUrl")
-    private String featuredImageUrl;
-    private String featuredImagePath;
-    @SerializedName("previewAudioUrl")
-    private String previewAudioUrl;
-    private String previewAudioPath;
     @SerializedName("shortDescription")
     private String shortDescription;
     @SerializedName("longDescription")
@@ -56,6 +50,10 @@ public class Attraction extends RealmObject {
     @SerializedName("deletedAt")
     private String deletedAt;
 
+    @SerializedName("featuredImage")
+    private Image featuredImage;
+    @SerializedName("previewAudio")
+    private Audio previewAudio;
     @SerializedName("city")
     private City city;
     @SerializedName("type")
@@ -107,38 +105,6 @@ public class Attraction extends RealmObject {
 
     public void setBluePrintPath(String bluePrintPath) {
         this.bluePrintPath = bluePrintPath;
-    }
-
-    public String getFeaturedImageUrl() {
-        return featuredImageUrl;
-    }
-
-    public void setFeaturedImageUrl(String featuredImageUrl) {
-        this.featuredImageUrl = featuredImageUrl;
-    }
-
-    public String getFeaturedImagePath() {
-        return featuredImagePath;
-    }
-
-    public void setFeaturedImagePath(String featuredImagePath) {
-        this.featuredImagePath = featuredImagePath;
-    }
-
-    public String getPreviewAudioUrl() {
-        return previewAudioUrl;
-    }
-
-    public void setPreviewAudioUrl(String previewAudioUrl) {
-        this.previewAudioUrl = previewAudioUrl;
-    }
-
-    public String getPreviewAudioPath() {
-        return previewAudioPath;
-    }
-
-    public void setPreviewAudioPath(String previewAudioPath) {
-        this.previewAudioPath = previewAudioPath;
     }
 
     public String getShortDescription() {
@@ -251,6 +217,22 @@ public class Attraction extends RealmObject {
 
     public void setDeletedAt(String deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public Image getFeaturedImage() {
+        return featuredImage;
+    }
+
+    public void setFeaturedImage(Image featuredImage) {
+        this.featuredImage = featuredImage;
+    }
+
+    public Audio getPreviewAudio() {
+        return previewAudio;
+    }
+
+    public void setPreviewAudio(Audio previewAudio) {
+        this.previewAudio = previewAudio;
     }
 
     public City getCity() {

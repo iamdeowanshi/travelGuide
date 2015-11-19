@@ -10,6 +10,7 @@ public class Downloadable {
     private String title;
     private String description;
     private String destination;
+    private int progress;
 
     public Downloadable() {
     }
@@ -74,6 +75,15 @@ public class Downloadable {
         return this;
     }
 
+    public int getProgress() {
+        return progress;
+    }
+
+    public Downloadable setProgress(int progress) {
+        this.progress = progress;
+        return this;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object instanceof Downloadable) {
@@ -82,6 +92,11 @@ public class Downloadable {
         }
 
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id + url.hashCode());
     }
 
 }

@@ -51,6 +51,14 @@ public class PreferenceUtil {
         getEditor().putStringSet(key, values).apply();
     }
 
+    public void remove(String key) {
+        getEditor().remove(key).apply();
+    }
+
+    public void clear() {
+        getEditor().clear().apply();
+    }
+
     public void save(String key, String value) {
         getEditor().putString(key, value).apply();
     }

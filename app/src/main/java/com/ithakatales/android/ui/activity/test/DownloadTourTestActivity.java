@@ -1,6 +1,8 @@
 package com.ithakatales.android.ui.activity.test;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -86,7 +88,7 @@ public class DownloadTourTestActivity extends BaseActivity implements TourDownlo
 
         injectDependencies();
 
-        attractionId = 1;
+        attractionId = getIntent().getLongExtra(TourDownloadService.EXTRA_TOUR_ID, 1);
 
         startDownloadService();
     }
@@ -376,6 +378,16 @@ public class DownloadTourTestActivity extends BaseActivity implements TourDownlo
 
     private void hideProgress() {
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

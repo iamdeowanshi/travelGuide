@@ -56,6 +56,7 @@ public class ApiModule {
                 .setEndpoint(endpoint)
                 .setRequestInterceptor(interceptor)
                 .setConverter(new GsonConverter(gson))
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
     }
 

@@ -5,11 +5,11 @@ package com.ithakatales.android.download.manager;
  */
 public interface DownloadProgressListener {
 
-    void progressUpdated(Downloadable downloadable, int progress);
+    void progressUpdated(Downloadable downloadable);
 
     DownloadProgressListener DEFAULT__PROGRESS_LISTENER = new DownloadProgressListener() {
         @Override
-        public void progressUpdated(Downloadable downloadable, int progress) {}
+        public void progressUpdated(Downloadable downloadable) {}
     };
 
 }
