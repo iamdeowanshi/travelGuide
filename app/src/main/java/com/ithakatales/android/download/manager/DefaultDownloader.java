@@ -1,8 +1,6 @@
 package com.ithakatales.android.download.manager;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 
@@ -14,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import timber.log.Timber;
 
 /**
  * @author Farhan Ali
@@ -31,12 +27,12 @@ public class DefaultDownloader implements Downloader, DownloadableProvider {
 
     private android.app.DownloadManager downloadManager;
     private DownloadStatusReceiver downloadStatusReceiver;
-    private BroadcastReceiver notificationClickReceiver;
+    private DownloadNotificationClickReceiver notificationClickReceiver;
 
     public DefaultDownloader() {
         Injector.instance().inject(this);
         downloadManager = (android.app.DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        registerNotificationClickReciever();
+        registerNotificationClickReceiver();
         registerDownloadStatusReceiver();
     }
 
@@ -109,24 +105,10 @@ public class DefaultDownloader implements Downloader, DownloadableProvider {
         return runningDownloadsMap.get(downloadId);
     }
 
-    // TODO: 15/10/15 Refactor
-    public void registerNotificationClickReciever() {
-        // filter for notifications - only acts on notification while download busy
+    public void registerNotificationClickReceiver() {
         IntentFilter filter = new IntentFilter(android.app.DownloadManager
                 .ACTION_NOTIFICATION_CLICKED);
-
-        notificationClickReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                long[] references = intent.getLongArrayExtra(android.app.DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS);
-                for (long reference : references) {
-                    Downloadable downloadable = runningDownloadsMap.get(reference);
-                    if (downloadable != null) {
-                        // do something with the downloaded onclick
-                    }
-                }
-            }
-        };
+        notificationClickReceiver = new DownloadNotificationClickReceiver(this);
         context.registerReceiver(notificationClickReceiver, filter);
     }
 

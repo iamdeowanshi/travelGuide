@@ -1,7 +1,10 @@
 package com.ithakatales.android.download;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -30,7 +33,11 @@ import javax.inject.Inject;
 /**
  * @author Farhan Ali
  */
-public class TourDownloadService extends Service implements DownloadProgressListener, DownloadStatusListener {
+public class TourDownloadService extends Service
+        implements DownloadProgressListener, DownloadStatusListener, TourDownloadClickReceiver.TourIdProvider {
+
+    public static final String ACTION_VIEW_TOUR = "com.ithakatales.android.download.VIEW_TOUR_ACTION";
+    public static final String EXTRA_TOUR_ID    = "tour_id";
 
     @Inject Downloader downloader;
     @Inject DownloadBuilder downloadBuilder;
@@ -53,6 +60,7 @@ public class TourDownloadService extends Service implements DownloadProgressList
 
         downloader.setProgressListener(this);
         downloader.setStatusListener(this);
+        registerNotificationClickReceiver();
     }
 
     @Override
@@ -122,6 +130,17 @@ public class TourDownloadService extends Service implements DownloadProgressList
     @Override
     public void paused(Downloadable downloadable, String message) {
         updateDownload(downloadable, DownloadStatus.PAUSED);
+    }
+
+    @Override
+    public long getTourIdByDownloadable(Downloadable downloadable) {
+        return downloadBuilder.getTourIdByDownloadable(downloadable);
+    }
+
+    private void registerNotificationClickReceiver() {
+        IntentFilter intentFilter = new IntentFilter(Downloader.ACTION_NOTIFICATION_CLICKED);
+        TourDownloadClickReceiver receiver = new TourDownloadClickReceiver(this);
+        registerReceiver(receiver, intentFilter);
     }
 
     private long updateDownload(Downloadable downloadable, String status) {

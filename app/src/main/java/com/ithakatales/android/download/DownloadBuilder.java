@@ -63,6 +63,16 @@ public class DownloadBuilder {
         return imageDownloadableMap.get(downloadable);
     }
 
+    public long getTourIdByDownloadable(Downloadable downloadable) {
+        AudioDownload audioDownload = getAudioDownloadFromMap(downloadable);
+        if (audioDownload != null) return audioDownload.getTourId();
+
+        ImageDownload imageDownload = getImageDownloadFromMap(downloadable);
+        if (imageDownload != null) return imageDownload.getTourId();
+
+        return 0;
+    }
+
     public boolean removeFromMap(Downloadable downloadable) {
         return audioDownloadableMap.remove(downloadable) != null
                 || imageDownloadableMap.remove(downloadable) != null;
