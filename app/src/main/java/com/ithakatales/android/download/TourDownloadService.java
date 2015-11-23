@@ -169,9 +169,7 @@ public class TourDownloadService extends Service
     }
 
     private void updateTourDownload(long tourId) {
-        int totalAudioProgress  = audioDownloadRepo.getTotalProgressByTour(tourId);
-        int totalImageProgress  = imageDownloadRepo.getTotalProgressByTour(tourId);
-        int totalTourProgress   = (totalAudioProgress + totalImageProgress) / 2;
+        int totalTourProgress = tourDownloadRepo.getTotalProgress(tourId);
 
         String status = getTourDownloadStatus(tourId);
 
