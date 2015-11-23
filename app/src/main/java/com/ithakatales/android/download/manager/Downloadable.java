@@ -94,9 +94,4 @@ public class Downloadable {
         return false;
     }
 
-    @Override
-    public int hashCode() {
-        return (int) (id + url.hashCode());
-    }
-
 }
