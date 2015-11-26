@@ -211,6 +211,8 @@ public class DownloadBuilder {
     private RealmList<ImageDownload> createImageDownloads(List<Image> images, TourDownload tourDownload) {
         RealmList<ImageDownload> imageDownloads = new RealmList<>();
 
+        if (images == null) return imageDownloads;
+
         for (Image image : images) {
             imageDownloads.add(createImageDownload(image, tourDownload));
         }
