@@ -1,6 +1,7 @@
 package com.ithakatales.android.app.di;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 
 import com.ithakatales.android.app.IthakaApplication;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
@@ -16,6 +17,7 @@ import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
 import com.ithakatales.android.ui.activity.test.DownloadTourTestActivity;
 import com.ithakatales.android.ui.activity.test.TestActivity;
+import com.ithakatales.android.ui.adapter.ToursListAdapter;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.PreferenceUtil;
@@ -46,6 +48,7 @@ import dagger.Provides;
                 TestActivity.class,
                 ApiTestActivity.class,
                 DownloadTourTestActivity.class,
+                ToursListAdapter.class,
 
                 // Presenters
                 SamplePresenterImpl.class,
@@ -81,6 +84,12 @@ public class RootModule {
     @Singleton
     public Context provideApplicationContext() {
         return context;
+    }
+
+    @Provides
+    @Singleton
+    public LayoutInflater provideLayoutInflater() {
+        return LayoutInflater.from(context);
     }
 
 }
