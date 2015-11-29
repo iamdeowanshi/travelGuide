@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Ithakatales</string>
     <string name="app_description">Audio tour assistant system.</string>
+
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
     <string name="action_settings">Settings</string>
+    <string name="action_send_feedback">Send Feedback</string>
 </resources>
