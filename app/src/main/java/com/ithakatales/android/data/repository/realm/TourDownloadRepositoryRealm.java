@@ -5,8 +5,6 @@ import com.ithakatales.android.data.model.ImageDownload;
 import com.ithakatales.android.data.model.TourDownload;
 import com.ithakatales.android.data.repository.TourDownloadRepository;
 
-import java.util.List;
-
 import io.realm.RealmResults;
 
 /**

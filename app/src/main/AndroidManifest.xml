@@ -18,6 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.HomeActivity"/>
         <activity android:name=".ui.activity.test.TestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestResultActivity"/>

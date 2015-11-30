@@ -8,6 +8,9 @@ import com.ithakatales.android.ui.activity.test.TestActivity;
 
 import butterknife.OnClick;
 
+/**
+ * @author Farhan Ali
+ */
 public class LaunchActivity extends BaseActivity {
 
     @Override
@@ -24,7 +27,7 @@ public class LaunchActivity extends BaseActivity {
 
     @OnClick(R.id.button_sneak_peak)
     void launchHomeAsGuest() {
-        startActivity(TestActivity.class, null);
+        startActivity(HomeActivity.class, null);
         finish();
     }
 
