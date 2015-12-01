@@ -55,27 +55,6 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                bakery.toastShort("setting clicked");
-                break;
-            case R.id.action_send_feedback:
-                bakery.toastShort("send feedback clicked");
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onDrawerItemSelected(City city) {
         loadHomeFragment(city);
     }
@@ -89,7 +68,7 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
+        //fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
         fragmentTransaction.replace(R.id.layout_fragment_container, homeFragment);
         fragmentTransaction.commit();
 
