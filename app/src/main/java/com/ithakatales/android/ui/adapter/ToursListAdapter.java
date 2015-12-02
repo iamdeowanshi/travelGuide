@@ -16,6 +16,7 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.AttractionType;
+import com.ithakatales.android.data.model.IconMap;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -89,16 +90,13 @@ public class ToursListAdapter extends RecyclerView.Adapter<ToursListAdapter.View
 
             textName.setText(attraction.getName());
             // TODO: 27/11/15 set caption text - textCaption
-            int typeIconResource = attraction.getType().getId() == AttractionType.WALKING
-                    ? R.drawable.icon_walk
-                    : R.drawable.icon_view;
-            iconType.setImageResource(typeIconResource);
+            iconType.setImageResource(IconMap.tourTypeLight.get(attraction.getType().getId()));
             int durationInMinute = (int) (attraction.getDuration() / 60);
             textDuration.setText(durationInMinute + " Mins");
             textDescription.setText(attraction.getShortDescription());
 
             // load background to item root view
-            Picasso.with(context).load(attraction.getFeaturedImage().getUrl()).resize(400, 300).into(new Target() {
+            Picasso.with(context).load(attraction.getFeaturedImage().getUrl()).resize(600, 400).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                     layoutItemContainer.setBackground(new BitmapDrawable(context.getResources(), bitmap));

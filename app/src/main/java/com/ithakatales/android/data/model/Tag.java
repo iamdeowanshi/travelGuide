@@ -10,6 +10,28 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Tag extends RealmObject {
 
+    public static final long WALKING            = 1;
+    public static final long HIKING             = 2;
+    public static final long SHOPPING           = 3;
+    public static final long PHOTOGRAPHY        = 4;
+    public static final long FAMILY_FRIENDLY    = 5;
+    public static final long PET_FRIENDLY       = 6;
+
+    public static final long MONUMENT           = 7;
+    public static final long RELIGIOUS_LANDMARK = 8;
+    public static final long MUSEUM             = 9;
+    public static final long NEIGHBOURHOOD      = 10;
+
+    public static final long FOOD               = 11;
+    public static final long HISTORY            = 12;
+    public static final long NATURE             = 13;
+    public static final long VIEWS              = 14;
+    public static final long ARCHITECTURE       = 15;
+    public static final long ART                = 16;
+    public static final long BAZAR              = 17;
+    public static final long NIGHTLIFE          = 18;
+    public static final long MUSIC              = 19;
+
     @PrimaryKey
     @SerializedName("id")
     private long id;

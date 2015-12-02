@@ -10,8 +10,8 @@ import io.realm.annotations.PrimaryKey;
  */
 public class AttractionType extends RealmObject {
 
-    public static final int WALKING     = 1;
-    public static final int MONUMENT    = 2;
+    public static final long WALKING     = 1;
+    public static final long MONUMENT    = 2;
 
     @PrimaryKey
     @SerializedName("id")
