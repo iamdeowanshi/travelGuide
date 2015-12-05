@@ -16,6 +16,8 @@ public class Attraction extends RealmObject {
     private long id;
     @SerializedName("name")
     private String name;
+    @SerializedName("caption")
+    private String caption;
     @SerializedName("duration")
     private long duration;
     @SerializedName("blueprintUrl")
@@ -77,6 +79,14 @@ public class Attraction extends RealmObject {
 
     public String getName() {
         return name;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
     public void setName(String name) {
