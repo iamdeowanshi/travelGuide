@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.data.model.AttractionType;
 import com.ithakatales.android.data.model.IconMap;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -30,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * @author Farhan Ali
  */
-public class ToursListAdapter extends RecyclerView.Adapter<ToursListAdapter.ViewHolder> {
+public class ToursListRecyclerAdapter extends RecyclerView.Adapter<ToursListRecyclerAdapter.ViewHolder> {
 
     @Inject LayoutInflater inflater;
     @Inject Context context;
@@ -39,7 +38,7 @@ public class ToursListAdapter extends RecyclerView.Adapter<ToursListAdapter.View
 
     private List<Attraction> attractions;
 
-    public ToursListAdapter(List<Attraction> attractions, RecyclerItemClickListener<Attraction> itemClickListener) {
+    public ToursListRecyclerAdapter(List<Attraction> attractions, RecyclerItemClickListener<Attraction> itemClickListener) {
         Injector.instance().inject(this);
         this.attractions = attractions;
         this.itemClickListener = itemClickListener;
@@ -96,6 +95,8 @@ public class ToursListAdapter extends RecyclerView.Adapter<ToursListAdapter.View
             textDescription.setText(attraction.getShortDescription());
 
             // load background to item root view
+            if (attraction.getFeaturedImage() == null) return;
+
             Picasso.with(context).load(attraction.getFeaturedImage().getUrl()).resize(600, 400).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {

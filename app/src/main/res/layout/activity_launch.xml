@@ -1,39 +1,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/spacing_medium"
-    android:background="@drawable/bg_launch_activity">
+    android:background="@drawable/bg_launch_activity"
+    android:padding="@dimen/spacing_medium">
 
     <ImageView
+        android:id="@+id/image_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/image_logo"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/logo_launch"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/logo_launch" />
 
     <Button
+        android:id="@+id/button_sneak_peak"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sneak Peak"
-        android:id="@+id/button_sneak_peak"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/bg_button_pink"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/bg_button_pink_rounded"
+        android:text="Sneak Peak"
         android:textColor="@android:color/white" />
 
     <Button
+        android:id="@+id/button_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/button_login"
         android:layout_above="@+id/button_sneak_peak"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
-        android:background="@drawable/bg_button_teal"
+        android:background="@drawable/bg_button_teal_rounded"
+        android:text="Login"
         android:textColor="@android:color/white" />
 </RelativeLayout>

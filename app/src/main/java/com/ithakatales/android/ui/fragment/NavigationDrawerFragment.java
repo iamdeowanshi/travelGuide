@@ -107,7 +107,6 @@ public class NavigationDrawerFragment extends BaseFragment implements Navigation
         });
     }
 
-
     @Override
     public void citiesLoaded(List<City> cities) {
         this.cities.clear();

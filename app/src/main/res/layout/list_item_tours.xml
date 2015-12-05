@@ -13,9 +13,9 @@
         android:layout_centerInParent="true"
         android:layout_marginTop="30dp"
         android:text="Tour Name"
+        android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textAllCaps="true" />
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/text_caption"
@@ -24,44 +24,44 @@
         android:layout_below="@+id/text_name"
         android:layout_centerInParent="true"
         android:text="Some thing about tour"
+        android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="22sp"
-        android:textAllCaps="true" />
+        android:textSize="22sp" />
 
     <ImageView
         android:id="@+id/icon_type"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:layout_above="@+id/text_description"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/text_description"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:src="@drawable/icon_walk" />
+        android:src="@drawable/icon_walk_light" />
 
     <ImageView
         android:id="@+id/icon_duration"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:layout_above="@+id/text_description"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_toLeftOf="@+id/text_duration"
         android:layout_toStartOf="@+id/text_description"
-        android:layout_above="@+id/text_description"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
         android:src="@drawable/icon_clock_light" />
 
     <TextView
         android:id="@+id/text_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_above="@+id/text_description"
-        android:paddingBottom="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="16dp"
+        android:paddingBottom="5dp"
         android:text="35 Mins"
         android:textColor="@android:color/white"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/text_description"
@@ -69,11 +69,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:padding="16dp"
         android:layout_marginTop="5dp"
+        android:background="@color/black_transparent_50"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:padding="16dp"
         android:text="Tour short description goes here.."
         android:textColor="@android:color/white"
-        android:textSize="12sp"
-        android:background="@color/black_transparent_50"/>
+        android:textSize="12sp" />
 
 </RelativeLayout>

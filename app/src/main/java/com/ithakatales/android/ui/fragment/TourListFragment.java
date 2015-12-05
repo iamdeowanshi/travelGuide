@@ -15,8 +15,9 @@ import com.ithakatales.android.app.base.BaseFragment;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.presenter.TourListPresenter;
 import com.ithakatales.android.presenter.TourListViewInteractor;
+import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.adapter.RecyclerItemClickListener;
-import com.ithakatales.android.ui.adapter.ToursListAdapter;
+import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
 import com.ithakatales.android.util.Bakery;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
     @Bind(R.id.recycler_tours) RecyclerView recyclerTours;
     @Bind(R.id.progress) ProgressBar progress;
 
-    private ToursListAdapter adapter;
+    private ToursListRecyclerAdapter toursListRecyclerAdapter;
 
     private List<Attraction> attractions = new ArrayList<>();
 
@@ -59,8 +60,8 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new ToursListAdapter(attractions, this);
-        recyclerTours.setAdapter(adapter);
+        toursListRecyclerAdapter = new ToursListRecyclerAdapter(attractions, this);
+        recyclerTours.setAdapter(toursListRecyclerAdapter);
         recyclerTours.setLayoutManager(new LinearLayoutManager(context));
 
         presenter.loadAttractions(getArguments().getLong("city_id", 0));
@@ -70,7 +71,7 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
     public void attractionsLoaded(List<Attraction> attractions) {
         this.attractions.clear();
         this.attractions.addAll(attractions);
-        adapter.notifyDataSetChanged();
+        toursListRecyclerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -91,7 +92,9 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
 
     @Override
     public void onItemClick(Attraction item) {
-        bakery.snackShort(getContentView(), "Tour Details - Under construction");
+        Bundle bundle = new Bundle();
+        bundle.putLong("attraction_id", item.getId());
+        startActivity(TourDetailActivity.class, bundle);
     }
 
 }

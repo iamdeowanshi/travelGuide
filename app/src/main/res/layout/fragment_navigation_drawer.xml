@@ -1,61 +1,60 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/spacing_medium"
-    android:background="@drawable/bg_drawer">
+    android:background="@drawable/bg_drawer"
+    android:padding="@dimen/spacing_medium">
 
     <ImageView
         android:id="@+id/icon_globe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/icon_globe"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"/>
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/icon_globe_light" />
 
     <TextView
+        android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/icon_globe"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/icon_globe"
+        android:layout_toRightOf="@+id/icon_globe"
         android:gravity="center|start"
         android:text="Cities"
         android:textAllCaps="true"
         android:textColor="@color/pink_normal"
-        android:textSize="22sp"
-        android:id="@+id/text_title"
-        android:layout_alignBottom="@+id/icon_globe"
-        android:layout_toRightOf="@+id/icon_globe"
-        android:layout_toEndOf="@+id/icon_globe"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp" />
+        android:textSize="22sp" />
 
     <View
         android:id="@+id/view_horizontal_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/icon_globe"
-        android:layout_marginTop="8dp"
-        android:background="@color/pink_pressed"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginTop="8dp"
+        android:background="@color/pink_pressed" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_cities"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/view_horizontal_divider"
-        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginTop="20dp" />
 
     <ProgressBar
+        android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progress"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:indeterminate="false"
-        android:visibility="invisible"/>
-
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/image_featured"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                android:minHeight="80dp"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/black_transparent_50"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--Title, description and preview player button-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_medium">
+
+                <TextView
+                    android:id="@+id/text_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="Qutub Minar"
+                    android:textAllCaps="true"
+                    android:textColor="@color/pink_normal"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/text_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_title"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:text="@string/lorem_ipsum_medium" />
+
+                <ImageView
+                    android:id="@+id/icon_type"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/text_description"
+                    android:src="@drawable/icon_walk_dark" />
+
+                <ImageView
+                    android:id="@+id/icon_duration"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_below="@+id/text_description"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@+id/text_duration"
+                    android:src="@drawable/icon_clock_dark" />
+
+                <TextView
+                    android:id="@+id/text_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/text_description"
+                    android:paddingTop="5dp"
+                    android:text="35 Mins"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/button_player"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/icon_type"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:background="@drawable/bg_button_teal_rounded"
+                    android:text="Play Preview"
+                    android:textColor="@android:color/white" />
+
+            </RelativeLayout>
+
+            <!--Blueprint-->
+
+            <ImageView
+                android:id="@+id/image_blueprint"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/dummy_map" />
+
+            <!--Know more-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/spacing_small"
+                android:paddingEnd="@dimen/spacing_medium"
+                android:paddingLeft="@dimen/spacing_medium"
+                android:paddingRight="@dimen/spacing_medium"
+                android:paddingStart="@dimen/spacing_medium"
+                android:paddingTop="@dimen/spacing_medium">
+
+                <TextView
+                    android:id="@+id/text_knowmore_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:text="Know More"
+                    android:textAllCaps="true"
+                    android:textSize="18dp" />
+
+                <com.ms.square.android.expandabletextview.ExpandableTextView
+                    android:id="@+id/expandable_text_know_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_knowmore_header"
+                    expandableTextView:animDuration="200"
+                    expandableTextView:maxCollapsedLines="2">
+
+                    <TextView
+                        android:id="@id/expandable_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium" />
+
+                    <ImageButton
+                        android:id="@id/expand_collapse"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center|bottom"
+                        android:background="@android:color/transparent" />
+
+                </com.ms.square.android.expandabletextview.ExpandableTextView>
+
+            </RelativeLayout>
+
+            <!--Before you go-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_light"
+                android:paddingBottom="@dimen/spacing_small"
+                android:paddingEnd="@dimen/spacing_medium"
+                android:paddingLeft="@dimen/spacing_medium"
+                android:paddingRight="@dimen/spacing_medium"
+                android:paddingStart="@dimen/spacing_medium"
+                android:paddingTop="@dimen/spacing_medium">
+
+                <TextView
+                    android:id="@+id/text_before_you_go_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:text="Before You Go"
+                    android:textAllCaps="true"
+                    android:textSize="18dp" />
+
+                <com.ms.square.android.expandabletextview.ExpandableTextView
+                    android:id="@+id/expandable_text_before_you_go"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_before_you_go_header"
+                    expandableTextView:animDuration="200"
+                    expandableTextView:maxCollapsedLines="2">
+
+                    <TextView
+                        android:id="@id/expandable_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium" />
+
+                    <ImageButton
+                        android:id="@id/expand_collapse"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center|bottom"
+                        android:background="@android:color/transparent" />
+
+                </com.ms.square.android.expandabletextview.ExpandableTextView>
+
+            </RelativeLayout>
+
+            <!--Tags-->
+
+            <include
+                android:id="@+id/view_tag_type_one"
+                layout="@layout/view_tag_type" />
+
+            <include
+                android:id="@+id/view_tag_type_two"
+                layout="@layout/view_tag_type" />
+
+            <include
+                android:id="@+id/view_tag_type_three"
+                layout="@layout/view_tag_type" />
+
+            <!--Behind the scenes-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_light"
+                android:padding="@dimen/spacing_medium" >
+
+                <TextView
+                    android:id="@+id/text_credits_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:text="Behind The Scenes"
+                    android:textAllCaps="true"
+                    android:textSize="18dp" />
+
+                <com.ms.square.android.expandabletextview.ExpandableTextView
+                    android:id="@+id/expandable_text_credits"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_credits_header"
+                    expandableTextView:animDuration="200"
+                    expandableTextView:maxCollapsedLines="2">
+
+                    <TextView
+                        android:id="@id/expandable_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium" />
+
+                    <ImageButton
+                        android:id="@id/expand_collapse"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center|bottom"
+                        android:background="@android:color/transparent" />
+
+                </com.ms.square.android.expandabletextview.ExpandableTextView>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/button_tour_action"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="Begin Ithakatale"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textAllCaps="true"
+                android:background="@drawable/bg_button_pink"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
