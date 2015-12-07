@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
@@ -27,7 +25,7 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
 
     @Inject Bakery bakery;
 
-    @Bind(R.id.layout_drawer) DrawerLayout mDrawerLayout;
+    @Bind(R.id.layout_drawer) DrawerLayout drawerLayout;
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     private NavigationDrawerFragment drawerFragment;
@@ -35,42 +33,23 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        injectDependencies();
+
         setContentView(R.layout.activity_home);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Delhi");
+        getSupportActionBar().setTitle("Ithakatales");
         getSupportActionBar().setIcon(R.mipmap.app_icon);
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name,
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
                 R.string.app_name);
 
         /*setting navigation drawer*/
         drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        drawerFragment.setUpDrawer((DrawerLayout) findViewById(R.id.layout_drawer), toolbar);
         drawerFragment.setDrawerItemClickLister(this);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                bakery.toastShort("setting clicked");
-                break;
-            case R.id.action_send_feedback:
-                bakery.toastShort("send feedback clicked");
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
+        drawerFragment.setUpDrawer(drawerLayout, toolbar);
     }
 
     @Override
@@ -87,7 +66,7 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
+        //fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
         fragmentTransaction.replace(R.id.layout_fragment_container, homeFragment);
         fragmentTransaction.commit();
 

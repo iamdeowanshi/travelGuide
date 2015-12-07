@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 
 import com.ithakatales.android.app.IthakaApplication;
+import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioDownloadRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioRepositoryRealm;
@@ -15,13 +16,16 @@ import com.ithakatales.android.download.TourDownloadService;
 import com.ithakatales.android.download.manager.DefaultDownloader;
 import com.ithakatales.android.presenter.concrete.NavigationDrawerPresenterImpl;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
+import com.ithakatales.android.presenter.concrete.TourDetailPresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourListPresenterImpl;
 import com.ithakatales.android.ui.activity.HomeActivity;
+import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
 import com.ithakatales.android.ui.activity.test.DownloadTourTestActivity;
 import com.ithakatales.android.ui.activity.test.TestActivity;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
-import com.ithakatales.android.ui.adapter.ToursListAdapter;
+import com.ithakatales.android.ui.adapter.TagGridAdapter;
+import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
 import com.ithakatales.android.ui.fragment.HomeFragment;
 import com.ithakatales.android.ui.fragment.NavigationDrawerFragment;
 import com.ithakatales.android.ui.fragment.TourListFragment;
@@ -52,10 +56,12 @@ import dagger.Provides;
                 IthakaApplication.class,
 
                 // Activities
+                BaseActivity.class,
                 TestActivity.class,
                 ApiTestActivity.class,
                 DownloadTourTestActivity.class,
                 HomeActivity.class,
+                TourDetailActivity.class,
 
                 // Fragments
                 HomeFragment.class,
@@ -63,13 +69,15 @@ import dagger.Provides;
                 TourListFragment.class,
 
                 // Adapters
-                ToursListAdapter.class,
+                ToursListRecyclerAdapter.class,
                 NavigationDrawerAdapter.class,
+                TagGridAdapter.class,
 
                 // Presenters
                 SamplePresenterImpl.class,
-                TourListPresenterImpl.class,
                 NavigationDrawerPresenterImpl.class,
+                TourListPresenterImpl.class,
+                TourDetailPresenterImpl.class,
 
                 // Repositories
                 TourDownloadRepositoryRealm.class,

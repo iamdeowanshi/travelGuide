@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Api Test"
         android:id="@+id/btn_api_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="Api Test" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Download Tour Test"
         android:id="@+id/btn_download_tour_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/btn_api_test"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="Download Tour Test" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="My Tours Test"
         android:id="@+id/btn_my_tours_test"
-        android:layout_below="@+id/btn_download_tour_test"
-        android:layout_centerHorizontal="true" />
-
-    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Export Realm"
+        android:layout_below="@+id/btn_download_tour_test"
+        android:layout_centerHorizontal="true"
+        android:text="My Tours Test" />
+
+    <Button
         android:id="@+id/btn_export_realm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:text="Export Realm" />
 
     <Button
+        android:id="@+id/btn_clear_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Clear Data"
-        android:id="@+id/btn_clear_data"
+        android:layout_above="@+id/btn_export_realm"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/btn_export_realm" />
+        android:text="Clear Data" />
 
 </RelativeLayout>
