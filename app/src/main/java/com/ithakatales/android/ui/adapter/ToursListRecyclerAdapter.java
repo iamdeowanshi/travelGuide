@@ -61,7 +61,7 @@ public class ToursListRecyclerAdapter extends RecyclerView.Adapter<ToursListRecy
         return attractions.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements Target {
         @Bind(R.id.layout_item_container) RelativeLayout layoutItemContainer;
         @Bind(R.id.text_name) TextView textName;
         @Bind(R.id.text_caption) TextView textCaption;
@@ -97,20 +97,20 @@ public class ToursListRecyclerAdapter extends RecyclerView.Adapter<ToursListRecy
             // load background to item root view
             if (attraction.getFeaturedImage() == null) return;
 
-            Picasso.with(context).load(attraction.getFeaturedImage().getUrl()).resize(600, 400).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    layoutItemContainer.setBackground(new BitmapDrawable(context.getResources(), bitmap));
-                }
+            Picasso.with(context).load(attraction.getFeaturedImage().getUrl()).resize(600, 400).into(this);
+        }
 
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-                }
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            layoutItemContainer.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+        }
 
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-                }
-            });
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
     }
 
