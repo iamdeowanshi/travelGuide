@@ -10,6 +10,8 @@ import java.util.Map;
  */
 public class Config {
 
+    public static final boolean DEBUG = true;
+
     //--------------------------------------------------------------------------------
     // API related constants/configurations - used in ApiModule & Api class, prefix with API_
     //--------------------------------------------------------------------------------
