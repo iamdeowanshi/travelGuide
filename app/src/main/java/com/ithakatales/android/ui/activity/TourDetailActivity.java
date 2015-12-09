@@ -38,6 +38,7 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -81,12 +82,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         initMapView();
         initTagViews();
 
-        webViewBeforeYouGo.setBackgroundColor(Color.TRANSPARENT);
-
-        long attractionId = getIntent().getLongExtra("attraction_id", 0);
-
         presenter.setViewInteractor(this);
-        presenter.loadAttraction(attractionId);
+        presenter.loadAttraction(getIntent().getLongExtra("attraction_id", 0));
     }
 
     @Override
@@ -136,6 +133,16 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         Timber.e(e.getMessage(), e);
     }
 
+    @OnClick(R.id.button_preview_player)
+    void onPreviewPlayerClick() {
+        bakery.snackShort(getContentView(), "Under Development !");
+    }
+
+    @OnClick(R.id.button_tour_action)
+    void onTourActionClick() {
+        bakery.snackShort(getContentView(), "Under Development !");
+    }
+
     private void initActivityTransitions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Slide transition = new Slide();
@@ -183,8 +190,9 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         textDuration.setText(durationInMinutes + " Mins");
 
         // load text details
-        textDescription.setText(attraction.getLongDescription());
+        textDescription.setText(attraction.getShortDescription());
         expandableTextKnowMore.setText(attraction.getLongDescription());
+        webViewBeforeYouGo.setBackgroundColor(Color.TRANSPARENT);
         webViewBeforeYouGo.loadData(attraction.getBeforeYouGo(), "text/html", "UTF-8");
         expandableTextCredits.setText(attraction.getCredits());
     }
@@ -202,12 +210,11 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             }
 
             @Override
-            public void onError() {
-
-            }
+            public void onError() {}
         });
     }
 
+    // TODO: 09/12/15 load actual data
     private void loadPoiMap() {
         mapView.setImage(ImageSource.asset("map_sample.jpg"));
 
