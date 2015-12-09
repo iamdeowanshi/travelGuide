@@ -10,6 +10,8 @@ import java.util.Map;
  */
 public class Config {
 
+    public static final boolean DEBUG = true;
+
     //--------------------------------------------------------------------------------
     // API related constants/configurations - used in ApiModule & Api class, prefix with API_
     //--------------------------------------------------------------------------------
@@ -18,7 +20,7 @@ public class Config {
     public static final String API_BASE_URL_MOCK        = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
-    public static final String API_BASE_URL = API_BASE_URL_MOCK;
+    public static final String API_BASE_URL = API_BASE_URL_DEVELOP;
 
     /**
      * GET: all cities as a list

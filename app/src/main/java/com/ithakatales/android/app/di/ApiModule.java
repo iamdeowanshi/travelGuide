@@ -51,13 +51,18 @@ public class ApiModule {
     @Singleton
     public RestAdapter provideRestAdapter(Endpoint endpoint, OkHttpClient client,
                                           RequestInterceptor interceptor, Gson gson) {
-        return new RestAdapter.Builder()
-                .setClient(new OkClient(client))
+        RestAdapter.Builder builder = new RestAdapter.Builder();
+
+        if (Config.DEBUG) {
+            builder.setLogLevel(RestAdapter.LogLevel.FULL);
+        }
+
+        builder.setClient(new OkClient(client))
                 .setEndpoint(endpoint)
                 .setRequestInterceptor(interceptor)
-                .setConverter(new GsonConverter(gson))
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .build();
+                .setConverter(new GsonConverter(gson));
+
+        return builder.build();
     }
 
     @Provides

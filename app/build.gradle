@@ -62,4 +62,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.github.aakira:expandable-layout:1.4.0@aar'
     compile 'com.ms-square:expandableTextView:0.1.4'
+
+    // custom map related
+    compile'com.davemorrissey.labs:subsampling-scale-image-view:3.1.4'
 }
