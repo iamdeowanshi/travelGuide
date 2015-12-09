@@ -165,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_knowmore_header"
                         expandableTextView:animDuration="200"
-                        expandableTextView:maxCollapsedLines="2">
+                        expandableTextView:maxCollapsedLines="3">
 
                         <TextView
                             android:id="@id/expandable_text"
