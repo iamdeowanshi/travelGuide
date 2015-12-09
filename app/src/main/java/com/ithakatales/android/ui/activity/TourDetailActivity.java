@@ -14,15 +14,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
 import com.ithakatales.android.data.model.TagType;
+import com.ithakatales.android.map.MapView;
+import com.ithakatales.android.map.Marker;
 import com.ithakatales.android.presenter.TourDetailPresenter;
 import com.ithakatales.android.presenter.TourDetailViewInteractor;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
@@ -53,10 +57,10 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.icon_type) ImageView iconType;
     @Bind(R.id.text_duration) TextView textDuration;
 
-    @Bind(R.id.image_blueprint) ImageView imageBluePrint;
+    @Bind(R.id.map_view) MapView mapView;
 
     @Bind(R.id.expandable_text_know_more) ExpandableTextView expandableTextKnowMore;
-    @Bind(R.id.expandable_text_before_you_go) ExpandableTextView expandableTextBeforeYouGo;
+    @Bind(R.id.web_view_before_you_go) WebView webViewBeforeYouGo;
     @Bind(R.id.expandable_text_credits) ExpandableTextView expandableTextCredits;
 
     @Bind(R.id.view_tag_type_one) View viewTagTypeOne;
@@ -73,8 +77,11 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         injectDependencies();
 
         initActivityTransitions();
-        setupToolbar();
+        initToolbar();
+        initMapView();
         initTagViews();
+
+        webViewBeforeYouGo.setBackgroundColor(Color.TRANSPARENT);
 
         long attractionId = getIntent().getLongExtra("attraction_id", 0);
 
@@ -138,11 +145,16 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
     }
 
-    private void setupToolbar() {
+    private void initToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
+    }
+
+    private void initMapView() {
+        mapView.setMarkerDrawable(R.drawable.icon_map_marker);
+        mapView.setMarkerSelectedDrawable(R.drawable.icon_map_marker_selected);
     }
 
     private void initTagViews() {
@@ -156,7 +168,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         if (attraction == null) return;
 
         loadFeaturedImage();
-        loadBlueprint();
+        loadPoiMap();
         loadTagTypes();
 
         // load titles
@@ -173,7 +185,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         // load text details
         textDescription.setText(attraction.getLongDescription());
         expandableTextKnowMore.setText(attraction.getLongDescription());
-        expandableTextBeforeYouGo.setText(attraction.getBeforeYouGo());
+        webViewBeforeYouGo.loadData(attraction.getBeforeYouGo(), "text/html", "UTF-8");
         expandableTextCredits.setText(attraction.getCredits());
     }
 
@@ -196,15 +208,14 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         });
     }
 
-    private void loadBlueprint() {
-        Picasso.with(this).load(attraction.getBlueprintUrl()).into(imageBluePrint);
-    }
+    private void loadPoiMap() {
+        mapView.setImage(ImageSource.asset("map_sample.jpg"));
 
-    private void applyPalette(Palette palette) {
-        int primaryDark = Color.BLACK;
-        int primary = Color.DKGRAY;
-        collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(primary));
-        collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
+        mapView.addMarker(new Marker(1, 175f, 445f, "Poi 1", "76 min"));
+        mapView.addMarker(new Marker(2, 400f, 200f, "Poi 2", "42 min"));
+        mapView.addMarker(new Marker(3, 500f, 420f, "Poi 2", "18 min"));
+        mapView.addMarker(new Marker(4, 895f, 555f, "Poi 4", "24 min"));
+        mapView.addMarker(new Marker(5, 1100f, 300f, "Poi 5", "35 min"));
     }
 
     private void loadTagTypes() {
@@ -238,6 +249,13 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         return viewTagTypeOne;
+    }
+
+    private void applyPalette(Palette palette) {
+        int primaryDark = Color.BLACK;
+        int primary = Color.DKGRAY;
+        collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(primary));
+        collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
     }
 
 }
