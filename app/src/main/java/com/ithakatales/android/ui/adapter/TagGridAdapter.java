@@ -1,6 +1,5 @@
 package com.ithakatales.android.ui.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +54,6 @@ public class TagGridAdapter extends BaseAdapter {
 
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.grid_item_tag, parent, false);
-
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
@@ -67,12 +65,11 @@ public class TagGridAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder {
         @Bind(R.id.icon_tag) ImageView iconTag;
         @Bind(R.id.text_tag_name) TextView textTagName;
 
         public ViewHolder(View view) {
-            super(view);
             ButterKnife.bind(this, view);
         }
 
