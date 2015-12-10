@@ -172,12 +172,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
 
         public void bindData(TourDownload tourDownload) {
             Attraction attraction = attractionRepo.find(tourDownload.getId());
-            Picasso.with(context)
-                    .load(new File(attraction.getFeaturedImage().getPath()))
-                    .placeholder(R.drawable.placeholder_ratio_3_2)
-                    .error(R.drawable.placeholder_ratio_3_2)
-                    .resize(600, 400)
-                    .into(this);
+
             textName.setText(attraction.getName());
             textCaption.setText(attraction.getCaption());
 
@@ -186,6 +181,13 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
             int progressDrawableId = progressValue < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
             progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
             progress.setProgress(progressValue);
+            
+            Picasso.with(context)
+                    .load(new File(attraction.getFeaturedImage().getPath()))
+                    .placeholder(R.drawable.placeholder_ratio_3_2)
+                    .error(R.drawable.placeholder_ratio_3_2)
+                    .resize(600, 400)
+                    .into(this);
         }
 
         @Override
