@@ -1,5 +1,6 @@
 package com.ithakatales.android.ui.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import com.ithakatales.android.R;
@@ -21,14 +22,17 @@ public class LaunchActivity extends BaseActivity {
 
     @OnClick(R.id.button_login)
     void launchLogin() {
-        startActivity(TestActivity.class, null);
-        finish();
+        launchActivity(TestActivity.class);
     }
 
     @OnClick(R.id.button_sneak_peak)
     void launchHomeAsGuest() {
-        startActivity(HomeActivity.class, null);
-        finish();
+        launchActivity(HomeActivity.class);
+    }
+
+    private void launchActivity(Class<? extends Activity> activityClass) {
+        startActivity(activityClass, null);
+        //finish();
     }
 
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_item_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:background="@drawable/placeholder_ratio_3_2">
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Tour Name"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/text_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_name"
+        android:gravity="center"
+        android:text="Some thing about tour"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/text_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingBottom="@dimen/spacing_tiny"
+        android:paddingLeft="@dimen/spacing_medium"
+        android:paddingStart="@dimen/spacing_medium"
+        android:text="47%"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white"
+        android:textSize="44dp"/>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignParentBottom="true"
+        android:indeterminate="false"
+        android:progress="47"
+        android:progressDrawable="@drawable/progress_tour_partial"/>
+
+    <Button
+        android:id="@+id/button_tour_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/spacing_large"
+        android:background="@drawable/bg_button_teal_rounded"
+        android:text="Start Tour"
+        android:textColor="@android:color/white"
+        android:visibility="gone"/>
+
+</RelativeLayout>

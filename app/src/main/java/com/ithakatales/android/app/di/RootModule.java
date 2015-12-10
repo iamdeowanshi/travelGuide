@@ -23,10 +23,12 @@ import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
 import com.ithakatales.android.ui.activity.test.DownloadTourTestActivity;
 import com.ithakatales.android.ui.activity.test.TestActivity;
+import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
 import com.ithakatales.android.ui.fragment.HomeFragment;
+import com.ithakatales.android.ui.fragment.MyToursFragment;
 import com.ithakatales.android.ui.fragment.NavigationDrawerFragment;
 import com.ithakatales.android.ui.fragment.TourListFragment;
 import com.ithakatales.android.util.Bakery;
@@ -67,11 +69,13 @@ import dagger.Provides;
                 HomeFragment.class,
                 NavigationDrawerFragment.class,
                 TourListFragment.class,
+                MyToursFragment.class,
 
                 // Adapters
                 ToursListRecyclerAdapter.class,
                 NavigationDrawerAdapter.class,
                 TagGridAdapter.class,
+                MyToursExpandableListAdapter.class,
 
                 // Presenters
                 SamplePresenterImpl.class,

@@ -2,8 +2,11 @@ package com.ithakatales.android.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,20 +100,37 @@ public class ToursListRecyclerAdapter extends RecyclerView.Adapter<ToursListRecy
             // load background to item root view
             if (attraction.getFeaturedImage() == null) return;
 
-            Picasso.with(context).load(attraction.getFeaturedImage().getUrl()).resize(600, 400).into(this);
+            Picasso.with(context)
+                    .load(attraction.getFeaturedImage().getUrl())
+                    .placeholder(R.drawable.placeholder_ratio_3_2)
+                    .error(R.drawable.placeholder_ratio_3_2)
+                    .resize(600, 400)
+                    .into(this);
         }
 
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             layoutItemContainer.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                public void onGenerated(Palette palette) {
+                    applyPalette(palette);
+                }
+            });
         }
 
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
+            layoutItemContainer.setBackground(errorDrawable);
         }
 
         @Override
         public void onPrepareLoad(Drawable placeHolderDrawable) {
+            layoutItemContainer.setBackground(placeHolderDrawable);
+        }
+
+        private void applyPalette(Palette palette) {
+            textName.setTextColor(palette.getLightMutedColor(Color.WHITE));
+            textCaption.setTextColor(palette.getDarkMutedColor(Color.WHITE));
         }
     }
 
