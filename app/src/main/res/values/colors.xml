@@ -10,4 +10,7 @@
 
     <color name="black_transparent_50">#80000000</color>
     <color name="gray_light">#dddddd</color>
+
+    <color name="progress_partial">#37abb7</color>
+    <color name="progress_full">#35D866</color>
 </resources>

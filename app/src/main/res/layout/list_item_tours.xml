@@ -3,7 +3,7 @@
     android:id="@+id/layout_item_container"
     android:layout_width="match_parent"
     android:layout_height="225dp"
-    android:background="@color/teal_normal">
+    android:background="@drawable/placeholder_ratio_3_2">
 
     <TextView
         android:id="@+id/text_name"

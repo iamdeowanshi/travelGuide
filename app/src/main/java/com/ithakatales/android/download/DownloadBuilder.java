@@ -170,6 +170,8 @@ public class DownloadBuilder {
 
         // creating poi audio downloads
         for (Poi poi : attraction.getPois()) {
+            if (poi.getAudio() == null) continue;
+
             audioDownloads.add(createAudioDownload(poi.getAudio(), tourDownload));
         }
 
@@ -202,6 +204,9 @@ public class DownloadBuilder {
         // creating poi image & audio image downloads
         for (Poi poi : attraction.getPois()) {
             imageDownloads.addAll(createImageDownloads(poi.getImages(), tourDownload));
+
+            if (poi.getAudio() == null) continue;
+
             imageDownloads.addAll(createImageDownloads(poi.getAudio().getImages(), tourDownload));
         }
 

@@ -198,20 +198,25 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     }
 
     private void loadFeaturedImage() {
-        Picasso.with(this).load(attraction.getFeaturedImage().getUrl()).resize(600, 600).into(imageFeatured, new Callback() {
-            @Override
-            public void onSuccess() {
-                Bitmap bitmap = ((BitmapDrawable) imageFeatured.getDrawable()).getBitmap();
-                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                    public void onGenerated(Palette palette) {
-                        applyPalette(palette);
+        Picasso.with(this)
+                .load(attraction.getFeaturedImage().getUrl())
+                .placeholder(R.drawable.placeholder_ratio_1_1)
+                .error(R.drawable.placeholder_ratio_1_1)
+                .resize(600, 600)
+                .into(imageFeatured, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Bitmap bitmap = ((BitmapDrawable) imageFeatured.getDrawable()).getBitmap();
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            public void onGenerated(Palette palette) {
+                                applyPalette(palette);
+                            }
+                        });
                     }
-                });
-            }
 
-            @Override
-            public void onError() {}
-        });
+                    @Override
+                    public void onError() {}
+                });
     }
 
     // TODO: 09/12/15 load actual data
@@ -259,8 +264,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     }
 
     private void applyPalette(Palette palette) {
-        int primaryDark = Color.BLACK;
-        int primary = Color.DKGRAY;
+        int primaryDark = ContextCompat.getColor(this, R.color.primary_dark);
+        int primary = ContextCompat.getColor(this, R.color.primary);
         collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(primary));
         collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
     }
