@@ -13,6 +13,7 @@ import com.ithakatales.android.data.repository.realm.ImageRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.TourDownloadRepositoryRealm;
 import com.ithakatales.android.download.DownloadBuilder;
 import com.ithakatales.android.download.TourDownloadService;
+import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.manager.DefaultDownloader;
 import com.ithakatales.android.presenter.concrete.NavigationDrawerPresenterImpl;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
@@ -93,6 +94,7 @@ import dagger.Provides;
 
                 // Download
                 TourDownloadService.class,
+                TourDownloader.class,
                 DownloadBuilder.class,
                 DefaultDownloader.class,
 

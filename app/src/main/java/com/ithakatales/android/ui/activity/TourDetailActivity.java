@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
 import com.ithakatales.android.data.model.TagType;
+import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.map.MapView;
 import com.ithakatales.android.map.Marker;
 import com.ithakatales.android.presenter.TourDetailPresenter;
@@ -46,8 +48,9 @@ import timber.log.Timber;
  */
 public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor {
 
-    @Inject Bakery bakery;
+    @Inject TourDownloader tourDownloader;
     @Inject TourDetailPresenter presenter;
+    @Inject Bakery bakery;
 
     @Bind(R.id.image_featured) ImageView imageFeatured;
 
@@ -68,6 +71,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.view_tag_type_two) View viewTagTypeTwo;
     @Bind(R.id.view_tag_type_three) View viewTagTypeThree;
 
+    @Bind(R.id.button_tour_action) Button buttonTourActon;
+
     private Attraction attraction;
 
     @Override
@@ -81,6 +86,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         initToolbar();
         initMapView();
         initTagViews();
+
+        buttonTourActon.setEnabled(false);
 
         presenter.setViewInteractor(this);
         presenter.loadAttraction(getIntent().getLongExtra("attraction_id", 0));
@@ -115,6 +122,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Override
     public void onAttractionLoadSuccess(Attraction attraction) {
+        buttonTourActon.setEnabled(true);
         this.attraction = attraction;
         loadAttractionDetails();
     }
@@ -140,7 +148,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_tour_action)
     void onTourActionClick() {
-        bakery.snackShort(getContentView(), "Under Development !");
+        //bakery.snackShort(getContentView(), "Under Development !");
+        tourDownloader.download(attraction);
     }
 
     private void initActivityTransitions() {

@@ -25,21 +25,21 @@ public class Config {
     /**
      * GET: all cities as a list
      */
-    public static final String API_CITIES               = "/cities";
+    public static final String API_CITIES               = "/mobile/cities";
 
     /**
      * GET: all attractions for a city with basic details.
      *
      * Query param : city_id : required
      */
-    public static final String API_ATTRACTIONS          = "/attractions";
+    public static final String API_ATTRACTIONS          = "/mobile/attractions";
 
     /**
      * GET: full information of an attraction including pois, audios & images.
      *
      * Path param : attraction_id : required
      */
-    public static final String API_ATTRACTION_INFO      = "/attractions/{attraction_id}";
+    public static final String API_ATTRACTION_INFO      = "/mobile/attractions/{attraction_id}";
 
     /**
      * POST: send an attraction download status after success full download.

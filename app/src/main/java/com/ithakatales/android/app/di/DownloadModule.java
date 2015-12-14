@@ -1,6 +1,7 @@
 package com.ithakatales.android.app.di;
 
 import com.ithakatales.android.download.DownloadBuilder;
+import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.TourStorage;
 import com.ithakatales.android.download.manager.DefaultDownloader;
 import com.ithakatales.android.download.manager.Downloader;
@@ -31,6 +32,12 @@ public class DownloadModule {
     @Singleton
     public DownloadBuilder provideDownloadBuilder() {
         return new DownloadBuilder();
+    }
+
+    @Provides
+    @Singleton
+    public TourDownloader provideTourDownloader() {
+        return new TourDownloader();
     }
 
     @Provides

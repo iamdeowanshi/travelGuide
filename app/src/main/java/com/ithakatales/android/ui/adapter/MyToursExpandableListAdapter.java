@@ -228,7 +228,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
         private void bindTotalImageDownloadProgress(AudioDownload dummyAudioDownload) {
             int totalCount = imageDownloadRepo.readByTourId(dummyAudioDownload.getTourId()).size();
             int successCount = imageDownloadRepo.readByTourAndStatus(dummyAudioDownload.getTourId(), DownloadStatus.SUCCESS).size();
-            String title = String.format("Images(%d/%d )", successCount, totalCount);
+            String title = String.format("Images(%d/%d)", successCount, totalCount);
             textTitle.setText(title);
             setProgress(imageDownloadRepo.getTotalProgressByTour(dummyAudioDownload.getTourId()));
         }
