@@ -28,15 +28,7 @@
         <activity android:name=".ui.activity.test.TestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestResultActivity"/>
-        <activity android:name=".ui.activity.test.DownloadTourTestActivity">
-            <intent-filter>
-                <action android:name="com.ithakatales.android.download.VIEW_TOUR_ACTION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".ui.activity.test.MyToursTestActivity"/>
-
-        <service android:name=".download.TourDownloadService"/>
 
     </application>
 

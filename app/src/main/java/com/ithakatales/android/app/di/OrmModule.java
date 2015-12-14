@@ -4,17 +4,11 @@ import android.content.Context;
 
 import com.ithakatales.android.app.Config;
 import com.ithakatales.android.data.repository.AttractionRepository;
-import com.ithakatales.android.data.repository.AudioDownloadRepository;
 import com.ithakatales.android.data.repository.AudioRepository;
-import com.ithakatales.android.data.repository.ImageDownloadRepository;
 import com.ithakatales.android.data.repository.ImageRepository;
-import com.ithakatales.android.data.repository.TourDownloadRepository;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
-import com.ithakatales.android.data.repository.realm.AudioDownloadRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioRepositoryRealm;
-import com.ithakatales.android.data.repository.realm.ImageDownloadRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.ImageRepositoryRealm;
-import com.ithakatales.android.data.repository.realm.TourDownloadRepositoryRealm;
 
 import javax.inject.Singleton;
 
@@ -61,24 +55,6 @@ public class OrmModule {
     @Singleton
     public ImageRepository provideImageRepository() {
         return new ImageRepositoryRealm();
-    }
-
-    @Provides
-    @Singleton
-    public TourDownloadRepository provideTourDownloadRepository() {
-        return new TourDownloadRepositoryRealm();
-    }
-
-    @Provides
-    @Singleton
-    public AudioDownloadRepository provideAudioDownloadRepository() {
-        return new AudioDownloadRepositoryRealm();
-    }
-
-    @Provides
-    @Singleton
-    public ImageDownloadRepository provideImageDownloadRepository() {
-        return new ImageDownloadRepositoryRealm();
     }
 
 }

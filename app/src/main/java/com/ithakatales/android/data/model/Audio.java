@@ -141,4 +141,11 @@ public class Audio extends RealmObject {
         this.downloadId = downloadId;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        return  (object instanceof  Audio)
+                && id == ((Audio)object).getId()
+                && downloadId == ((Audio)object).getDownloadId();
+    }
+
 }

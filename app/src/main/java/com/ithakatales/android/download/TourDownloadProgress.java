@@ -1,4 +1,7 @@
-package com.ithakatales.android.download.rework;
+package com.ithakatales.android.download;
+
+import com.ithakatales.android.data.model.Audio;
+import com.ithakatales.android.data.model.Image;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +15,9 @@ public class TourDownloadProgress {
     private int totalProgress;
     private int totalAudioProgress;
     private int totalImageProgress;
-    private Map<Long, Integer> progressMap = new HashMap<>();
+
+    private Map<Audio, Integer> audioProgressMap = new HashMap<>();
+    private Map<Image, Integer> imageProgressMap = new HashMap<>();
 
     public long getAttractionId() {
         return attractionId;
@@ -46,12 +51,20 @@ public class TourDownloadProgress {
         this.totalImageProgress = totalImageProgress;
     }
 
-    public Map<Long, Integer> getProgressMap() {
-        return progressMap;
+    public Map<Audio, Integer> getAudioProgressMap() {
+        return audioProgressMap;
     }
 
-    public void addProgressToMap(long downloadId, int progress) {
-        progressMap.put(downloadId, progress);
+    public Map<Image, Integer> getImageProgressMap() {
+        return imageProgressMap;
+    }
+
+    public void addToAudioProgress(Audio audio, int progress) {
+        audioProgressMap.put(audio, progress);
+    }
+
+    public void addToImageProgress(Image image, int progress) {
+        imageProgressMap.put(image, progress);
     }
 
 }

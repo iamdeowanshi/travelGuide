@@ -1,8 +1,6 @@
+/*
 package com.ithakatales.android.ui.adapter;
 
-import java.io.File;
-import java.util.List;
- 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.common.base.Strings;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
@@ -30,14 +27,19 @@ import com.ithakatales.android.download.DownloadStatus;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+*/
 /**
  * @author farhanali
- */
+ *//*
+
 public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
  
     @Inject Context context;
@@ -121,10 +123,12 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
             return inflater.inflate(R.layout.list_item_mytours_child_header, null);
         }
 
-        /*
+        */
+/*
          * getting some unexpected situation where convertView.getTag() is null other than on fist position,
          * that makes viewHolder object null, so some not so interesting condition checks.. !!
-         */
+         *//*
+
         ChildViewHolder viewHolder = (convertView != null)
                 ? (ChildViewHolder) convertView.getTag()
                 : null;
@@ -139,10 +143,12 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
         try {
             audioDownload = (AudioDownload) getChild(groupPosition, childPosition - 1);
         } catch (ArrayIndexOutOfBoundsException e) {
-            /*
+            */
+/*
              * will get exception on last row, which is used to show total image download progress,
              * so binding a dummy audio download object
-             */
+             *//*
+
             audioDownload = new AudioDownload();
             audioDownload.setId(-1);
             audioDownload.setTourId(((TourDownload) getGroup(groupPosition)).getId());
@@ -240,4 +246,4 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
 
-}
+}*/

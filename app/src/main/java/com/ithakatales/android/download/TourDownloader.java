@@ -1,224 +1,246 @@
 package com.ithakatales.android.download;
 
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Binder;
-import android.os.IBinder;
+import android.app.DownloadManager;
+import android.net.Uri;
+import android.os.FileObserver;
 
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.data.model.AudioDownload;
-import com.ithakatales.android.data.model.ImageDownload;
-import com.ithakatales.android.data.model.TourDownload;
+import com.ithakatales.android.data.model.Audio;
+import com.ithakatales.android.data.model.Image;
+import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.repository.AttractionRepository;
-import com.ithakatales.android.data.repository.AudioDownloadRepository;
-import com.ithakatales.android.data.repository.ImageDownloadRepository;
-import com.ithakatales.android.data.repository.RepoCallback;
-import com.ithakatales.android.data.repository.TourDownloadRepository;
-import com.ithakatales.android.download.manager.DownloadProgressListener;
-import com.ithakatales.android.download.manager.DownloadStatusListener;
-import com.ithakatales.android.download.manager.Downloadable;
-import com.ithakatales.android.download.manager.Downloader;
-import com.ithakatales.android.util.Bakery;
-import com.ithakatales.android.util.Checksum;
+import com.ithakatales.android.data.repository.AudioRepository;
+import com.ithakatales.android.data.repository.ImageRepository;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 /**
  * @author Farhan Ali
  */
-public class TourDownloader implements DownloadProgressListener, DownloadStatusListener, TourDownloadClickReceiver.TourIdProvider {
+public class TourDownloader {
 
-    public static final String ACTION_VIEW_TOUR = "com.ithakatales.android.download.VIEW_TOUR_ACTION";
-    public static final String EXTRA_TOUR_ID    = "tour_id";
-
-    @Inject Context context;
-
-    @Inject Downloader downloader;
-    @Inject DownloadBuilder downloadBuilder;
+    @Inject DownloadManager downloadManager;
+    @Inject TourStorage tourStorage;
 
     @Inject AttractionRepository attractionRepo;
-    @Inject TourDownloadRepository tourDownloadRepo;
-    @Inject AudioDownloadRepository audioDownloadRepo;
-    @Inject ImageDownloadRepository imageDownloadRepo;
-
-    @Inject Bakery bakery;
-
-    private Map<Long, TourDownloadObserver> tourDownloadObserverMap = new HashMap<>();
+    @Inject AudioRepository audioRepo;
+    @Inject ImageRepository imageRepo;
 
     public TourDownloader() {
         Injector.instance().inject(this);
-
-        downloader.setProgressListener(this);
-        downloader.setStatusListener(this);
-        registerNotificationClickReceiver();
     }
 
-    public void subscribe(long attractionId, TourDownloadObserver observer) {
-        tourDownloadObserverMap.put(attractionId, observer);
-    }
-
-    public void unSubscribe(long attractionId) {
-        tourDownloadObserverMap.remove(attractionId);
-    }
-
-    public TourDownload download(final Attraction attraction) {
+    public void download(Attraction attraction) {
         attractionRepo.save(attraction);
 
-        final TourDownload tourDownload = downloadBuilder.createTourDownload(attraction);
-        tourDownloadRepo.saveAsync(tourDownload, new RepoCallback() {
-            @Override
-            public void onSuccess() {
-                List<Downloadable> downloadables = new ArrayList<Downloadable>();
-                downloadables.addAll(downloadBuilder.getDownloadablesForTourAudios(tourDownload));
-                downloadables.addAll(downloadBuilder.getDownloadablesForTourImages(tourDownload));
-                downloadables.add(downloadBuilder.getPreviewAudioDownloadable(tourDownload));
-                downloadables.add(downloadBuilder.getFeaturedImageDownloadable(tourDownload));
-                downloadables.add(downloadBuilder.getBluePrintImageDownloadable(attraction));
+        downloadBlueprint(attraction);
+        downloadFeaturedImage(attraction);
+        downloadPreviewAudio(attraction);
 
-                downloader.download(downloadables);
-            }
+        downloadImages(attraction.getImages(), attraction.getId());
+        downloadAudios(attraction.getAudios(), attraction.getId());
 
-            @Override
-            public void onError(Throwable e) {
-            }
-        });
-
-        return tourDownload;
-    }
-
-    @Override
-    public void progressUpdated(Downloadable downloadable) {
-        // get status, if completed
-        String status = (downloadable.getProgress() == 100)
-                ? getStatusAfterChecksumVerification(downloadable)
-                : DownloadStatus.DOWNLOADING;
-
-        // update download progress & status
-        long tourId = updateDownload(downloadable, status);
-        updateTourDownloadAndNotify(tourId);
-    }
-
-    @Override
-    public void success(Downloadable downloadable) {
-        // updating success status is done in progress updated because some unexpected call-
-        // is coming to progressUpdated method even after success of a download
-        downloader.unregisterProgressObserver(downloadable);
-    }
-
-    @Override
-    public void failed(Downloadable downloadable, String message) {
-        updateDownload(downloadable, DownloadStatus.FAILED);
-        downloader.unregisterProgressObserver(downloadable);
-    }
-
-    @Override
-    public void cancelled(Downloadable downloadable, String message) {
-        updateDownload(downloadable, DownloadStatus.FAILED);
-        downloader.unregisterProgressObserver(downloadable);
-    }
-
-    @Override
-    public void paused(Downloadable downloadable, String message) {
-        updateDownload(downloadable, DownloadStatus.PAUSED);
-    }
-
-    @Override
-    public long getTourIdByDownloadable(Downloadable downloadable) {
-        return downloadBuilder.getTourIdByDownloadable(downloadable);
-    }
-
-    private void registerNotificationClickReceiver() {
-        IntentFilter intentFilter = new IntentFilter(Downloader.ACTION_NOTIFICATION_CLICKED);
-        TourDownloadClickReceiver receiver = new TourDownloadClickReceiver(this);
-        context.registerReceiver(receiver, intentFilter);
-    }
-
-    private long updateDownload(Downloadable downloadable, String status) {
-        // update progress and status if audio download
-        AudioDownload audioDownload = downloadBuilder.getAudioDownloadFromMap(downloadable);
-        if (audioDownload != null) {
-            audioDownloadRepo.updateProgressAndStatus(audioDownload.getId(), downloadable.getProgress(), status);
-
-            return audioDownload.getTourId();
-        }
-
-        // update progress and status if image download
-        ImageDownload imageDownload = downloadBuilder.getImageDownloadFromMap(downloadable);
-        if (imageDownload != null) {
-            imageDownloadRepo.updateProgressAndStatus(imageDownload.getId(), downloadable.getProgress(), status);
-
-            return imageDownload.getTourId();
-        }
-
-        return 0;
-    }
-
-    private void updateTourDownloadAndNotify(long tourId) {
-        updateTourDownload(tourId);
-        notifyTourDownloadStatusChange(tourId);
-    }
-
-    private void updateTourDownload(long tourId) {
-        int totalTourProgress = tourDownloadRepo.getTotalProgress(tourId);
-
-        String status = getTourDownloadStatus(tourId);
-
-        tourDownloadRepo.updateProgressAndStatus(tourId, totalTourProgress, status);
-    }
-
-    private void notifyTourDownloadStatusChange(long tourId) {
-        TourDownload tourDownload = tourDownloadRepo.find(tourId);
-        TourDownloadObserver observer = tourDownloadObserverMap.get(tourDownload.getAttractionId());
-        if (observer != null) {
-            observer.downloadStatusChanged(tourDownload);
+        for (Poi poi : attraction.getPois()) {
+            downloadAudio(poi.getAudio(), attraction.getId());
+            downloadImages(poi.getImages(), attraction.getId());
         }
     }
 
-    private String getTourDownloadStatus(long tourId) {
-        int audioFailedCount = audioDownloadRepo.readByTourAndStatus(tourId, DownloadStatus.FAILED).size();
-        int imageFailedCount = imageDownloadRepo.readByTourAndStatus(tourId, DownloadStatus.FAILED).size();
-
-        if (audioFailedCount > 0 || imageFailedCount > 0) {
-            return DownloadStatus.FAILED;
-        }
-
-        int audioDownloadingCount = audioDownloadRepo.readByTourAndStatus(tourId, DownloadStatus.DOWNLOADING).size();
-        int imageDownloadingCount = imageDownloadRepo.readByTourAndStatus(tourId, DownloadStatus.DOWNLOADING).size();
-
-        if (audioDownloadingCount > 0 || imageDownloadingCount > 0) {
-            return DownloadStatus.DOWNLOADING;
-        }
+    public String getAttractionStatus(Attraction attraction) {
+        // get all download id's - images and audios - check status for each
+            // if failed : return failed
+            // if downloading : return downloading
+            // if completed - verify checksum
+            // if checksum failed return failed
+            // continue loop
 
         return DownloadStatus.SUCCESS;
     }
 
-    private String getStatusAfterChecksumVerification(Downloadable downloadable) {
-        return verifyCheckSum(downloadable)
-                ? DownloadStatus.SUCCESS
-                : DownloadStatus.FAILED;
+    public void listenForProgress(long attractionId, final TourDownloadProgressListener listener) {
+        new FileObserver(tourStorage.getTourDir(attractionId).getPath()) {
+            @Override
+            public void onEvent(int event, String path) {
+                switch (event) {
+                    case FileObserver.MODIFY :
+                        Timber.d("File modified: " + path);
+                        break;
+                }
+                listener.onProgressChange(null);
+            }
+        }.startWatching();
     }
 
-    private boolean verifyCheckSum(Downloadable downloadable) {
-        String checkSum = getCheckSumFromUrl(downloadable.getUrl());
+    private void downloadBlueprint(Attraction attraction) {
+        String title = attraction.getName() + " blueprint";
+        String fileName = "/blueprint" + getExtensionFromUrl(attraction.getBlueprintUrl());
+        String destination = tourStorage.getTourDir(attraction.getId()).getAbsolutePath() + fileName;
+        enqueueDownload(title, attraction.getBlueprintUrl(), destination);
 
-        return (checkSum != null) && Checksum.checkSHA1(checkSum, new File(downloadable.getDestination()));
+        attractionRepo.updateBlueprintPath(attraction.getId(), destination);
     }
 
-    private String getCheckSumFromUrl(String url) {
-        try {
-            return url.split("-")[1];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return null;
+    private void downloadFeaturedImage(Attraction attraction) {
+        Image featuredImage = attraction.getFeaturedImage();
+
+        if (featuredImage == null) return;
+
+        String fileName = "/featured" + getExtensionFromUrl(featuredImage.getUrl());
+        String destination = tourStorage.getTourDir(attraction.getId()).getAbsolutePath() + fileName;
+        long downloadId = enqueueDownload(featuredImage.getName(), featuredImage.getUrl(), destination);
+
+        updateImageDownloadInfo(featuredImage.getId(), downloadId, destination);
+    }
+
+    private void downloadPreviewAudio(Attraction attraction) {
+        Audio previewAudio = attraction.getPreviewAudio();
+
+        if (previewAudio == null) return;
+
+        String fileName = "/preview" + getExtensionFromUrl(previewAudio.getEncUrl());
+        String destination = tourStorage.getTourDir(attraction.getId()).getAbsolutePath() + fileName;
+        long downloadId = enqueueDownload(previewAudio.getName(), previewAudio.getEncUrl(), destination);
+
+        updateAudioDownloadInfo(previewAudio.getId(), downloadId, destination);
+    }
+
+    private void downloadAudios(List<Audio> audios, long tourId) {
+        if (audios == null) return;
+
+        for (Audio audio : audios) {
+            downloadAudio(audio, tourId);
         }
+    }
+
+    private void downloadAudio(Audio audio, long tourId) {
+        if (audio == null) return;
+
+        // download audio
+        String destination = getAudioPath(audio, tourId);
+        long downloadId = enqueueDownload(audio.getName(), audio.getEncUrl(), destination);
+
+        updateAudioDownloadInfo(audio.getId(), downloadId, destination);
+
+        // download images within an audio
+        downloadImages(audio.getImages(), tourId);
+    }
+
+    private void downloadImages(List<Image> images, long tourId) {
+        if (images == null) return;
+
+        for (Image image : images) {
+            downloadImage(image, tourId);
+        }
+    }
+
+    private void downloadImage(Image image, long tourId) {
+        if (image == null) return;
+
+        String destination = getImagePath(image, tourId);
+        long downloadId = enqueueDownload(image.getName(), image.getUrl(), destination);
+
+        updateImageDownloadInfo(image.getId(), downloadId, destination);
+    }
+
+    private long enqueueDownload(String title, String url, String destination) {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url))
+                .setTitle(title)
+                .setDestinationUri(Uri.fromFile(new File(destination)))
+                .setVisibleInDownloadsUi(false)
+                .setAllowedNetworkTypes(android.app.DownloadManager.Request.NETWORK_WIFI
+                        | android.app.DownloadManager.Request.NETWORK_MOBILE);
+
+        return downloadManager.enqueue(request);
+    }
+
+    private String getAudioPath(Audio audio, long tourId) {
+        String audioName = audio.getName().replace(" ", "_");
+        return tourStorage.getAudioDir(tourId)
+                .getAbsolutePath() + "/" + audio.getId() + "_" + audioName;
+    }
+
+    private String getImagePath(Image image, long tourId) {
+        String imageName = image.getName().replace(" ", "_");
+        return tourStorage.getImagesDir(tourId)
+                .getAbsolutePath() + "/" + image.getId() + "_" + imageName + getExtensionFromUrl(image.getUrl());
+    }
+
+    private String getExtensionFromUrl(String url) {
+        try {
+            String extension = url.substring(url.lastIndexOf("."));
+            int ampersandIndex = extension.indexOf("&");
+
+            return ampersandIndex != -1
+                    ? extension.substring(0, ampersandIndex)
+                    : extension;
+        } catch (StringIndexOutOfBoundsException e) {
+            return "";
+        }
+    }
+
+    private void updateAudioDownloadInfo(long audioId, long downloadId, String path) {
+        audioRepo.updateDownloadId(audioId, downloadId);
+        audioRepo.updatePath(audioId, path);
+    }
+
+    private void updateImageDownloadInfo(long imageId, long downloadId, String path) {
+        imageRepo.updateDownloadId(imageId, downloadId);
+        imageRepo.updatePath(imageId, path);
+    }
+
+
+
+
+    // -----------------------------------------------------------------------------------
+    // TODO: 15/12/15 listener/status related methods - move to other classes
+    // -----------------------------------------------------------------------------------
+
+    private List<Long> getDownloadIds(long attractionId) {
+        Attraction attraction = attractionRepo.find(attractionId);
+
+        List<Long> ids = new ArrayList<>();
+
+        ids.add(attraction.getFeaturedImage().getDownloadId());
+        ids.add(attraction.getPreviewAudio().getDownloadId());
+
+        ids.addAll(getAudioDownloadIds(attraction.getAudios()));
+        ids.addAll(getImageDownloadIds(attraction.getImages()));
+
+        for (Poi poi : attraction.getPois()) {
+            ids.add(poi.getAudio().getDownloadId());
+            ids.addAll(getImageDownloadIds(poi.getAudio().getImages()));
+            ids.addAll(getImageDownloadIds(poi.getImages()));
+        }
+
+        return ids;
+    }
+
+    private List<Long> getAudioDownloadIds(List<Audio> audios) {
+        List<Long> ids = new ArrayList<>();
+
+        for (Audio audio : audios) {
+            ids.add(audio.getDownloadId());
+            ids.addAll(getImageDownloadIds(audio.getImages()));
+        }
+
+        return ids;
+    }
+
+    private List<Long> getImageDownloadIds(List<Image> images) {
+        List<Long> ids = new ArrayList<>();
+
+        for (Image image : images) {
+            ids.add(image.getDownloadId());
+        }
+
+        return ids;
     }
 
 }

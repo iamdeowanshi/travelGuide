@@ -26,7 +26,9 @@ import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
 import com.ithakatales.android.data.model.TagType;
-import com.ithakatales.android.download.rework.TourDownloader;
+import com.ithakatales.android.download.TourDownloadProgress;
+import com.ithakatales.android.download.TourDownloadProgressListener;
+import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.map.MapView;
 import com.ithakatales.android.map.Marker;
 import com.ithakatales.android.presenter.TourDetailPresenter;
@@ -148,6 +150,14 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_tour_action)
     void onTourActionClick() {
+        // TODO: 15/12/15 move code
+        tourDownloader.listenForProgress(attraction.getId(), new TourDownloadProgressListener() {
+            @Override
+            public void onProgressChange(TourDownloadProgress tourDownloadProgress) {
+                Timber.d("Download progress updated");
+            }
+        });
+
         //bakery.snackShort(getContentView(), "Under Development !");
         tourDownloader.download(attraction);
     }
