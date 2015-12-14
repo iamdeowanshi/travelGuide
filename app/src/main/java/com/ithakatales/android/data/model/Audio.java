@@ -34,6 +34,8 @@ public class Audio extends RealmObject {
     @SerializedName("images")
     private RealmList<Image> images;
     private boolean isPlayed = false;
+    // download related details
+    private long downloadId;
 
     public long getId() {
         return id;
@@ -129,6 +131,14 @@ public class Audio extends RealmObject {
 
     public void setIsPlayed(boolean isPlayed) {
         this.isPlayed = isPlayed;
+    }
+
+    public long getDownloadId() {
+        return downloadId;
+    }
+
+    public void setDownloadId(long downloadId) {
+        this.downloadId = downloadId;
     }
 
 }

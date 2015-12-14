@@ -26,7 +26,7 @@ import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
 import com.ithakatales.android.data.model.TagType;
-import com.ithakatales.android.download.TourDownloader;
+import com.ithakatales.android.download.rework.TourDownloader;
 import com.ithakatales.android.map.MapView;
 import com.ithakatales.android.map.Marker;
 import com.ithakatales.android.presenter.TourDetailPresenter;

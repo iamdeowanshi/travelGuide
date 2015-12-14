@@ -20,26 +20,26 @@ public class Config {
     public static final String API_BASE_URL_MOCK        = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
-    public static final String API_BASE_URL = API_BASE_URL_DEVELOP;
+    public static final String API_BASE_URL = API_BASE_URL_MOCK;
 
     /**
      * GET: all cities as a list
      */
-    public static final String API_CITIES               = "/mobile/cities";
+    public static final String API_CITIES               = "/cities";
 
     /**
      * GET: all attractions for a city with basic details.
      *
      * Query param : city_id : required
      */
-    public static final String API_ATTRACTIONS          = "/mobile/attractions";
+    public static final String API_ATTRACTIONS          = "/attractions";
 
     /**
      * GET: full information of an attraction including pois, audios & images.
      *
      * Path param : attraction_id : required
      */
-    public static final String API_ATTRACTION_INFO      = "/mobile/attractions/{attraction_id}";
+    public static final String API_ATTRACTION_INFO      = "/attractions/{attraction_id}";
 
     /**
      * POST: send an attraction download status after success full download.
@@ -68,7 +68,7 @@ public class Config {
 
     // Headers required to be added by interceptor
     public static final Map<String, String> API_HEADERS = new HashMap<String, String>() {{
-        put("User-Agent", "Ithaka-Tales-App");
+        put("User-Agent", "Ithaka-Tales-Android-App");
         put("Content-Type", "application/json");
     }};
 

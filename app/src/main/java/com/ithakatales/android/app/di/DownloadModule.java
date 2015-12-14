@@ -1,5 +1,8 @@
 package com.ithakatales.android.app.di;
 
+import android.app.DownloadManager;
+import android.content.Context;
+
 import com.ithakatales.android.download.DownloadBuilder;
 import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.TourStorage;
@@ -24,6 +27,12 @@ public class DownloadModule {
 
     @Provides
     @Singleton
+    public DownloadManager provideDownloadManager(Context context) {
+        return (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    }
+
+    @Provides
+    @Singleton
     public Downloader provideDownloader() {
         return new DefaultDownloader();
     }
@@ -38,6 +47,13 @@ public class DownloadModule {
     @Singleton
     public TourDownloader provideTourDownloader() {
         return new TourDownloader();
+    }
+
+
+    @Provides
+    @Singleton
+    public com.ithakatales.android.download.rework.TourDownloader provideTourDownloaderNew() {
+        return new com.ithakatales.android.download.rework.TourDownloader();
     }
 
     @Provides

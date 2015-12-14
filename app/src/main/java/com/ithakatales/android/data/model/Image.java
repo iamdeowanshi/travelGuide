@@ -30,6 +30,8 @@ public class Image extends RealmObject {
     private String updatedAt;
     @SerializedName("deletedAt")
     private String deletedAt;
+    // download related details
+    private long downloadId;
 
     public long getId() {
         return id;
@@ -109,6 +111,14 @@ public class Image extends RealmObject {
 
     public void setDeletedAt(String deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public long getDownloadId() {
+        return downloadId;
+    }
+
+    public void setDownloadId(long downloadId) {
+        this.downloadId = downloadId;
     }
 
 }

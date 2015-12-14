@@ -97,6 +97,7 @@ import dagger.Provides;
                 TourDownloader.class,
                 DownloadBuilder.class,
                 DefaultDownloader.class,
+                com.ithakatales.android.download.rework.TourDownloader.class,
 
                 // Utilities
                 PreferenceUtil.class,
