@@ -6,8 +6,6 @@ import android.content.Context;
 import com.ithakatales.android.download.TourDownloadProgressReader;
 import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.TourStorage;
-import com.ithakatales.android.download.manager.DefaultDownloader;
-import com.ithakatales.android.download.manager.Downloader;
 
 import javax.inject.Singleton;
 

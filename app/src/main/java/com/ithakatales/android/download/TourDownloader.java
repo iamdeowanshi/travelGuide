@@ -67,7 +67,11 @@ public class TourDownloader {
     }
 
     public void stopProgressListening(long attractionId) {
-        progressObserverMap.get(attractionId).stopWatching();
+        TourDownloadProgressObserver observer = progressObserverMap.get(attractionId);
+
+        if (observer != null) {
+            observer.stopWatching();
+        }
     }
 
     private void downloadBlueprint(Attraction attraction) {

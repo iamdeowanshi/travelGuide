@@ -2,8 +2,6 @@ package com.ithakatales.android.download.model;
 
 import android.app.DownloadManager;
 
-import com.ithakatales.android.data.model.Audio;
-import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.util.Checksum;
 
 import java.io.File;
@@ -89,15 +87,13 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
         for (AudioDownloadProgress audioDownload :  audioDownloadProgresses) {
             audioBytesTotal += audioDownload.getBytesTotal();
             audioBytesDownloaded += audioDownload.getBytesDownloaded();
-            Audio audio = audioDownload.getAudio();
-            updateStatus(audioDownload.getStatus(), audio.getEncUrl(), audio.getPath());
+            updateStatus(audioDownload.getStatus(), audioDownload.getUrl(), audioDownload.getPath());
         }
 
         for (ImageDownloadProgress imageDownload : imageDownloadProgresses) {
             imageBytesTotal += imageDownload.getBytesTotal();
             imageBytesDownloaded += imageDownload.getBytesDownloaded();
-            Image image = imageDownload.getImage();
-            updateStatus(imageDownload.getStatus(), image.getUrl(), image.getPath());
+            updateStatus(imageDownload.getStatus(), imageDownload.getUrl(), imageDownload.getPath());
         }
 
         try {
@@ -106,10 +102,21 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
 
             bytesTotal = imageBytesTotal + audioBytesTotal;
             bytesDownloaded = imageBytesDownloaded + audioBytesDownloaded;
-            progress = (int) ((bytesDownloaded * 100l) / bytesTotal);
+            int tempProgress = (int) ((bytesDownloaded * 100l) / bytesTotal);
+            progress = tempProgress >= progress ? tempProgress : progress;
         } catch (Exception e) {
 
         }
+    }
+
+    public int getDownloadedImageCount() {
+        int count = 0;
+
+        for (ImageDownloadProgress download : imageDownloadProgresses) {
+            count += download.getProgress() == 100 ? 1 : 0;
+        }
+
+        return count;
     }
 
     // TODO: 15/12/15 code readability should be improved
@@ -127,7 +134,7 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
                 status = DownloadManager.STATUS_FAILED;
                 break;
             case DownloadManager.STATUS_SUCCESSFUL:
-                status = getStatusAfterChecksumVerification(url, filePath);
+                status = DownloadManager.STATUS_SUCCESSFUL;//getStatusAfterChecksumVerification(url, filePath);
                 break;
         }
     }

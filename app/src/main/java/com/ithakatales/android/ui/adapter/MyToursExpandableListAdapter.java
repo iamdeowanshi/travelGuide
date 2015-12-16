@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.data.model.Audio;
 import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.data.repository.AudioRepository;
 import com.ithakatales.android.download.TourDownloadProgressListener;
@@ -29,7 +26,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +63,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
 
     @Override
     public void onProgressChange(final TourDownloadProgress tourDownloadProgress) {
-        
+
     }
 
     @Override
@@ -244,17 +240,14 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
                 return;
             }
 
-            textTitle.setText(audioDownload.getAudio().getName());
+            textTitle.setText(audioDownload.getAudioName());
             setProgress(audioDownload.getProgress());
         }
 
         private void bindTotalImageDownloadProgress(Attraction attraction) {
-            TourDownloadProgress tourDownloadProgress = downloadProgressMap.get(attraction.getId());
-            /*float total = tourDownloadProgress.getImageBytesTotal() / 1024 / 1024;
-            float downloaded = tourDownloadProgress.getImageBytesDownloaded() / 1024 / 1024;
-            String title = String.format("Images(%f/%f)", Math.round(downloaded * 10d) / 10d, Math.round(total * 10d) / 10d);*/
-            textTitle.setText("Images");
-            setProgress(tourDownloadProgress.getImageProgress());
+            TourDownloadProgress progress = downloadProgressMap.get(attraction.getId());
+            textTitle.setText(String.format("Images (%d/%d)", progress.getDownloadedImageCount(), progress.getImageDownloadProgresses().size()));
+            setProgress(progress.getImageProgress());
         }
 
         private void setProgress(int progressValue) {

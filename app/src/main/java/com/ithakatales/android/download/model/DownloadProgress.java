@@ -5,10 +5,21 @@ package com.ithakatales.android.download.model;
  */
 public abstract class DownloadProgress<T extends DownloadProgress> {
 
+    protected long downloadId;
     protected int progress;
     protected long bytesTotal;
     protected long bytesDownloaded;
     protected int status;
+
+    public long getDownloadId() {
+        return downloadId;
+    }
+
+    public T setDownloadId(long downloadId) {
+        this.downloadId = downloadId;
+
+        return (T) this;
+    }
 
     public int getProgress() {
         return progress;

@@ -1,7 +1,6 @@
 package com.ithakatales.android.download;
 
 import android.app.DownloadManager;
-import android.content.Context;
 import android.database.Cursor;
 
 import com.ithakatales.android.app.di.Injector;
@@ -37,6 +36,8 @@ public class TourDownloadProgressReader {
     public TourDownloadProgress readProgress(long attractionId) {
         Attraction attraction = readAttractionFromRealm(attractionId);
 
+        if (attraction ==  null) return null;
+
         TourDownloadProgress downloadProgress = new TourDownloadProgress();
 
         downloadProgress.setAttractionId(attraction.getId());
@@ -70,7 +71,11 @@ public class TourDownloadProgressReader {
         ProgressInfo info = readInfo(audio.getDownloadId());
 
         return new AudioDownloadProgress()
-                .setAudio(audio)
+                .setDownloadId(audio.getDownloadId())
+                .setAudioId(audio.getId())
+                .setUrl(audio.getEncUrl())
+                .setPath(audio.getPath())
+                .setAudioName(audio.getName())
                 .setProgress(info.progress)
                 .setBytesDownloaded(info.bytesDownloaded)
                 .setBytesTotal(info.bytesTotal)
@@ -91,7 +96,11 @@ public class TourDownloadProgressReader {
         ProgressInfo info = readInfo(image.getDownloadId());
 
         return new ImageDownloadProgress()
-                .setImage(image)
+                .setDownloadId(image.getDownloadId())
+                .setImageId(image.getId())
+                .setUrl(image.getUrl())
+                .setPath(image.getPath())
+                .setImageName(image.getName())
                 .setProgress(info.progress)
                 .setBytesDownloaded(info.bytesDownloaded)
                 .setBytesTotal(info.bytesTotal)
