@@ -8,6 +8,8 @@ import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.ImageRepositoryRealm;
+import com.ithakatales.android.download.TourDownloadProgressObserver;
+import com.ithakatales.android.download.TourDownloadProgressReader;
 import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.manager.DefaultDownloader;
 import com.ithakatales.android.presenter.concrete.NavigationDrawerPresenterImpl;
@@ -18,6 +20,7 @@ import com.ithakatales.android.ui.activity.HomeActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
 import com.ithakatales.android.ui.activity.test.TestActivity;
+import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
@@ -68,6 +71,7 @@ import dagger.Provides;
                 ToursListRecyclerAdapter.class,
                 NavigationDrawerAdapter.class,
                 TagGridAdapter.class,
+                MyToursExpandableListAdapter.class,
 
                 // Presenters
                 SamplePresenterImpl.class,
@@ -82,8 +86,9 @@ import dagger.Provides;
 
                 // Download
                 TourDownloader.class,
+                TourDownloadProgressReader.class,
                 DefaultDownloader.class,
-                TourDownloader.class,
+                TourDownloadProgressObserver.class,
 
                 // Utilities
                 PreferenceUtil.class,

@@ -30,13 +30,17 @@ public class OrmModule {
 
     @Provides
     @Singleton
-    public Realm provideRealm(Context context) {
-        RealmConfiguration config = new RealmConfiguration.Builder(context)
+    public Realm provideRealm(RealmConfiguration config) {
+        return Realm.getInstance(config);
+    }
+
+    @Provides
+    @Singleton
+    public RealmConfiguration provideRealmConfiguration(Context context) {
+        return new RealmConfiguration.Builder(context)
                 .name(Config.DB_NAME)
                 .schemaVersion(Config.DB_VERSION)
                 .build();
-
-        return Realm.getInstance(config);
     }
 
     @Provides

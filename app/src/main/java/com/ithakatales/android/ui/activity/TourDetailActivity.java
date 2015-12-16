@@ -26,7 +26,7 @@ import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
 import com.ithakatales.android.data.model.TagType;
-import com.ithakatales.android.download.TourDownloadProgress;
+import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.ithakatales.android.download.TourDownloadProgressListener;
 import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.map.MapView;
@@ -150,16 +150,23 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_tour_action)
     void onTourActionClick() {
+        //bakery.snackShort(getContentView(), "Under Development !");
+        tourDownloader.download(attraction);
+
         // TODO: 15/12/15 move code
-        tourDownloader.listenForProgress(attraction.getId(), new TourDownloadProgressListener() {
+        tourDownloader.startProgressListening(attraction.getId(), new TourDownloadProgressListener() {
             @Override
-            public void onProgressChange(TourDownloadProgress tourDownloadProgress) {
-                Timber.d("Download progress updated");
+            public void onProgressChange(TourDownloadProgress progress) {
+                Timber.d(String.format("total: %d | downloaded: %d | progress: %d | status: %d",
+                        progress.getBytesTotal(), progress.getBytesDownloaded(),
+                        progress.getProgress(), progress.getStatus()));
+
+                if (progress.getProgress() == 100) {
+                    tourDownloader.stopProgressListening(attraction.getId());
+                }
             }
         });
 
-        //bakery.snackShort(getContentView(), "Under Development !");
-        tourDownloader.download(attraction);
     }
 
     private void initActivityTransitions() {

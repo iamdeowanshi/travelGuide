@@ -121,11 +121,4 @@ public class Image extends RealmObject {
         this.downloadId = downloadId;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        return  (object instanceof  Image)
-                && id == ((Image)object).getId()
-                && downloadId == ((Image)object).getDownloadId();
-    }
-
 }

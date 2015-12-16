@@ -1,10 +1,11 @@
-/*
 package com.ithakatales.android.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,42 +19,55 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.Audio;
-import com.ithakatales.android.data.model.AudioDownload;
-import com.ithakatales.android.data.model.TourDownload;
 import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.data.repository.AudioRepository;
-import com.ithakatales.android.data.repository.ImageDownloadRepository;
-import com.ithakatales.android.download.DownloadStatus;
+import com.ithakatales.android.download.TourDownloadProgressListener;
+import com.ithakatales.android.download.TourDownloader;
+import com.ithakatales.android.download.model.AudioDownloadProgress;
+import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-*/
 /**
  * @author farhanali
- *//*
+ */
 
-public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
- 
+public class MyToursExpandableListAdapter extends BaseExpandableListAdapter implements TourDownloadProgressListener {
+
     @Inject Context context;
     @Inject LayoutInflater inflater;
 
     @Inject AttractionRepository attractionRepo;
     @Inject AudioRepository audioRepo;
-    @Inject ImageDownloadRepository imageDownloadRepo;
 
-    private List<TourDownload> tourDownloads;
- 
-    public MyToursExpandableListAdapter(List<TourDownload> tourDownloads) {
+    @Inject TourDownloader tourDownloader;
+
+    private List<Attraction> attractions;
+    private Map<Long, TourDownloadProgress> downloadProgressMap = new HashMap<>();
+
+    public MyToursExpandableListAdapter(List<Attraction> attractions) {
         Injector.instance().inject(this);
-        this.tourDownloads = tourDownloads;
+        this.attractions = attractions;
+
+        for (Attraction attraction : attractions) {
+            downloadProgressMap.put(attraction.getId(), tourDownloader.readProgress(attraction.getId()));
+        }
+    }
+
+    @Override
+    public void onProgressChange(final TourDownloadProgress tourDownloadProgress) {
+        
     }
 
     @Override
@@ -65,22 +79,22 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int groupPosition) {
-        return tourDownloads.get(groupPosition);
+        return attractions.get(groupPosition);
     }
- 
+
     @Override
     public int getGroupCount() {
-        return tourDownloads.size();
+        return attractions.size();
     }
- 
+
     @Override
     public long getGroupId(int groupPosition) {
         return groupPosition;
     }
- 
+
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
-            View convertView, ViewGroup parent) {
+                             View convertView, ViewGroup parent) {
         GroupViewHolder viewHolder;
 
         if (convertView == null) {
@@ -91,9 +105,9 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
             viewHolder = (GroupViewHolder) convertView.getTag();
         }
 
-        TourDownload tourDownload = (TourDownload) getGroup(groupPosition);
-        viewHolder.bindData(tourDownload);
- 
+        Attraction attraction = (Attraction) getGroup(groupPosition);
+        viewHolder.bindData(attraction);
+
         return convertView;
     }
 
@@ -101,7 +115,9 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return tourDownloads.get(groupPosition).getAudioDownloads().get(childPosition);
+        Attraction attraction = attractions.get(groupPosition);
+
+        return downloadProgressMap.get(attraction.getId()).getAudioDownloadProgresses().get(childPosition);
     }
 
     @Override
@@ -111,24 +127,23 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
+        Attraction attraction = attractions.get(groupPosition);
         // size + 2 : first for header "Download Progress" & last for total image download progress
-        return tourDownloads.get(groupPosition).getAudioDownloads().size() + 2;
+        return downloadProgressMap.get(attraction.getId()).getAudioDownloadProgresses().size() + 2;
     }
 
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         // first row is used as header
-        if(childPosition == 0) {
+        if (childPosition == 0) {
             return inflater.inflate(R.layout.list_item_mytours_child_header, null);
         }
 
-        */
-/*
+        /*
          * getting some unexpected situation where convertView.getTag() is null other than on fist position,
          * that makes viewHolder object null, so some not so interesting condition checks.. !!
-         *//*
-
+         */
         ChildViewHolder viewHolder = (convertView != null)
                 ? (ChildViewHolder) convertView.getTag()
                 : null;
@@ -139,22 +154,19 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
             convertView.setTag(viewHolder);
         }
 
-        AudioDownload audioDownload;
+        AudioDownloadProgress audioDownload;
         try {
-            audioDownload = (AudioDownload) getChild(groupPosition, childPosition - 1);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            */
-/*
+            audioDownload = (AudioDownloadProgress) getChild(groupPosition, childPosition - 1);
+            } catch (Exception e) {
+            /*
              * will get exception on last row, which is used to show total image download progress,
              * so binding a dummy audio download object
-             *//*
-
-            audioDownload = new AudioDownload();
-            audioDownload.setId(-1);
-            audioDownload.setTourId(((TourDownload) getGroup(groupPosition)).getId());
+             */
+            audioDownload = new AudioDownloadProgress();
+            audioDownload.setProgress(-1);
         }
 
-        viewHolder.bindData(audioDownload);
+        viewHolder.bindData(audioDownload, attractions.get(groupPosition));
 
         return convertView;
     }
@@ -165,28 +177,32 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public class GroupViewHolder implements Target {
-        @Bind(R.id.layout_item_container) RelativeLayout layoutItemContainer;
-        @Bind(R.id.text_name) TextView textName;
-        @Bind(R.id.text_caption) TextView textCaption;
-        @Bind(R.id.text_progress) TextView textProgress;
-        @Bind(R.id.progress) ProgressBar progress;
+        @Bind(R.id.layout_item_container)
+        RelativeLayout layoutItemContainer;
+        @Bind(R.id.text_name)
+        TextView textName;
+        @Bind(R.id.text_caption)
+        TextView textCaption;
+        @Bind(R.id.text_progress)
+        TextView textProgress;
+        @Bind(R.id.progress)
+        ProgressBar progress;
 
         public GroupViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindData(TourDownload tourDownload) {
-            Attraction attraction = attractionRepo.find(tourDownload.getId());
+        public void bindData(Attraction attraction) {
 
             textName.setText(attraction.getName());
             textCaption.setText(attraction.getCaption());
 
-            int progressValue = tourDownload.getProgress();
-            textProgress.setText(progressValue + "%");
-            int progressDrawableId = progressValue < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
+            TourDownloadProgress downloadProgress = downloadProgressMap.get(attraction.getId());
+            textProgress.setText(downloadProgress.getProgress() + "%");
+            int progressDrawableId = downloadProgress.getProgress() < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
             progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
-            progress.setProgress(progressValue);
-            
+            progress.setProgress(downloadProgress.getProgress());
+
             Picasso.with(context)
                     .load(new File(attraction.getFeaturedImage().getPath()))
                     .placeholder(R.drawable.placeholder_ratio_3_2)
@@ -212,31 +228,33 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public class ChildViewHolder {
-        @Bind(R.id.text_title) TextView textTitle;
-        @Bind(R.id.progress) ProgressBar progress;
+        @Bind(R.id.text_title)
+        TextView textTitle;
+        @Bind(R.id.progress)
+        ProgressBar progress;
 
         public ChildViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindData(AudioDownload audioDownload) {
-            // audio download id will be -1 for last entry, there we will show total image download progress
-            if (audioDownload.getId() == -1) {
-                bindTotalImageDownloadProgress(audioDownload);
+        public void bindData(AudioDownloadProgress audioDownload, Attraction attraction) {
+            // audio download progress will be -1 for last entry, there we will show total image download progress
+            if (audioDownload.getProgress() == -1) {
+                bindTotalImageDownloadProgress(attraction);
                 return;
             }
 
-            Audio audio = audioRepo.find(audioDownload.getAudioId());
-            textTitle.setText(audio.getName());
+            textTitle.setText(audioDownload.getAudio().getName());
             setProgress(audioDownload.getProgress());
         }
 
-        private void bindTotalImageDownloadProgress(AudioDownload dummyAudioDownload) {
-            int totalCount = imageDownloadRepo.readByTourId(dummyAudioDownload.getTourId()).size();
-            int successCount = imageDownloadRepo.readByTourAndStatus(dummyAudioDownload.getTourId(), DownloadStatus.SUCCESS).size();
-            String title = String.format("Images(%d/%d)", successCount, totalCount);
-            textTitle.setText(title);
-            setProgress(imageDownloadRepo.getTotalProgressByTour(dummyAudioDownload.getTourId()));
+        private void bindTotalImageDownloadProgress(Attraction attraction) {
+            TourDownloadProgress tourDownloadProgress = downloadProgressMap.get(attraction.getId());
+            /*float total = tourDownloadProgress.getImageBytesTotal() / 1024 / 1024;
+            float downloaded = tourDownloadProgress.getImageBytesDownloaded() / 1024 / 1024;
+            String title = String.format("Images(%f/%f)", Math.round(downloaded * 10d) / 10d, Math.round(total * 10d) / 10d);*/
+            textTitle.setText("Images");
+            setProgress(tourDownloadProgress.getImageProgress());
         }
 
         private void setProgress(int progressValue) {
@@ -246,4 +264,4 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter {
         }
     }
 
-}*/
+}

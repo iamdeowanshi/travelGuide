@@ -3,6 +3,7 @@ package com.ithakatales.android.app.di;
 import android.app.DownloadManager;
 import android.content.Context;
 
+import com.ithakatales.android.download.TourDownloadProgressReader;
 import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.TourStorage;
 import com.ithakatales.android.download.manager.DefaultDownloader;
@@ -32,14 +33,14 @@ public class DownloadModule {
 
     @Provides
     @Singleton
-    public Downloader provideDownloader() {
-        return new DefaultDownloader();
+    public TourDownloader provideTourDownloader() {
+        return new TourDownloader();
     }
 
     @Provides
     @Singleton
-    public TourDownloader provideTourDownloader() {
-        return new TourDownloader();
+    public TourDownloadProgressReader provideTourDownloadProgressReader() {
+        return new TourDownloadProgressReader();
     }
 
     @Provides

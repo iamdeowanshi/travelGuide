@@ -2,7 +2,6 @@ package com.ithakatales.android.download;
 
 import android.app.DownloadManager;
 import android.net.Uri;
-import android.os.FileObserver;
 
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
@@ -12,14 +11,15 @@ import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.data.repository.AudioRepository;
 import com.ithakatales.android.data.repository.ImageRepository;
+import com.ithakatales.android.download.model.TourDownloadProgress;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
-
-import timber.log.Timber;
 
 /**
  * @author Farhan Ali
@@ -27,11 +27,14 @@ import timber.log.Timber;
 public class TourDownloader {
 
     @Inject DownloadManager downloadManager;
+    @Inject TourDownloadProgressReader progressReader;
     @Inject TourStorage tourStorage;
 
     @Inject AttractionRepository attractionRepo;
     @Inject AudioRepository audioRepo;
     @Inject ImageRepository imageRepo;
+
+    private Map<Long, TourDownloadProgressObserver> progressObserverMap = new HashMap<>();
 
     public TourDownloader() {
         Injector.instance().inject(this);
@@ -53,29 +56,18 @@ public class TourDownloader {
         }
     }
 
-    public String getAttractionStatus(Attraction attraction) {
-        // get all download id's - images and audios - check status for each
-            // if failed : return failed
-            // if downloading : return downloading
-            // if completed - verify checksum
-            // if checksum failed return failed
-            // continue loop
-
-        return DownloadStatus.SUCCESS;
+    public TourDownloadProgress readProgress(long attractionId) {
+        return progressReader.readProgress(attractionId);
     }
 
-    public void listenForProgress(long attractionId, final TourDownloadProgressListener listener) {
-        new FileObserver(tourStorage.getTourDir(attractionId).getPath()) {
-            @Override
-            public void onEvent(int event, String path) {
-                switch (event) {
-                    case FileObserver.MODIFY :
-                        Timber.d("File modified: " + path);
-                        break;
-                }
-                listener.onProgressChange(null);
-            }
-        }.startWatching();
+    public void startProgressListening(final long attractionId, final TourDownloadProgressListener listener) {
+        TourDownloadProgressObserver observer = new TourDownloadProgressObserver(attractionId, listener);
+        progressObserverMap.put(attractionId, observer);
+        observer.startWatching();
+    }
+
+    public void stopProgressListening(long attractionId) {
+        progressObserverMap.get(attractionId).stopWatching();
     }
 
     private void downloadBlueprint(Attraction attraction) {
@@ -194,9 +186,6 @@ public class TourDownloader {
         imageRepo.updateDownloadId(imageId, downloadId);
         imageRepo.updatePath(imageId, path);
     }
-
-
-
 
     // -----------------------------------------------------------------------------------
     // TODO: 15/12/15 listener/status related methods - move to other classes
