@@ -1,14 +1,18 @@
 package com.ithakatales.android.ui.adapter;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +27,7 @@ import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.model.AudioDownloadProgress;
 import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.File;
@@ -55,15 +60,33 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     public MyToursExpandableListAdapter(List<Attraction> attractions) {
         Injector.instance().inject(this);
         this.attractions = attractions;
-
-        for (Attraction attraction : attractions) {
-            downloadProgressMap.put(attraction.getId(), tourDownloader.readProgress(attraction.getId()));
-        }
+        updateProgressMap();
     }
 
     @Override
-    public void onProgressChange(final TourDownloadProgress tourDownloadProgress) {
+    public void onProgressChange(final TourDownloadProgress download) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                downloadProgressMap.put(download.getAttractionId(), download);
+                notifyDataSetChanged();
 
+                if (download.getProgress() == 100) {
+                    tourDownloader.stopProgressListening(download.getAttractionId());
+                }
+            }
+        });
+    }
+
+    public void updateProgressMap() {
+        for (Attraction attraction : attractions) {
+            TourDownloadProgress download = tourDownloader.readProgress(attraction.getId());
+            downloadProgressMap.put(attraction.getId(), download);
+
+            if (download.getProgress() < 100) {
+                tourDownloader.startProgressListening(attraction.getId(), this);
+            }
+        }
     }
 
     @Override
@@ -112,8 +135,9 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         Attraction attraction = attractions.get(groupPosition);
+        TourDownloadProgress download = downloadProgressMap.get(attraction.getId());
 
-        return downloadProgressMap.get(attraction.getId()).getAudioDownloadProgresses().get(childPosition);
+        return download.getAudioDownloadProgresses().get(childPosition);
     }
 
     @Override
@@ -124,6 +148,12 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     @Override
     public int getChildrenCount(int groupPosition) {
         Attraction attraction = attractions.get(groupPosition);
+        TourDownloadProgress download = downloadProgressMap.get(attraction.getId());
+
+        if (download.getStatus() != DownloadManager.STATUS_RUNNING) {
+            return 0;
+        }
+
         // size + 2 : first for header "Download Progress" & last for total image download progress
         return downloadProgressMap.get(attraction.getId()).getAudioDownloadProgresses().size() + 2;
     }
@@ -183,25 +213,42 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         TextView textProgress;
         @Bind(R.id.progress)
         ProgressBar progress;
+        @Bind(R.id.button_tour_action) Button buttonTourAction;
 
         public GroupViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
         }
 
         public void bindData(Attraction attraction) {
-
             textName.setText(attraction.getName());
             textCaption.setText(attraction.getCaption());
 
-            TourDownloadProgress downloadProgress = downloadProgressMap.get(attraction.getId());
-            textProgress.setText(downloadProgress.getProgress() + "%");
-            int progressDrawableId = downloadProgress.getProgress() < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
-            progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
-            progress.setProgress(downloadProgress.getProgress());
+            RequestCreator requestCreator = Picasso.with(context).load(new File(attraction.getFeaturedImage().getPath()));
+            TourDownloadProgress download = downloadProgressMap.get(attraction.getId());
 
-            Picasso.with(context)
-                    .load(new File(attraction.getFeaturedImage().getPath()))
-                    .placeholder(R.drawable.placeholder_ratio_3_2)
+            switch (download.getStatus()) {
+                case DownloadManager.STATUS_SUCCESSFUL:
+                    buttonTourAction.setVisibility(View.VISIBLE);
+                    textProgress.setVisibility(View.GONE);
+                    progress.setVisibility(View.GONE);
+                    break;
+                case DownloadManager.STATUS_FAILED:
+                    buttonTourAction.setText("Retry");
+                    buttonTourAction.setVisibility(View.VISIBLE);
+                    textProgress.setVisibility(View.GONE);
+                    progress.setVisibility(View.GONE);
+                    break;
+                case DownloadManager.STATUS_RUNNING:
+                    requestCreator = Picasso.with(context).load(attraction.getFeaturedImage().getUrl());
+                    textProgress.setText(String.format("%d%%", download.getProgress()));
+                    int progressDrawableId = download.getProgress() < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
+                    progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
+                    progress.setProgress(download.getProgress());
+                    break;
+            }
+
+            // TODO: 16/12/15 chance path to be null when downloading
+            requestCreator.placeholder(R.drawable.placeholder_ratio_3_2)
                     .error(R.drawable.placeholder_ratio_3_2)
                     .resize(600, 400)
                     .into(this);

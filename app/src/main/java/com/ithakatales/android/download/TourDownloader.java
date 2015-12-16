@@ -191,49 +191,4 @@ public class TourDownloader {
         imageRepo.updatePath(imageId, path);
     }
 
-    // -----------------------------------------------------------------------------------
-    // TODO: 15/12/15 listener/status related methods - move to other classes
-    // -----------------------------------------------------------------------------------
-
-    private List<Long> getDownloadIds(long attractionId) {
-        Attraction attraction = attractionRepo.find(attractionId);
-
-        List<Long> ids = new ArrayList<>();
-
-        ids.add(attraction.getFeaturedImage().getDownloadId());
-        ids.add(attraction.getPreviewAudio().getDownloadId());
-
-        ids.addAll(getAudioDownloadIds(attraction.getAudios()));
-        ids.addAll(getImageDownloadIds(attraction.getImages()));
-
-        for (Poi poi : attraction.getPois()) {
-            ids.add(poi.getAudio().getDownloadId());
-            ids.addAll(getImageDownloadIds(poi.getAudio().getImages()));
-            ids.addAll(getImageDownloadIds(poi.getImages()));
-        }
-
-        return ids;
-    }
-
-    private List<Long> getAudioDownloadIds(List<Audio> audios) {
-        List<Long> ids = new ArrayList<>();
-
-        for (Audio audio : audios) {
-            ids.add(audio.getDownloadId());
-            ids.addAll(getImageDownloadIds(audio.getImages()));
-        }
-
-        return ids;
-    }
-
-    private List<Long> getImageDownloadIds(List<Image> images) {
-        List<Long> ids = new ArrayList<>();
-
-        for (Image image : images) {
-            ids.add(image.getDownloadId());
-        }
-
-        return ids;
-    }
-
 }

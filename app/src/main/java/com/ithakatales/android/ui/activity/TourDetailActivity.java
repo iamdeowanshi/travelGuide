@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -43,6 +44,9 @@ import com.ithakatales.android.util.Bakery;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -130,6 +134,15 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        try {
+            return super.dispatchTouchEvent(motionEvent);
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    @Override
     public void onAttractionLoadSuccess(Attraction attraction) {
         this.attraction = attraction;
         showAttractionDetails();
@@ -153,18 +166,20 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     }
 
     @Override
-    public void onProgressChange(final TourDownloadProgress progress) {
+    public void onProgressChange(final TourDownloadProgress download) {
+        if (download == null) return;
+
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                buttonTourActon.setText(String.format("Downloading (%d%%)", progress.getProgress()));
+                buttonTourActon.setText(String.format("Downloading (%d%%)", download.getProgress()));
                 Timber.d(String.format("total: %d | downloaded: %d | progress: %d | status: %d",
-                        progress.getBytesTotal(), progress.getBytesDownloaded(),
-                        progress.getProgress(), progress.getStatus()));
+                        download.getBytesTotal(), download.getBytesDownloaded(),
+                        download.getProgress(), download.getStatus()));
 
-                if (progress.getProgress() == 100) {
+                if (download.getProgress() == 100) {
                     tourDownloader.stopProgressListening(attractionId);
-                    setTourAction(TOUR_ACTION_START);
+                    setTourAction(download);
                 }
             }
         });
@@ -239,19 +254,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         showAttractionDetails();
-
-        TourDownloadProgress progress = progressReader.readProgress(attractionId);
-        switch (progress.getStatus()) {
-            case DownloadManager.STATUS_FAILED:
-                setTourAction(TOUR_ACTION_RETRY);
-                break;
-            case DownloadManager.STATUS_SUCCESSFUL:
-                setTourAction(TOUR_ACTION_START);
-                break;
-            case DownloadManager.STATUS_RUNNING:
-                setTourAction(TOUR_ACTION_DOWNLOADING);
-                break;
-        }
+        setTourAction(progressReader.readProgress(attractionId));
     }
 
     private void showAttractionDetails() {
@@ -280,6 +283,20 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         expandableTextCredits.setText(attraction.getCredits());
     }
 
+    private void setTourAction(TourDownloadProgress download) {
+        switch (download.getStatus()) {
+            case DownloadManager.STATUS_FAILED:
+                setTourAction(TOUR_ACTION_RETRY);
+                break;
+            case DownloadManager.STATUS_SUCCESSFUL:
+                setTourAction(TOUR_ACTION_START);
+                break;
+            case DownloadManager.STATUS_RUNNING:
+                setTourAction(TOUR_ACTION_DOWNLOADING);
+                break;
+        }
+    }
+
     private void setTourAction(int tourAction) {
         this.tourAction = tourAction;
         buttonTourActon.setEnabled(true);
@@ -305,9 +322,14 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     }
 
     private void loadFeaturedImage() {
-        Picasso.with(this)
-                .load(attraction.getFeaturedImage().getUrl())
-                .placeholder(R.drawable.placeholder_ratio_1_1)
+        RequestCreator requestCreator = null;
+        if (attraction.getFeaturedImage().getPath() != null) {
+            requestCreator = Picasso.with(this).load(new File(attraction.getFeaturedImage().getPath()));
+        } else {
+            requestCreator = Picasso.with(this).load(attraction.getFeaturedImage().getUrl());
+        }
+
+        requestCreator.placeholder(R.drawable.placeholder_ratio_1_1)
                 .error(R.drawable.placeholder_ratio_1_1)
                 .resize(600, 600)
                 .into(imageFeatured, new Callback() {

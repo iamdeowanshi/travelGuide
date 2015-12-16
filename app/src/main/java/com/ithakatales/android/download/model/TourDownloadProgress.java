@@ -102,10 +102,9 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
 
             bytesTotal = imageBytesTotal + audioBytesTotal;
             bytesDownloaded = imageBytesDownloaded + audioBytesDownloaded;
-            int tempProgress = (int) ((bytesDownloaded * 100l) / bytesTotal);
-            progress = tempProgress >= progress ? tempProgress : progress;
+            progress = (int) ((bytesDownloaded * 100l) / bytesTotal);
         } catch (Exception e) {
-
+            // Some arithmetic exception when initial stage of download - nothing todo
         }
     }
 
@@ -134,7 +133,8 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
                 status = DownloadManager.STATUS_FAILED;
                 break;
             case DownloadManager.STATUS_SUCCESSFUL:
-                status = DownloadManager.STATUS_SUCCESSFUL;//getStatusAfterChecksumVerification(url, filePath);
+                //status = DownloadManager.STATUS_SUCCESSFUL;
+                status = getStatusAfterChecksumVerification(url, filePath);
                 break;
         }
     }

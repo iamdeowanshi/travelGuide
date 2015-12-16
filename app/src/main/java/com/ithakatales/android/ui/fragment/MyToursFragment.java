@@ -24,6 +24,8 @@ public class MyToursFragment extends BaseFragment {
 
     @Bind(R.id.list_my_tours) ExpandableListView listMyTours;
 
+    private MyToursExpandableListAdapter adapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +41,13 @@ public class MyToursFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        MyToursExpandableListAdapter adapter = new MyToursExpandableListAdapter(attractionRepo.readAll());
+        adapter = new MyToursExpandableListAdapter(attractionRepo.readAll());
         listMyTours.setAdapter(adapter);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.updateProgressMap();
+    }
 }
