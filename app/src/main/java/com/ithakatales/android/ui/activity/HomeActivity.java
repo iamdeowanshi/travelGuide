@@ -29,6 +29,7 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     private NavigationDrawerFragment drawerFragment;
+    private City selectedCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,16 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
 
     @Override
     public void onDrawerItemSelected(City city) {
+        selectedCity = city;
         loadHomeFragment(city);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (selectedCity != null) {
+            loadHomeFragment(selectedCity);
+        }
     }
 
     // TODO: 29/11/15 Optimization required: Adding seperate fragment on each item click is not required

@@ -96,6 +96,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     private Attraction attraction;
     private long attractionId;
     private int tourAction;
+    private TourDownloadProgress lastDownloadProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,6 +173,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                // if (lastDownloadProgress != null && lastDownloadProgress.getProgress() > download.getProgress()) return;
+
                 buttonTourActon.setText(String.format("Downloading (%d%%)", download.getProgress()));
                 Timber.d(String.format("total: %d | downloaded: %d | progress: %d | status: %d",
                         download.getBytesTotal(), download.getBytesDownloaded(),
@@ -181,6 +184,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                     tourDownloader.stopProgressListening(attractionId);
                     setTourAction(download);
                 }
+
+                lastDownloadProgress = download;
             }
         });
     }
@@ -198,7 +203,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                 setTourAction(TOUR_ACTION_DOWNLOADING);
                 break;
             case TOUR_ACTION_START:
-                bakery.snackShort(getContentView(), "Under Development");
+                bakery.snackShort(getContentView(), "Under Development !");
                 break;
             case TOUR_ACTION_RETRY:
                 tourDownloader.download(attraction);
@@ -309,7 +314,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             case TOUR_ACTION_DOWNLOADING:
                 buttonTourActon.setEnabled(false);
                 buttonTourActon.setClickable(false);
-                buttonTourActon.setText("Downloading");
+                // TODO: 17/12/15 code to move - start progress listening here is confusing
                 tourDownloader.startProgressListening(attractionId, this);
                 break;
             case TOUR_ACTION_START:

@@ -30,7 +30,6 @@ public class DownloadModule {
     }
 
     @Provides
-    @Singleton
     public TourDownloader provideTourDownloader() {
         return new TourDownloader();
     }

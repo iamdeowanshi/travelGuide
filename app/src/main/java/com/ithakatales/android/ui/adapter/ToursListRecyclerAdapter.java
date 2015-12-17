@@ -93,7 +93,7 @@ public class ToursListRecyclerAdapter extends RecyclerView.Adapter<ToursListRecy
             textCaption.setText(attraction.getCaption());
             iconType.setImageResource(IconMap.tourTypeLight.get(attraction.getType().getId()));
             int durationInMinute = (int) (attraction.getDuration() / 60);
-            textDuration.setText(durationInMinute + " Mins");
+            textDuration.setText(String.format("%d Min", durationInMinute));
             textDescription.setText(attraction.getShortDescription());
 
             // load background to item root view

@@ -39,6 +39,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * @author farhanali
@@ -65,11 +66,21 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
 
     @Override
     public void onProgressChange(final TourDownloadProgress download) {
+        if (download == null) return;
+
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                TourDownloadProgress lastProgress = downloadProgressMap.get(download.getAttractionId());
+
+                if (lastProgress != null && lastProgress.getProgress() > download.getProgress()) return;
+
                 downloadProgressMap.put(download.getAttractionId(), download);
                 notifyDataSetChanged();
+
+                Timber.d(String.format("attraction: %d | total: %d | downloaded: %d | progress: %d | status: %d",
+                        download.getAttractionId(), download.getBytesTotal(), download.getBytesDownloaded(),
+                        download.getProgress(), download.getStatus()));
 
                 if (download.getProgress() == 100) {
                     tourDownloader.stopProgressListening(download.getAttractionId());

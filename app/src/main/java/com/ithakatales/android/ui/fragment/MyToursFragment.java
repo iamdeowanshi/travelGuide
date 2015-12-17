@@ -5,11 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseFragment;
+import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -25,6 +30,7 @@ public class MyToursFragment extends BaseFragment {
     @Bind(R.id.list_my_tours) ExpandableListView listMyTours;
 
     private MyToursExpandableListAdapter adapter;
+    private List<Attraction> attractions = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,13 +47,14 @@ public class MyToursFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new MyToursExpandableListAdapter(attractionRepo.readAll());
+        attractions = attractionRepo.readAll();
+        adapter = new MyToursExpandableListAdapter(attractions);
         listMyTours.setAdapter(adapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        adapter.updateProgressMap();
     }
+
 }

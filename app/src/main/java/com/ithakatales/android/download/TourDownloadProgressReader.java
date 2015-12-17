@@ -42,10 +42,16 @@ public class TourDownloadProgressReader {
 
         downloadProgress.setAttractionId(attraction.getId());
 
-        // featured image progress
-        downloadProgress.getImageDownloadProgresses().add(readImageProgress(attraction.getFeaturedImage()));
-        // preview audio progress
-        downloadProgress.getAudioDownloadProgresses().add(readAudioProgress(attraction.getPreviewAudio()));
+        // featured image progress - should not be null from api
+        if (attraction.getFeaturedImage() != null) {
+            downloadProgress.getImageDownloadProgresses().add(readImageProgress(attraction.getFeaturedImage()));
+        }
+
+        // preview audio progress - should not be null from api
+        if (attraction.getPreviewAudio() != null) {
+            downloadProgress.getAudioDownloadProgresses().add(readAudioProgress(attraction.getPreviewAudio()));
+        }
+
         // tour images progress
         downloadProgress.getImageDownloadProgresses().addAll(readImageProgresses(attraction.getImages()));
 
@@ -57,6 +63,9 @@ public class TourDownloadProgressReader {
 
         // poi images, audio & audio images progress
         for (Poi poi : attraction.getPois()) {
+            // poi audio should not be null from api - doing for a safety
+            if (poi.getAudio() == null) continue;
+
             downloadProgress.getAudioDownloadProgresses().add(readAudioProgress(poi.getAudio()));
             downloadProgress.getImageDownloadProgresses().addAll(readImageProgresses(poi.getAudio().getImages()));
             downloadProgress.getImageDownloadProgresses().addAll(readImageProgresses(poi.getImages()));
@@ -84,6 +93,9 @@ public class TourDownloadProgressReader {
 
     private List<ImageDownloadProgress> readImageProgresses(List<Image> images) {
         List<ImageDownloadProgress> imageDownloadProgresses = new ArrayList<>();
+
+        // images should not be null from api - doing for a safety
+        if (images == null) return imageDownloadProgresses;
 
         for (Image image : images) {
             imageDownloadProgresses.add(readImageProgress(image));
