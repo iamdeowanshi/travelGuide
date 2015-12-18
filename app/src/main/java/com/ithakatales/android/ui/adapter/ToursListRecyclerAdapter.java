@@ -110,11 +110,6 @@ public class ToursListRecyclerAdapter extends RecyclerView.Adapter<ToursListRecy
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             layoutItemContainer.setBackground(new BitmapDrawable(context.getResources(), bitmap));
-            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                public void onGenerated(Palette palette) {
-                    applyPalette(palette);
-                }
-            });
         }
 
         @Override
@@ -127,10 +122,6 @@ public class ToursListRecyclerAdapter extends RecyclerView.Adapter<ToursListRecy
             layoutItemContainer.setBackground(placeHolderDrawable);
         }
 
-        private void applyPalette(Palette palette) {
-            textName.setTextColor(palette.getLightMutedColor(Color.WHITE));
-            textCaption.setTextColor(palette.getDarkMutedColor(Color.WHITE));
-        }
     }
 
 }
