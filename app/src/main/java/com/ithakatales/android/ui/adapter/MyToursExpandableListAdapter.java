@@ -71,10 +71,6 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                TourDownloadProgress lastProgress = downloadProgressMap.get(download.getAttractionId());
-
-                if (lastProgress != null && lastProgress.getProgress() > download.getProgress()) return;
-
                 downloadProgressMap.put(download.getAttractionId(), download);
                 notifyDataSetChanged();
 
