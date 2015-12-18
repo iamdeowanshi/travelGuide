@@ -100,6 +100,7 @@ public class TourDownloader {
 
         if (observer != null) {
             observer.stopWatching();
+            progressObserverMap.remove(attractionId);
         }
     }
 

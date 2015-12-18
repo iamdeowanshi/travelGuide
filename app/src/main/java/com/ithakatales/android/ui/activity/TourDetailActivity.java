@@ -177,7 +177,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                         download.getBytesTotal(), download.getBytesDownloaded(),
                         download.getProgress(), download.getStatus()));
 
-                if (download.getProgress() == 100) {
+                if (download.getProgress() >= 100) {
                     tourDownloader.stopProgressListening(attractionId);
                     setTourAction(download);
                 }

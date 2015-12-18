@@ -87,7 +87,8 @@ public class TourDownloadProgressReader {
                 .setAudioName(audio.getName())
                 .setProgress(info.progress)
                 .setBytesDownloaded(info.bytesDownloaded)
-                .setBytesTotal(info.bytesTotal)
+                //.setBytesTotal(info.bytesTotal)
+                .setBytesTotal(audio.getSize())
                 .setStatus(info.status);
     }
 
@@ -115,7 +116,8 @@ public class TourDownloadProgressReader {
                 .setImageName(image.getName())
                 .setProgress(info.progress)
                 .setBytesDownloaded(info.bytesDownloaded)
-                .setBytesTotal(info.bytesTotal)
+                //.setBytesTotal(info.bytesTotal)
+                .setBytesTotal(image.getSize())
                 .setStatus(info.status);
     }
 

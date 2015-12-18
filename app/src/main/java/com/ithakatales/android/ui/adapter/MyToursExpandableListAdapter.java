@@ -78,7 +78,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
                         download.getAttractionId(), download.getBytesTotal(), download.getBytesDownloaded(),
                         download.getProgress(), download.getStatus()));
 
-                if (download.getProgress() == 100) {
+                if (download.getProgress() >= 100) {
                     tourDownloader.stopProgressListening(download.getAttractionId());
                 }
             }
@@ -90,7 +90,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             TourDownloadProgress download = tourDownloader.readProgress(attraction.getId());
             downloadProgressMap.put(attraction.getId(), download);
 
-            if (download.getProgress() < 100) {
+            if (download.getProgress() < 100 && download.getStatus() == DownloadManager.STATUS_RUNNING) {
                 tourDownloader.startProgressListening(attraction.getId(), this);
             }
         }

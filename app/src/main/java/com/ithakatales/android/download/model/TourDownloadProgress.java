@@ -85,15 +85,21 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
 
     public void updateProgressInfo() {
         for (AudioDownloadProgress audioDownload :  audioDownloadProgresses) {
+            updateStatus(audioDownload, audioDownload.getUrl(), audioDownload.getPath());
+
+            if (audioDownload.getStatus() == DownloadManager.STATUS_FAILED) continue;
+
             audioBytesTotal += audioDownload.getBytesTotal();
             audioBytesDownloaded += audioDownload.getBytesDownloaded();
-            updateStatus(audioDownload, audioDownload.getUrl(), audioDownload.getPath());
         }
 
         for (ImageDownloadProgress imageDownload : imageDownloadProgresses) {
+            updateStatus(imageDownload, imageDownload.getUrl(), imageDownload.getPath());
+
+            if (imageDownload.getStatus() == DownloadManager.STATUS_FAILED) continue;
+
             imageBytesTotal += imageDownload.getBytesTotal();
             imageBytesDownloaded += imageDownload.getBytesDownloaded();
-            updateStatus(imageDownload, imageDownload.getUrl(), imageDownload.getPath());
         }
 
         try {
@@ -103,6 +109,7 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
             bytesTotal = imageBytesTotal + audioBytesTotal;
             bytesDownloaded = imageBytesDownloaded + audioBytesDownloaded;
             progress = (int) ((bytesDownloaded * 100l) / bytesTotal);
+            progress = progress > 100 ? 100 : progress;
         } catch (Exception e) {
             // Some arithmetic exception when initial stage of download - nothing todo
         }
