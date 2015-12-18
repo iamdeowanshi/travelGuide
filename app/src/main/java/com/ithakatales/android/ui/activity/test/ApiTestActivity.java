@@ -7,9 +7,8 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
-import com.ithakatales.android.data.model.AttractionDownloadRequest;
-import com.ithakatales.android.data.model.AttractionRatingRequest;
-import com.ithakatales.android.data.model.AttractionViewRequest;
+import com.ithakatales.android.data.model.AttractionRating;
+import com.ithakatales.android.data.model.AttractionAccess;
 import com.ithakatales.android.util.JsonUtil;
 import com.ithakatales.android.util.RxUtil;
 
@@ -74,19 +73,19 @@ public class ApiTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_create_download)
     void createAttractionDownload() {
-        AttractionDownloadRequest body = new AttractionDownloadRequest(1, 1);
+        AttractionAccess body = new AttractionAccess(1, 1);
         subscribeForNetwork(ithakaApi.attractionDownloaded(AUTHORIZATION, body), observer);
     }
 
     @OnClick(R.id.btn_create_view)
     void createAttractionView() {
-        AttractionViewRequest body = new AttractionViewRequest(1, 1);
+        AttractionAccess body = new AttractionAccess(1, 1);
         subscribeForNetwork(ithakaApi.attractionViewed(AUTHORIZATION, body), observer);
     }
 
     @OnClick(R.id.btn_rate_attraction)
     void rateAttraction() {
-        AttractionRatingRequest body = new AttractionRatingRequest(1, 1, 4);
+        AttractionRating body = new AttractionRating(1, 1, 4);
         subscribeForNetwork(ithakaApi.rateAttraction(AUTHORIZATION, body), observer);
     }
 
