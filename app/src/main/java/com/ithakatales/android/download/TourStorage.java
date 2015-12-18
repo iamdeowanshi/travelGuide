@@ -56,6 +56,10 @@ public class TourStorage {
         return getIthakaExternalDir();
     }
 
+    public void removeTour(long tourId) {
+        delete(getTourDir(tourId));
+    }
+
     private File getIthakaInternalDir() {
         File internal = context.getFilesDir();
 
@@ -83,6 +87,18 @@ public class TourStorage {
         }
 
         return dir;
+    }
+
+    private void delete(File file) {
+        if ( ! file.exists()) return;
+
+        if (file.isDirectory() && file.list().length > 0) {
+            for (File child : file.listFiles()) {
+                delete(child);
+            }
+        }
+
+        file.delete();
     }
 
 }

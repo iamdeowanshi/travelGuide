@@ -16,7 +16,6 @@ import com.ithakatales.android.download.model.ImageDownloadProgress;
 import com.ithakatales.android.download.model.TourDownloadProgress;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +59,13 @@ public class TourDownloader {
         }
     }
 
+    // TODO: 18/12/15 not a proper solution - will remove all the details and download it again even for small text changes
+    public void update(Attraction updatedAttraction) {
+        attractionRepo.remove(updatedAttraction.getId());
+        tourStorage.removeTour(updatedAttraction.getId());
+        download(updatedAttraction);
+    }
+
     public void retryDownload(Attraction attraction) {
         TourDownloadProgress downloadProgress = readProgress(attraction.getId());
 
@@ -78,11 +84,6 @@ public class TourDownloader {
                 Timber.d(String.format("Retrying download: %d | %s | %s", newDownloadId, imageDownload.getImageName(), imageDownload.getUrl()));
             }
         }
-    }
-
-    public void update(Attraction attraction) {
-        // get updated and download again
-
     }
 
     public TourDownloadProgress readProgress(long attractionId) {
@@ -219,6 +220,10 @@ public class TourDownloader {
     private void updateImageDownloadInfo(long imageId, long downloadId, String path) {
         imageRepo.updateDownloadId(imageId, downloadId);
         imageRepo.updatePath(imageId, path);
+    }
+
+    private void deleteFile(String path) {
+        new File(path).delete();
     }
 
 }
