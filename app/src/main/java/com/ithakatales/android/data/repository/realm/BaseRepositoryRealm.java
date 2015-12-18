@@ -33,6 +33,17 @@ public abstract class BaseRepositoryRealm<T extends RealmObject> implements Base
     }
 
     @Override
+    public void save(List<T> collection) {
+        realm.beginTransaction();
+
+        for (T obj : collection) {
+            realm.copyToRealmOrUpdate(obj);
+        }
+
+        realm.commitTransaction();
+    }
+
+    @Override
     public void saveAsync(final T obj, final RepoCallback callback) {
         Realm.Transaction transaction = new Realm.Transaction() {
             @Override
