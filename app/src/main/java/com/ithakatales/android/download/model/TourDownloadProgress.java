@@ -87,13 +87,13 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
         for (AudioDownloadProgress audioDownload :  audioDownloadProgresses) {
             audioBytesTotal += audioDownload.getBytesTotal();
             audioBytesDownloaded += audioDownload.getBytesDownloaded();
-            updateStatus(audioDownload.getStatus(), audioDownload.getUrl(), audioDownload.getPath());
+            updateStatus(audioDownload, audioDownload.getUrl(), audioDownload.getPath());
         }
 
         for (ImageDownloadProgress imageDownload : imageDownloadProgresses) {
             imageBytesTotal += imageDownload.getBytesTotal();
             imageBytesDownloaded += imageDownload.getBytesDownloaded();
-            updateStatus(imageDownload.getStatus(), imageDownload.getUrl(), imageDownload.getPath());
+            updateStatus(imageDownload, imageDownload.getUrl(), imageDownload.getPath());
         }
 
         try {
@@ -119,11 +119,11 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
     }
 
     // TODO: 15/12/15 code readability should be improved
-    private void updateStatus(int statusCode, String url, String filePath) {
+    private void updateStatus(DownloadProgress downloadProgress, String url, String filePath) {
         // don't change if already running or failed
         if (status == DownloadManager.STATUS_RUNNING  || status == DownloadManager.STATUS_FAILED) return;
 
-        switch (statusCode) {
+        switch (downloadProgress.getStatus()) {
             case DownloadManager.STATUS_RUNNING:
             case DownloadManager.STATUS_PAUSED:
             case DownloadManager.STATUS_PENDING:
@@ -135,6 +135,7 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
             case DownloadManager.STATUS_SUCCESSFUL:
                 //status = DownloadManager.STATUS_SUCCESSFUL;
                 status = getStatusAfterChecksumVerification(url, filePath);
+                downloadProgress.setStatus(status);
                 break;
         }
     }

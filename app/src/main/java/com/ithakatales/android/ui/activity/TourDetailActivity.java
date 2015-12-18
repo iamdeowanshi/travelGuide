@@ -201,7 +201,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                 bakery.snackShort(getContentView(), "Under Development !");
                 break;
             case TOUR_ACTION_RETRY:
-                tourDownloader.download(attraction);
+                tourDownloader.retryDownload(attraction);
                 setTourAction(TOUR_ACTION_DOWNLOADING);
                 break;
         }

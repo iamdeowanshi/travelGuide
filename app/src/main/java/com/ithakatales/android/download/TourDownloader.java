@@ -11,6 +11,8 @@ import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.data.repository.AudioRepository;
 import com.ithakatales.android.data.repository.ImageRepository;
+import com.ithakatales.android.download.model.AudioDownloadProgress;
+import com.ithakatales.android.download.model.ImageDownloadProgress;
 import com.ithakatales.android.download.model.TourDownloadProgress;
 
 import java.io.File;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 /**
  * @author Farhan Ali
@@ -54,6 +58,31 @@ public class TourDownloader {
             downloadAudio(poi.getAudio(), attraction.getId());
             downloadImages(poi.getImages(), attraction.getId());
         }
+    }
+
+    public void retryDownload(Attraction attraction) {
+        TourDownloadProgress downloadProgress = readProgress(attraction.getId());
+
+        for (AudioDownloadProgress audioDownload: downloadProgress.getAudioDownloadProgresses()) {
+            if (audioDownload.getStatus() == DownloadManager.STATUS_FAILED) {
+                long newDownloadId = enqueueDownload(audioDownload.getAudioName(), audioDownload.getUrl(), audioDownload.getPath());
+                audioRepo.updateDownloadId(audioDownload.getAudioId(), newDownloadId);
+                Timber.d(String.format("Retrying download: %d | %s | %s", newDownloadId, audioDownload.getAudioName(), audioDownload.getUrl()));
+            }
+        }
+
+        for (ImageDownloadProgress imageDownload: downloadProgress.getImageDownloadProgresses()) {
+            if (imageDownload.getStatus() == DownloadManager.STATUS_FAILED) {
+                long newDownloadId = enqueueDownload(imageDownload.getImageName(), imageDownload.getUrl(), imageDownload.getPath());
+                imageRepo.updateDownloadId(imageDownload.getImageId(), newDownloadId);
+                Timber.d(String.format("Retrying download: %d | %s | %s", newDownloadId, imageDownload.getImageName(), imageDownload.getUrl()));
+            }
+        }
+    }
+
+    public void update(Attraction attraction) {
+        // get updated and download again
+
     }
 
     public TourDownloadProgress readProgress(long attractionId) {
