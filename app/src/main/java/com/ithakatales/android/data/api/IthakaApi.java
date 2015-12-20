@@ -2,8 +2,8 @@ package com.ithakatales.android.data.api;
 
 import com.ithakatales.android.app.Config;
 import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.data.model.AttractionRating;
 import com.ithakatales.android.data.model.AttractionAccess;
+import com.ithakatales.android.data.model.AttractionRating;
 import com.ithakatales.android.data.model.AttractionUpdate;
 import com.ithakatales.android.data.model.City;
 

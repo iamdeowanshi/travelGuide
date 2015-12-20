@@ -7,8 +7,8 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
-import com.ithakatales.android.data.model.AttractionRating;
 import com.ithakatales.android.data.model.AttractionAccess;
+import com.ithakatales.android.data.model.AttractionRating;
 import com.ithakatales.android.util.JsonUtil;
 import com.ithakatales.android.util.RxUtil;
 
