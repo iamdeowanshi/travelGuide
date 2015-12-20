@@ -1,11 +1,17 @@
 package com.ithakatales.android.ui.activity;
 
+import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -15,16 +21,26 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.data.model.AttractionUpdate;
 import com.ithakatales.android.data.model.IconMap;
 import com.ithakatales.android.data.model.TagType;
+import com.ithakatales.android.data.model.User;
+import com.ithakatales.android.data.repository.AttractionRepository;
+import com.ithakatales.android.data.repository.AttractionUpdateRepository;
+import com.ithakatales.android.download.TourDownloadProgressListener;
+import com.ithakatales.android.download.TourDownloadProgressReader;
+import com.ithakatales.android.download.TourDownloader;
+import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.ithakatales.android.map.MapView;
 import com.ithakatales.android.map.Marker;
 import com.ithakatales.android.presenter.TourDetailPresenter;
@@ -34,6 +50,9 @@ import com.ithakatales.android.util.Bakery;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -44,11 +63,22 @@ import timber.log.Timber;
 /**
  * @author Farhan Ali
  */
-public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor {
+public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor, TourDownloadProgressListener {
 
-    @Inject Bakery bakery;
+    private static final int TOUR_ACTION_DOWNLOAD       = 1;
+    private static final int TOUR_ACTION_DOWNLOADING    = 2;
+    private static final int TOUR_ACTION_START          = 3;
+    private static final int TOUR_ACTION_RETRY          = 4;
+
+    @Inject TourDownloader tourDownloader;
+    @Inject TourDownloadProgressReader progressReader;
+
+    @Inject AttractionRepository attractionRepo;
+    @Inject AttractionUpdateRepository attractionUpdateRepo;
     @Inject TourDetailPresenter presenter;
+    @Inject Bakery bakery;
 
+    @Bind(R.id.layout_coordinator) CoordinatorLayout layoutCoordinator;
     @Bind(R.id.image_featured) ImageView imageFeatured;
 
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
@@ -68,7 +98,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.view_tag_type_two) View viewTagTypeTwo;
     @Bind(R.id.view_tag_type_three) View viewTagTypeThree;
 
+    @Bind(R.id.button_tour_action) Button buttonTourActon;
+    @Bind(R.id.progress) ProgressBar progress;
+
     private Attraction attraction;
+    private long attractionId;
+    private int tourAction;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,14 +111,9 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         setContentView(R.layout.activity_tour_detail);
 
         injectDependencies();
+        initialize();
 
-        initActivityTransitions();
-        initToolbar();
-        initMapView();
-        initTagViews();
-
-        presenter.setViewInteractor(this);
-        presenter.loadAttraction(getIntent().getLongExtra("attraction_id", 0));
+        loadAttraction();
     }
 
     @Override
@@ -105,6 +135,13 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        presenter.pause();
+        tourDownloader.stopProgressListening(attractionId);
+    }
+
+    @Override
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
         try {
             return super.dispatchTouchEvent(motionEvent);
@@ -116,21 +153,46 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Override
     public void onAttractionLoadSuccess(Attraction attraction) {
         this.attraction = attraction;
-        loadAttractionDetails();
+        // TODO: 18/12/15 dummy user - change to actual
+        presenter.updateAttractionView(User.dummy(), attraction.getId());
+        showAttractionDetails();
+        setTourAction(TOUR_ACTION_DOWNLOAD);
     }
 
     @Override
     public void showProgress() {
+        progress.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
+        progress.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onNetworkError(Throwable e) {
         bakery.toastShort(e.getMessage());
         Timber.e(e.getMessage(), e);
+    }
+
+    @Override
+    public void onProgressChange(final TourDownloadProgress download) {
+        if (download == null) return;
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                buttonTourActon.setText(String.format("Downloading (%d%%)", download.getProgress()));
+                Timber.d(String.format("total: %d | downloaded: %d | progress: %d | status: %d",
+                        download.getBytesTotal(), download.getBytesDownloaded(),
+                        download.getProgress(), download.getStatus()));
+
+                if (download.getProgress() >= 100) {
+                    tourDownloader.stopProgressListening(attractionId);
+                    setTourAction(download);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.button_preview_player)
@@ -140,7 +202,30 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_tour_action)
     void onTourActionClick() {
-        bakery.snackShort(getContentView(), "Under Development !");
+        switch (tourAction) {
+            case TOUR_ACTION_DOWNLOAD:
+                tourDownloader.download(attraction);
+                // TODO: 18/12/15 dummy user - change to actual
+                presenter.updateAttractionDownload(User.dummy(), attraction.getId());
+                setTourAction(TOUR_ACTION_DOWNLOADING);
+                break;
+            case TOUR_ACTION_START:
+                startTour();
+                break;
+            case TOUR_ACTION_RETRY:
+                tourDownloader.retryDownload(attraction);
+                setTourAction(TOUR_ACTION_DOWNLOADING);
+                break;
+        }
+    }
+
+    private void initialize() {
+        presenter.setViewInteractor(this);
+
+        initActivityTransitions();
+        initToolbar();
+        initMapView();
+        initTagViews();
     }
 
     private void initActivityTransitions() {
@@ -155,7 +240,6 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     private void initToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
 
@@ -171,7 +255,21 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         viewTagTypeThree.setVisibility(View.GONE);
     }
 
-    private void loadAttractionDetails() {
+    private void loadAttraction() {
+        attractionId = getIntent().getLongExtra("attraction_id", 0);
+        attraction = attractionRepo.find(attractionId);
+
+        // if not in db, load from api using presenter
+        if (attraction == null) {
+            presenter.loadAttraction(attractionId);
+            return;
+        }
+
+        showAttractionDetails();
+        setTourAction(progressReader.readProgress(attractionId));
+    }
+
+    private void showAttractionDetails() {
         if (attraction == null) return;
 
         loadFeaturedImage();
@@ -187,7 +285,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
         // load duration
         int durationInMinutes = (int) (attraction.getDuration() / 60);
-        textDuration.setText(durationInMinutes + " Mins");
+        textDuration.setText(String.format("%d Mins", durationInMinutes));
 
         // load text details
         textDescription.setText(attraction.getShortDescription());
@@ -197,10 +295,53 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         expandableTextCredits.setText(attraction.getCredits());
     }
 
+    private void setTourAction(TourDownloadProgress download) {
+        switch (download.getStatus()) {
+            case DownloadManager.STATUS_FAILED:
+                setTourAction(TOUR_ACTION_RETRY);
+                break;
+            case DownloadManager.STATUS_SUCCESSFUL:
+                setTourAction(TOUR_ACTION_START);
+                break;
+            case DownloadManager.STATUS_RUNNING:
+                setTourAction(TOUR_ACTION_DOWNLOADING);
+                break;
+        }
+    }
+
+    private void setTourAction(int tourAction) {
+        this.tourAction = tourAction;
+        buttonTourActon.setEnabled(true);
+        buttonTourActon.setClickable(true);
+
+        switch (tourAction) {
+            case TOUR_ACTION_DOWNLOAD:
+                buttonTourActon.setText("Download Tour");
+                break;
+            case TOUR_ACTION_DOWNLOADING:
+                buttonTourActon.setEnabled(false);
+                buttonTourActon.setClickable(false);
+                // TODO: 17/12/15 code to move - start progress listening here is confusing
+                tourDownloader.startProgressListening(attractionId, this);
+                break;
+            case TOUR_ACTION_START:
+                buttonTourActon.setText("Start Tour");
+                break;
+            case TOUR_ACTION_RETRY:
+                buttonTourActon.setText("Retry Download");
+                break;
+        }
+    }
+
     private void loadFeaturedImage() {
-        Picasso.with(this)
-                .load(attraction.getFeaturedImage().getUrl())
-                .placeholder(R.drawable.placeholder_ratio_1_1)
+        RequestCreator requestCreator = null;
+        if (attraction.getFeaturedImage().getPath() != null) {
+            requestCreator = Picasso.with(this).load(new File(attraction.getFeaturedImage().getPath()));
+        } else {
+            requestCreator = Picasso.with(this).load(attraction.getFeaturedImage().getUrl());
+        }
+
+        requestCreator.placeholder(R.drawable.placeholder_ratio_1_1)
                 .error(R.drawable.placeholder_ratio_1_1)
                 .resize(600, 600)
                 .into(imageFeatured, new Callback() {
@@ -215,7 +356,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                     }
 
                     @Override
-                    public void onError() {}
+                    public void onError() {
+                    }
                 });
     }
 
@@ -261,6 +403,28 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         return viewTagTypeOne;
+    }
+
+    private void startTour() {
+        AttractionUpdate attractionUpdate = attractionUpdateRepo.find(attraction.getId());
+
+        if ( ! attraction.getUpdatedAt().equals(attractionUpdate.getUpdatedAt())) {
+            Snackbar snackbar = Snackbar
+                    .make(layoutCoordinator, "Tour Update Available", Snackbar.LENGTH_LONG)
+                    .setAction("UPDATE", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            bakery.toastShort("Updating");
+                        }
+                    });
+
+            snackbar.setActionTextColor(Color.BLUE);
+            snackbar.show();
+
+            return;
+        }
+
+        bakery.snackShort(layoutCoordinator, "Under Development !");
     }
 
     private void applyPalette(Palette palette) {

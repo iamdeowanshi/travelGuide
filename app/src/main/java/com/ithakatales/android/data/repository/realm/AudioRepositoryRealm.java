@@ -19,4 +19,11 @@ public class AudioRepositoryRealm extends BaseRepositoryRealm<Audio> implements 
         realm.commitTransaction();
     }
 
+    @Override
+    public void updateDownloadId(long audioId, long downloadId) {
+        realm.beginTransaction();
+        find(audioId).setDownloadId(downloadId);
+        realm.commitTransaction();
+    }
+
 }

@@ -21,6 +21,8 @@ public class Audio extends RealmObject {
     @SerializedName("encDigest")
     private String encDigest;
     private String path;
+    @SerializedName("size")
+    private long size;
     @SerializedName("duration")
     private long duration;
     @SerializedName("isPublished")
@@ -34,6 +36,8 @@ public class Audio extends RealmObject {
     @SerializedName("images")
     private RealmList<Image> images;
     private boolean isPlayed = false;
+    // download related details
+    private long downloadId;
 
     public long getId() {
         return id;
@@ -69,6 +73,14 @@ public class Audio extends RealmObject {
 
     public String getPath() {
         return path;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 
     public void setPath(String path) {
@@ -129,6 +141,14 @@ public class Audio extends RealmObject {
 
     public void setIsPlayed(boolean isPlayed) {
         this.isPlayed = isPlayed;
+    }
+
+    public long getDownloadId() {
+        return downloadId;
+    }
+
+    public void setDownloadId(long downloadId) {
+        this.downloadId = downloadId;
     }
 
 }

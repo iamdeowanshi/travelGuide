@@ -4,23 +4,22 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Farhan Ali
+ *
+ * used for attraction view/download status sending
  */
-public class AttractionRatingRequest {
+public class AttractionAccess {
 
     @SerializedName("userId")
     private long userId;
     @SerializedName("attractionId")
     private long attractionId;
-    @SerializedName("value")
-    private int rating;
 
-    public AttractionRatingRequest() {
+    public AttractionAccess() {
     }
 
-    public AttractionRatingRequest(long userId, long attractionId, int rating) {
+    public AttractionAccess(long userId, long attractionId) {
         this.userId = userId;
         this.attractionId = attractionId;
-        this.rating = rating;
     }
 
     public long getUserId() {
@@ -37,14 +36,6 @@ public class AttractionRatingRequest {
 
     public void setAttractionId(long attractionId) {
         this.attractionId = attractionId;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
     }
 
 }

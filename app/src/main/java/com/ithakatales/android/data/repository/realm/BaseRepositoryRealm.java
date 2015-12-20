@@ -2,6 +2,7 @@ package com.ithakatales.android.data.repository.realm;
 
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.repository.BaseRepository;
+import com.ithakatales.android.data.repository.RepoCallback;
 
 import java.util.List;
 
@@ -29,6 +30,39 @@ public abstract class BaseRepositoryRealm<T extends RealmObject> implements Base
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(obj);
         realm.commitTransaction();
+    }
+
+    @Override
+    public void save(List<T> collection) {
+        realm.beginTransaction();
+
+        for (T obj : collection) {
+            realm.copyToRealmOrUpdate(obj);
+        }
+
+        realm.commitTransaction();
+    }
+
+    @Override
+    public void saveAsync(final T obj, final RepoCallback callback) {
+        Realm.Transaction transaction = new Realm.Transaction() {
+            @Override
+            public void execute(Realm asyncRealm) {
+                asyncRealm.copyToRealmOrUpdate(obj);
+            }
+        };
+
+        realm.executeTransaction(transaction, new Realm.Transaction.Callback() {
+            @Override
+            public void onSuccess() {
+                if (callback != null) callback.onSuccess();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                if (callback != null) callback.onError(e);
+            }
+        });
     }
 
     @Override

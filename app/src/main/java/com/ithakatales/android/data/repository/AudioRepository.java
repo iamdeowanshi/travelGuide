@@ -9,4 +9,6 @@ public interface AudioRepository extends BaseRepository<Audio> {
 
     void updatePath(long id, String path);
 
+    void updateDownloadId(long audioId, long downloadId);
+
 }

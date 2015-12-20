@@ -1,6 +1,5 @@
 package com.ithakatales.android.presenter.concrete;
 
-import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.base.BaseNetworkPresenter;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
@@ -8,7 +7,6 @@ import com.ithakatales.android.data.model.City;
 import com.ithakatales.android.presenter.NavigationDrawerPresenter;
 import com.ithakatales.android.presenter.NavigationDrawerViewInteractor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;

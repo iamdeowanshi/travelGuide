@@ -29,15 +29,32 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     private NavigationDrawerFragment drawerFragment;
+    private City selectedCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         injectDependencies();
-
         setContentView(R.layout.activity_home);
+        setupActionBar();
+        setupNavigationDrawer();
+    }
 
+    @Override
+    public void onDrawerItemSelected(City city) {
+        selectedCity = city;
+        loadHomeFragment(city);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (selectedCity != null) {
+            loadHomeFragment(selectedCity);
+        }
+    }
+
+    private void setupActionBar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -45,19 +62,15 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
         getSupportActionBar().setIcon(R.mipmap.app_icon);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
                 R.string.app_name);
+    }
 
-        /*setting navigation drawer*/
+    private void setupNavigationDrawer() {
         drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setDrawerItemClickLister(this);
         drawerFragment.setUpDrawer(drawerLayout, toolbar);
     }
 
-    @Override
-    public void onDrawerItemSelected(City city) {
-        loadHomeFragment(city);
-    }
-
-    // TODO: 29/11/15 Optimization required: Adding seperate fragment on each item click is not required
+    // TODO: 29/11/15 Optimization required: Adding separate fragment on each item click is not required
     private void loadHomeFragment(City city) {
         HomeFragment homeFragment = new HomeFragment();
         Bundle bundle = new Bundle();

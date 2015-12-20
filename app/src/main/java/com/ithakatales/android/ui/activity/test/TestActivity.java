@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
-import com.ithakatales.android.data.model.TourDownload;
-import com.ithakatales.android.data.repository.TourDownloadRepository;
 import com.ithakatales.android.download.TourStorage;
 import com.ithakatales.android.util.Bakery;
 
@@ -29,7 +27,6 @@ public class TestActivity extends BaseActivity {
 
     @Inject Realm realm;
     @Inject Bakery bakery;
-    @Inject TourDownloadRepository tourDownloadRepo;
     @Inject TourStorage tourStorage;
 
     @Override
@@ -47,7 +44,6 @@ public class TestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_download_tour_test)
     void launchDownloadTourTest() {
-        startActivity(DownloadTourTestActivity.class, null);
     }
 
     @OnClick(R.id.btn_my_tours_test)
@@ -121,11 +117,6 @@ public class TestActivity extends BaseActivity {
 
     private File getIthakaFolder() {
         return tourStorage.getIthakaDir();
-    }
-
-    void doSomething() {
-        TourDownload tourDownload = tourDownloadRepo.find(1);
-        Timber.d(tourDownload.toString());
     }
 
 }

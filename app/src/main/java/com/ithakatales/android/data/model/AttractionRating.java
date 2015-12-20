@@ -5,19 +5,22 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Farhan Ali
  */
-public class AttractionViewRequest {
+public class AttractionRating {
 
     @SerializedName("userId")
     private long userId;
     @SerializedName("attractionId")
     private long attractionId;
+    @SerializedName("value")
+    private int rating;
 
-    public AttractionViewRequest() {
+    public AttractionRating() {
     }
 
-    public AttractionViewRequest(long userId, long attractionId) {
+    public AttractionRating(long userId, long attractionId, int rating) {
         this.userId = userId;
         this.attractionId = attractionId;
+        this.rating = rating;
     }
 
     public long getUserId() {
@@ -34,6 +37,14 @@ public class AttractionViewRequest {
 
     public void setAttractionId(long attractionId) {
         this.attractionId = attractionId;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
 }

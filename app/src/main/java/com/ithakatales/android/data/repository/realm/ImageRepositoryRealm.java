@@ -19,4 +19,11 @@ public class ImageRepositoryRealm extends BaseRepositoryRealm<Image> implements 
         realm.commitTransaction();
     }
 
+    @Override
+    public void updateDownloadId(long imageId, long downloadId) {
+        realm.beginTransaction();
+        find(imageId).setDownloadId(downloadId);
+        realm.commitTransaction();
+    }
+
 }

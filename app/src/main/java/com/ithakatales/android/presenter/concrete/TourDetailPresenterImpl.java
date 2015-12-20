@@ -4,11 +4,14 @@ import com.ithakatales.android.app.base.BaseNetworkPresenter;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.data.model.AttractionAccess;
+import com.ithakatales.android.data.model.User;
 import com.ithakatales.android.presenter.TourDetailPresenter;
 import com.ithakatales.android.presenter.TourDetailViewInteractor;
 
 import javax.inject.Inject;
 
+import retrofit.client.Response;
 import rx.Observable;
 
 /**
@@ -40,6 +43,39 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
             public void onError(Throwable e) {
                 viewInteractor.onNetworkError(e);
                 viewInteractor.hideProgress();
+            }
+        });
+    }
+
+    @Override
+    public void updateAttractionView(User user, long attractionId) {
+        AttractionAccess attractionAccess = new AttractionAccess(user.getId(), attractionId);
+        Observable<Response> observable = api.attractionViewed(user.getAccessToken(), attractionAccess);
+
+        subscribeForNetwork(observable, new ApiObserver<Response>() {
+            @Override
+            public void onResult(Response response) {}
+
+            @Override
+            public void onError(Throwable e) {
+                viewInteractor.onNetworkError(e);
+            }
+        });
+    }
+
+    @Override
+    public void updateAttractionDownload(User user, long attractionId) {
+        AttractionAccess attractionAccess = new AttractionAccess(user.getId(), attractionId);
+
+        Observable<Response> observable = api.attractionDownloaded(user.getAccessToken(), attractionAccess);
+
+        subscribeForNetwork(observable, new ApiObserver<Response>() {
+            @Override
+            public void onResult(Response response) {}
+
+            @Override
+            public void onError(Throwable e) {
+                viewInteractor.onNetworkError(e);
             }
         });
     }

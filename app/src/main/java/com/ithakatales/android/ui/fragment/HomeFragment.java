@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +45,8 @@ public class HomeFragment extends BaseFragment {
 
         viewPager.setAdapter(new HomePageAdapter(getChildFragmentManager()));
 
+        //viewPager.addOnPageChangeListener(pageChangeListener);
+
         // The setupWithViewPager doesn't works without the runnable. Maybe a Support Library Bug.
         tabLayout.post(new Runnable() {
             @Override
@@ -54,7 +56,7 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
-    private class HomePageAdapter extends FragmentPagerAdapter {
+    private class HomePageAdapter extends FragmentStatePagerAdapter {
 
         public HomePageAdapter(FragmentManager fm) {
             super(fm);

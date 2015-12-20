@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import com.ithakatales.android.app.IthakaApplication;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
-import com.ithakatales.android.data.repository.realm.AudioDownloadRepositoryRealm;
+import com.ithakatales.android.data.repository.realm.AttractionUpdateRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioRepositoryRealm;
-import com.ithakatales.android.data.repository.realm.ImageDownloadRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.ImageRepositoryRealm;
-import com.ithakatales.android.data.repository.realm.TourDownloadRepositoryRealm;
-import com.ithakatales.android.download.DownloadBuilder;
-import com.ithakatales.android.download.TourDownloadService;
-import com.ithakatales.android.download.manager.DefaultDownloader;
+import com.ithakatales.android.download.TourDownloadProgressObserver;
+import com.ithakatales.android.download.TourDownloadProgressReader;
+import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.presenter.concrete.NavigationDrawerPresenterImpl;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourDetailPresenterImpl;
@@ -21,7 +19,6 @@ import com.ithakatales.android.presenter.concrete.TourListPresenterImpl;
 import com.ithakatales.android.ui.activity.HomeActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
-import com.ithakatales.android.ui.activity.test.DownloadTourTestActivity;
 import com.ithakatales.android.ui.activity.test.TestActivity;
 import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
@@ -61,7 +58,6 @@ import dagger.Provides;
                 BaseActivity.class,
                 TestActivity.class,
                 ApiTestActivity.class,
-                DownloadTourTestActivity.class,
                 HomeActivity.class,
                 TourDetailActivity.class,
 
@@ -84,17 +80,15 @@ import dagger.Provides;
                 TourDetailPresenterImpl.class,
 
                 // Repositories
-                TourDownloadRepositoryRealm.class,
-                AudioDownloadRepositoryRealm.class,
                 AttractionRepositoryRealm.class,
+                AttractionUpdateRepositoryRealm.class,
                 AudioRepositoryRealm.class,
                 ImageRepositoryRealm.class,
-                ImageDownloadRepositoryRealm.class,
 
                 // Download
-                TourDownloadService.class,
-                DownloadBuilder.class,
-                DefaultDownloader.class,
+                TourDownloader.class,
+                TourDownloadProgressReader.class,
+                TourDownloadProgressObserver.class,
 
                 // Utilities
                 PreferenceUtil.class,
