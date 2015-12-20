@@ -85,7 +85,7 @@ import dagger.Provides;
                 AudioRepositoryRealm.class,
                 ImageRepositoryRealm.class,
 
-                // Download
+                // TourDownloadAction
                 TourDownloader.class,
                 TourDownloadProgressReader.class,
                 TourDownloadProgressObserver.class,

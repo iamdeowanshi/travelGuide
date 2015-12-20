@@ -231,15 +231,19 @@
 
                 <include
                     android:id="@+id/view_tag_type_one"
-                    layout="@layout/view_tag_type"/>
+                    layout="@layout/view_tag_type"
+                    android:visibility="gone" />
 
                 <include
                     android:id="@+id/view_tag_type_two"
-                    layout="@layout/view_tag_type"/>
+                    layout="@layout/view_tag_type"
+                    android:visibility="gone"
+                    android:background="@color/gray_light" />
 
                 <include
                     android:id="@+id/view_tag_type_three"
-                    layout="@layout/view_tag_type"/>
+                    layout="@layout/view_tag_type"
+                    android:visibility="gone" />
 
                 <!--Behind the scenes-->
 
