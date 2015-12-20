@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseFragment;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.data.model.User;
 import com.ithakatales.android.presenter.TourListPresenter;
 import com.ithakatales.android.presenter.TourListViewInteractor;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
@@ -65,6 +66,9 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
         recyclerTours.setLayoutManager(new LinearLayoutManager(context));
 
         presenter.loadAttractions(getArguments().getLong("city_id", 0));
+
+        // TODO: 18/12/15 - dummy user - to be updated
+        presenter.loadAttractionUpdates(User.dummy());
     }
 
     @Override

@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.ithakatales.android.app.Config;
 import com.ithakatales.android.data.repository.AttractionRepository;
+import com.ithakatales.android.data.repository.AttractionUpdateRepository;
 import com.ithakatales.android.data.repository.AudioRepository;
 import com.ithakatales.android.data.repository.ImageRepository;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
+import com.ithakatales.android.data.repository.realm.AttractionUpdateRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.ImageRepositoryRealm;
 
@@ -47,6 +49,12 @@ public class OrmModule {
     @Singleton
     public AttractionRepository provideAttractionRepository() {
         return new AttractionRepositoryRealm();
+    }
+
+    @Provides
+    @Singleton
+    public AttractionUpdateRepository provideAttractionUpdateRepository() {
+        return new AttractionUpdateRepositoryRealm();
     }
 
     @Provides

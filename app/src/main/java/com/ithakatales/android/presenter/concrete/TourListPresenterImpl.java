@@ -4,6 +4,9 @@ import com.ithakatales.android.app.base.BaseNetworkPresenter;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.data.model.AttractionUpdate;
+import com.ithakatales.android.data.model.User;
+import com.ithakatales.android.data.repository.AttractionUpdateRepository;
 import com.ithakatales.android.presenter.TourListPresenter;
 import com.ithakatales.android.presenter.TourListViewInteractor;
 
@@ -20,6 +23,7 @@ public class TourListPresenterImpl extends BaseNetworkPresenter<TourListViewInte
         implements TourListPresenter {
 
     @Inject IthakaApi api;
+    @Inject AttractionUpdateRepository attractionUpdateRepo;
 
     public TourListPresenterImpl() {
         injectDependencies();
@@ -42,6 +46,23 @@ public class TourListPresenterImpl extends BaseNetworkPresenter<TourListViewInte
             public void onError(Throwable e) {
                 viewInteractor.onNetworkError(e);
                 viewInteractor.hideProgress();
+            }
+        });
+    }
+
+    @Override
+    public void loadAttractionUpdates(User user) {
+        Observable<List<AttractionUpdate>> observable = api.getAttractionUpdates(user.getAccessToken(), user.getId());
+
+        subscribeForNetwork(observable, new ApiObserver<List<AttractionUpdate>>() {
+            @Override
+            public void onResult(List<AttractionUpdate> result) {
+                attractionUpdateRepo.save(result);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                viewInteractor.onNetworkError(e);
             }
         });
     }

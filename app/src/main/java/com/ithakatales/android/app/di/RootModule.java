@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import com.ithakatales.android.app.IthakaApplication;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
+import com.ithakatales.android.data.repository.realm.AttractionUpdateRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.ImageRepositoryRealm;
 import com.ithakatales.android.download.TourDownloadProgressObserver;
@@ -80,6 +81,7 @@ import dagger.Provides;
 
                 // Repositories
                 AttractionRepositoryRealm.class,
+                AttractionUpdateRepositoryRealm.class,
                 AudioRepositoryRealm.class,
                 ImageRepositoryRealm.class,
 

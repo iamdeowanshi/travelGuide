@@ -34,23 +34,10 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         injectDependencies();
-
         setContentView(R.layout.activity_home);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Ithakatales");
-        getSupportActionBar().setIcon(R.mipmap.app_icon);
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
-                R.string.app_name);
-
-        /*setting navigation drawer*/
-        drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        drawerFragment.setDrawerItemClickLister(this);
-        drawerFragment.setUpDrawer(drawerLayout, toolbar);
+        setupActionBar();
+        setupNavigationDrawer();
     }
 
     @Override
@@ -67,7 +54,23 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
         }
     }
 
-    // TODO: 29/11/15 Optimization required: Adding seperate fragment on each item click is not required
+    private void setupActionBar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Ithakatales");
+        getSupportActionBar().setIcon(R.mipmap.app_icon);
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
+                R.string.app_name);
+    }
+
+    private void setupNavigationDrawer() {
+        drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setDrawerItemClickLister(this);
+        drawerFragment.setUpDrawer(drawerLayout, toolbar);
+    }
+
+    // TODO: 29/11/15 Optimization required: Adding separate fragment on each item click is not required
     private void loadHomeFragment(City city) {
         HomeFragment homeFragment = new HomeFragment();
         Bundle bundle = new Bundle();

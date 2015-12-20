@@ -8,8 +8,13 @@ import com.ithakatales.android.data.repository.AttractionUpdateRepository;
  */
 public class AttractionUpdateRepositoryRealm extends BaseRepositoryRealm<AttractionUpdate> implements AttractionUpdateRepository {
 
-    public AttractionUpdateRepositoryRealm(Class<AttractionUpdate> modelType) {
-        super(modelType);
+    public AttractionUpdateRepositoryRealm() {
+        super(AttractionUpdate.class);
+    }
+
+    @Override
+    public AttractionUpdate find(long attractionId) {
+        return realm.where(modelType).equalTo("attractionId", attractionId).findFirst();
     }
 
 }

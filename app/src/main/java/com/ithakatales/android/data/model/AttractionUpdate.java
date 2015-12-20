@@ -3,12 +3,14 @@ package com.ithakatales.android.data.model;
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * @author Farhan Ali
  */
 public class AttractionUpdate extends RealmObject {
 
+    @PrimaryKey
     @SerializedName("attractionId")
     private long attractionId;
     @SerializedName("createdAt")

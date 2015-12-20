@@ -1,5 +1,6 @@
 package com.ithakatales.android.ui.activity;
 
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -28,9 +31,12 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.data.model.AttractionUpdate;
 import com.ithakatales.android.data.model.IconMap;
 import com.ithakatales.android.data.model.TagType;
+import com.ithakatales.android.data.model.User;
 import com.ithakatales.android.data.repository.AttractionRepository;
+import com.ithakatales.android.data.repository.AttractionUpdateRepository;
 import com.ithakatales.android.download.TourDownloadProgressListener;
 import com.ithakatales.android.download.TourDownloadProgressReader;
 import com.ithakatales.android.download.TourDownloader;
@@ -68,9 +74,11 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Inject TourDownloadProgressReader progressReader;
 
     @Inject AttractionRepository attractionRepo;
+    @Inject AttractionUpdateRepository attractionUpdateRepo;
     @Inject TourDetailPresenter presenter;
     @Inject Bakery bakery;
 
+    @Bind(R.id.layout_coordinator) CoordinatorLayout layoutCoordinator;
     @Bind(R.id.image_featured) ImageView imageFeatured;
 
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
@@ -145,6 +153,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Override
     public void onAttractionLoadSuccess(Attraction attraction) {
         this.attraction = attraction;
+        // TODO: 18/12/15 dummy user - change to actual
+        presenter.updateAttractionView(User.dummy(), attraction.getId());
         showAttractionDetails();
         setTourAction(TOUR_ACTION_DOWNLOAD);
     }
@@ -195,10 +205,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         switch (tourAction) {
             case TOUR_ACTION_DOWNLOAD:
                 tourDownloader.download(attraction);
+                // TODO: 18/12/15 dummy user - change to actual
+                presenter.updateAttractionDownload(User.dummy(), attraction.getId());
                 setTourAction(TOUR_ACTION_DOWNLOADING);
                 break;
             case TOUR_ACTION_START:
-                bakery.snackShort(getContentView(), "Under Development !");
+                startTour();
                 break;
             case TOUR_ACTION_RETRY:
                 tourDownloader.retryDownload(attraction);
@@ -344,7 +356,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                     }
 
                     @Override
-                    public void onError() {}
+                    public void onError() {
+                    }
                 });
     }
 
@@ -390,6 +403,28 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         return viewTagTypeOne;
+    }
+
+    private void startTour() {
+        AttractionUpdate attractionUpdate = attractionUpdateRepo.find(attraction.getId());
+
+        if ( ! attraction.getUpdatedAt().equals(attractionUpdate.getUpdatedAt())) {
+            Snackbar snackbar = Snackbar
+                    .make(layoutCoordinator, "Tour Update Available", Snackbar.LENGTH_LONG)
+                    .setAction("UPDATE", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            bakery.toastShort("Updating");
+                        }
+                    });
+
+            snackbar.setActionTextColor(Color.BLUE);
+            snackbar.show();
+
+            return;
+        }
+
+        bakery.snackShort(layoutCoordinator, "Under Development !");
     }
 
     private void applyPalette(Palette palette) {

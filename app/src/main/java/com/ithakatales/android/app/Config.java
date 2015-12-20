@@ -16,7 +16,7 @@ public class Config {
     // API related constants/configurations - used in ApiModule & Api class, prefix with API_
     //--------------------------------------------------------------------------------
     public static final String API_BASE_URL_PRODUCTION  = "";
-    public static final String API_BASE_URL_DEVELOP     = "http://52.74.156.9:1337/v1";
+    public static final String API_BASE_URL_DEVELOP     = "http://52.77.211.228:1337/v1";
     public static final String API_BASE_URL_MOCK        = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
@@ -51,7 +51,7 @@ public class Config {
      *
      * Query param : user_id : required
      */
-    public static final String API_DOWNLOADS_UPDATED    = "/attraction_downloads/updated";
+    public static final String API_DOWNLOADS_UPDATED    = "/attraction_downloads";
 
     /**
      * POST: send an attraction view status.
