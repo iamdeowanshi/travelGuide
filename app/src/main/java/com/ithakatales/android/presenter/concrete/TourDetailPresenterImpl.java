@@ -86,6 +86,7 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
                 viewInteractor.onAttractionLoaded(attraction, TourAction.RETRY);
                 break;
             case DownloadManager.STATUS_RUNNING:
+                viewInteractor.onAttractionLoaded(attraction, TourAction.DOWNLOADING);
                 tourDownloader.startProgressListening(attraction.getId(), progressListener);
                 break;
             case DownloadManager.STATUS_SUCCESSFUL:

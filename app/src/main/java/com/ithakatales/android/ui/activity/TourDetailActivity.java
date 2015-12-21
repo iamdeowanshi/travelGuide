@@ -238,6 +238,28 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         expandableTextCredits.setText(attraction.getCredits());
     }
 
+    // declared here because it is specific to method under this
+    private Callback featuredImageLoadCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            Bitmap bitmap = ((BitmapDrawable) imageFeatured.getDrawable()).getBitmap();
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                public void onGenerated(Palette palette) {
+                    applyPalette(palette);
+                }
+            });
+        }
+
+        @Override
+        public void onError() {
+            // if loading from file failed, then try from network - chance to happen during download is running
+            if (attraction.getFeaturedImage().getPath() != null) {
+                String url = attraction.getFeaturedImage().getUrl();
+                Picasso.with(getApplicationContext()).load(url).into(imageFeatured);
+            }
+        }
+    };
+
     private void loadFeaturedImage() {
         RequestCreator requestCreator = attraction.getFeaturedImage().getPath() != null
                 ? Picasso.with(this).load(new File(attraction.getFeaturedImage().getPath()))
@@ -246,23 +268,10 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         requestCreator.placeholder(R.drawable.placeholder_ratio_1_1)
                 .error(R.drawable.placeholder_ratio_1_1)
                 .resize(600, 600)
-                .into(imageFeatured, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Bitmap bitmap = ((BitmapDrawable) imageFeatured.getDrawable()).getBitmap();
-                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                            public void onGenerated(Palette palette) {
-                                applyPalette(palette);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
+                .into(imageFeatured, featuredImageLoadCallback);
     }
 
+    // declared here because it is specific to method under this
     private Target mapViewPicassoTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
