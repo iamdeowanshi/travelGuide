@@ -122,7 +122,8 @@ public class MapView extends SubsamplingScaleImageView {
             resetPaint();
             paint.setColor(Color.WHITE);
             paint.setTextSize(28);
-            canvas.drawText(marker.getId() + "", xCoordinate + 15, yCoordinate + 35, paint);
+            paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(marker.getId() + "", xCoordinate + 24, yCoordinate + 35, paint);
         }
     }
 
@@ -148,13 +149,15 @@ public class MapView extends SubsamplingScaleImageView {
         resetPaint();
         paint.setColor(Color.DKGRAY);
         paint.setTextSize(32);
-        canvas.drawText(selectedMarker.getTitle(), rect.left + 100, rect.top + 40, paint);
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(selectedMarker.getTitle(), rect.left + 150, rect.top + 50, paint);
 
         // draw duration
         resetPaint();
         paint.setColor(Color.DKGRAY);
         paint.setTextSize(24);
-        canvas.drawText(selectedMarker.getDuration(), rect.left + 100, rect.top + 70, paint);
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(selectedMarker.getDuration(), rect.left + 150, rect.top + 80, paint);
     }
 
     private void notifyIfMarkerTouch(int x, int y) {

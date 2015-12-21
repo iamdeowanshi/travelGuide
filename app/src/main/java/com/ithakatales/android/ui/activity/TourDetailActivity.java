@@ -3,6 +3,8 @@ package com.ithakatales.android.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -25,6 +27,7 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
+import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.model.TagType;
 import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.ithakatales.android.map.MapView;
@@ -43,6 +46,7 @@ import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 
@@ -259,15 +263,45 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                 });
     }
 
+    private Target mapViewPicassoTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            if (bitmap == null || bitmap.isRecycled()) {
+                loadPoiMap();
+                return;
+            }
+
+            mapView.setImage(ImageSource.bitmap(bitmap));
+
+            int bitmapWidth = bitmap.getWidth();
+            int bitmapHeight = bitmap.getHeight();
+
+            int index = 1;
+            for (Poi poi : attraction.getPois()) {
+                float x = (float) (poi.getxPercent() * bitmapWidth / 100);
+                float y = (float) (poi.getyPercent() * bitmapHeight / 100);
+                mapView.addMarker(new Marker(index, x, y, poi.getName(), "5 Min"));
+                index ++;
+            }
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            bakery.toastShort("Blueprint loading failed");
+            mapView.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
+
     // TODO: 09/12/15 load actual data
     private void loadPoiMap() {
-        mapView.setImage(ImageSource.asset("map_sample.jpg"));
-
-        mapView.addMarker(new Marker(1, 175f, 445f, "Poi 1", "76 min"));
-        mapView.addMarker(new Marker(2, 400f, 200f, "Poi 2", "42 min"));
-        mapView.addMarker(new Marker(3, 500f, 420f, "Poi 2", "18 min"));
-        mapView.addMarker(new Marker(4, 895f, 555f, "Poi 4", "24 min"));
-        mapView.addMarker(new Marker(5, 1100f, 300f, "Poi 5", "35 min"));
+        RequestCreator requestCreator = attraction.getBluePrintPath() != null
+                ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
+                : Picasso.with(this).load(attraction.getBlueprintUrl());
+       requestCreator.into(mapViewPicassoTarget);
     }
 
     private void loadTagTypes() {
@@ -307,8 +341,6 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         switch (tourAction) {
             case TourAction.DOWNLOAD:
                 return new TourDownloadAction(buttonTourActon, presenter);
-            /*case TourAction.DOWNLOADING:
-                return new TourDownloadingAction(buttonTourActon);*/
             case TourAction.START:
                 return new TourStartAction(buttonTourActon, this);
             case TourAction.RETRY:
