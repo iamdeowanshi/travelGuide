@@ -46,9 +46,9 @@ public class TestActivity extends BaseActivity {
     void launchDownloadTourTest() {
     }
 
-    @OnClick(R.id.btn_my_tours_test)
+    @OnClick(R.id.btn_ui)
     void launchMyToursTest() {
-        startActivity(MyToursTestActivity.class, null);
+        startActivity(UiTestActivity.class, null);
     }
 
     @OnClick(R.id.btn_clear_data)

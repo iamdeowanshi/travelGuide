@@ -61,8 +61,8 @@ public class TourDownloader {
 
     // TODO: 18/12/15 not a proper solution - will remove all the details and download it again even for small text changes
     public void update(Attraction updatedAttraction) {
-        attractionRepo.remove(updatedAttraction.getId());
         tourStorage.removeTour(updatedAttraction.getId());
+        attractionRepo.remove(updatedAttraction.getId());
         download(updatedAttraction);
     }
 
@@ -84,6 +84,11 @@ public class TourDownloader {
                 Timber.d(String.format("Retrying download: %d | %s | %s", newDownloadId, imageDownload.getImageName(), imageDownload.getUrl()));
             }
         }
+    }
+
+    public void delete(Attraction attraction) {
+        tourStorage.removeTour(attraction.getId());
+        attractionRepo.remove(attraction.getId());
     }
 
     public TourDownloadProgress readProgress(long attractionId) {

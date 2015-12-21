@@ -161,7 +161,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             return 0;
         }
 
-        // size + 2 : first for header "Download Progress" & last for total image download progress
+        // size + 2 : first for header "TourDownloadAction Progress" & last for total image download progress
         return downloadProgressMap.get(attraction.getId()).getAudioDownloadProgresses().size() + 2;
     }
 
