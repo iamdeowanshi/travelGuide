@@ -20,12 +20,12 @@
         android:text="Download Tour Test" />
 
     <Button
-        android:id="@+id/btn_my_tours_test"
+        android:id="@+id/btn_ui"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_download_tour_test"
         android:layout_centerHorizontal="true"
-        android:text="My Tours Test" />
+        android:text="UI" />
 
     <Button
         android:id="@+id/btn_export_realm"
