@@ -109,9 +109,6 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
     public void retryDownloadAttraction(Attraction attraction) {
         tourDownloader.retryDownload(attraction);
         tourDownloader.startProgressListening(attraction.getId(), progressListener);
-
-        // TODO: 21/12/15 dummy user
-        updateAttractionDownload(User.dummy(), attraction.getId());
     }
 
     @Override
@@ -123,9 +120,6 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
             public void onResult(Attraction result) {
                 tourDownloader.update(result);
                 tourDownloader.startProgressListening(result.getId(), progressListener);
-
-                // TODO: 21/12/15 dummy user
-                updateAttractionView(User.dummy(), result.getId());
             }
 
             @Override
@@ -134,9 +128,6 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
                 viewInteractor.hideProgress();
             }
         });
-
-        // TODO: 21/12/15 dummy user
-        updateAttractionDownload(User.dummy(), attraction.getId());
     }
 
     @Override

@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseFragment;
+import com.ithakatales.android.util.Bakery;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 
@@ -25,8 +28,12 @@ public class HomeFragment extends BaseFragment {
     public static final int TAB_TOUR_LIST   = 0;
     public static final int TAB_MY_TOURS    = 1;
 
+    @Inject Bakery bakery;
+
     @Bind(R.id.tab_layout) TabLayout tabLayout;
     @Bind(R.id.view_pager) ViewPager viewPager;
+
+    private HomePageAdapter homePageAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,9 +50,8 @@ public class HomeFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        homePageAdapter = new HomePageAdapter(getChildFragmentManager());
         viewPager.setAdapter(new HomePageAdapter(getChildFragmentManager()));
-
-        //viewPager.addOnPageChangeListener(pageChangeListener);
 
         // The setupWithViewPager doesn't works without the runnable. Maybe a Support Library Bug.
         tabLayout.post(new Runnable() {
@@ -57,6 +63,8 @@ public class HomeFragment extends BaseFragment {
     }
 
     private class HomePageAdapter extends FragmentStatePagerAdapter {
+        TourListFragment listFragment = new TourListFragment();
+        MyToursFragment myToursFragment = new MyToursFragment();
 
         public HomePageAdapter(FragmentManager fm) {
             super(fm);
@@ -68,10 +76,10 @@ public class HomeFragment extends BaseFragment {
 
             switch (position) {
                 case TAB_TOUR_LIST:
-                    fragment = new TourListFragment();
+                    fragment = listFragment;
                     break;
                 case TAB_MY_TOURS:
-                    fragment = new MyToursFragment();
+                    fragment = myToursFragment;
                     break;
             }
 
