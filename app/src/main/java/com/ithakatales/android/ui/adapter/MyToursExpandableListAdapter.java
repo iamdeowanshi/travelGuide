@@ -26,6 +26,7 @@ import com.ithakatales.android.download.TourDownloadProgressListener;
 import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.model.AudioDownloadProgress;
 import com.ithakatales.android.download.model.TourDownloadProgress;
+import com.ithakatales.android.util.Bakery;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
@@ -39,6 +40,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -54,6 +56,8 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     @Inject AudioRepository audioRepo;
 
     @Inject TourDownloader tourDownloader;
+
+    @Inject Bakery bakery;
 
     private List<Attraction> attractions;
     private Map<Long, TourDownloadProgress> downloadProgressMap = new HashMap<>();
@@ -124,7 +128,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         GroupViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item_mytours_group, null);
+            convertView = inflater.inflate(R.layout.list_item_mytours_group, parent, false);
             viewHolder = new GroupViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
@@ -259,6 +263,11 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
                     .error(R.drawable.placeholder_ratio_3_2)
                     .resize(600, 400)
                     .into(this);
+        }
+
+        @OnClick(R.id.button_tour_action)
+        void onTourActionClick() {
+            bakery.toastShort("Under Development !");
         }
 
         @Override
