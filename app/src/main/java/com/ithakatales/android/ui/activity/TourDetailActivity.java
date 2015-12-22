@@ -88,6 +88,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.progress) ProgressBar progress;
 
     private Attraction attraction;
+    private int tourAction;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +146,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Override
     public void onAttractionLoaded(Attraction attraction, int tourAction) {
+        this.tourAction = tourAction;
         showTourDetails(attraction);
         buttonTourActon.setTag(getTourAction(tourAction));
     }
@@ -251,17 +253,11 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         @Override
-        public void onError() {
-            // if loading from file failed, then try from network - chance to happen during download is running
-            if (attraction.getFeaturedImage().getPath() != null) {
-                String url = attraction.getFeaturedImage().getUrl();
-                Picasso.with(getApplicationContext()).load(url).into(imageFeatured);
-            }
-        }
+        public void onError() {}
     };
 
     private void loadFeaturedImage() {
-        RequestCreator requestCreator = attraction.getFeaturedImage().getPath() != null
+        RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction != TourAction.DOWNLOADING)
                 ? Picasso.with(this).load(new File(attraction.getFeaturedImage().getPath()))
                 : Picasso.with(this).load(attraction.getFeaturedImage().getUrl());
 
@@ -275,6 +271,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     private Target mapViewPicassoTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            mapView.recycle();
+
             if (bitmap == null || bitmap.isRecycled()) {
                 loadPoiMap();
                 return;
@@ -307,7 +305,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     // TODO: 09/12/15 load actual data
     private void loadPoiMap() {
-        RequestCreator requestCreator = attraction.getBluePrintPath() != null
+        RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction != TourAction.DOWNLOADING)
                 ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
                 : Picasso.with(this).load(attraction.getBlueprintUrl());
        requestCreator.into(mapViewPicassoTarget);
