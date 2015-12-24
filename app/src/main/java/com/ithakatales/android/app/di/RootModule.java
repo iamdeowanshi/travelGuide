@@ -24,7 +24,6 @@ import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
-import com.ithakatales.android.ui.fragment.HomeFragment;
 import com.ithakatales.android.ui.fragment.MyToursFragment;
 import com.ithakatales.android.ui.fragment.NavigationDrawerFragment;
 import com.ithakatales.android.ui.fragment.TourListFragment;
@@ -38,7 +37,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Include all other modules, provide Context dependency. All activity, fragment, presenter and
+ * Include all other modules, provide BaseActivity dependency. All activity, fragment, presenter and
  * any classes that are going to use dependency injection should be registered here.
  *
  * @author Farhan Ali
@@ -62,7 +61,6 @@ import dagger.Provides;
                 TourDetailActivity.class,
 
                 // Fragments
-                HomeFragment.class,
                 NavigationDrawerFragment.class,
                 TourListFragment.class,
                 MyToursFragment.class,

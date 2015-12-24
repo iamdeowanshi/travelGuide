@@ -109,10 +109,12 @@ public class NavigationDrawerFragment extends BaseFragment implements Navigation
 
     @Override
     public void citiesLoaded(List<City> cities) {
-        this.cities.clear();
-        this.cities.addAll(cities);
-        adapter.notifyDataSetChanged();
-        selectItemAt(0);
+        if (cities.size() > 0) {
+            this.cities.clear();
+            this.cities.addAll(cities);
+            adapter.notifyDataSetChanged();
+            selectItemAt(0);
+        }
     }
 
     @Override
@@ -142,9 +144,8 @@ public class NavigationDrawerFragment extends BaseFragment implements Navigation
     }
 
     private void selectItemAt(int index) {
-        try {
+        if (cities.size() > index) {
             drawerItemClickLister.onDrawerItemSelected(cities.get(index));
-        } catch (Exception e) {
         }
     }
 

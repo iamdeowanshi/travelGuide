@@ -8,11 +8,11 @@ import com.ithakatales.android.data.model.Attraction;
 
 public class TourStartAction extends TourAction {
 
-    private BaseActivity activity;
+    private BaseActivity context;
 
-    public TourStartAction(Button button, BaseActivity activity) {
+    public TourStartAction(Button button, BaseActivity context) {
         super(button);
-        this.activity = activity;
+        this.context = context;
         text = "Start Tour";
         enable = true;
 
@@ -22,7 +22,7 @@ public class TourStartAction extends TourAction {
     @Override
     public void perform(Attraction attraction) {
         // start tour here
-        Toast.makeText(activity, "Under Development !", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Under Development !", Toast.LENGTH_SHORT).show();
     }
 
 }

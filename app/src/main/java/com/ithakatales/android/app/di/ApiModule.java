@@ -121,7 +121,7 @@ public class ApiModule {
     /**
      * Creates a http cache enable OkHttpClient
      *
-     * @param context Application Context
+     * @param context Application BaseActivity
      * @return OkHttpClient
      */
     private static OkHttpClient createOkHttpClient(Context context) {
