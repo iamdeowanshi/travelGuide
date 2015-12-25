@@ -5,9 +5,6 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 import com.ithakatales.android.R;
-import com.ithakatales.android.app.di.Injector;
-
-import javax.inject.Inject;
 
 /**
  * @author Farhan Ali
