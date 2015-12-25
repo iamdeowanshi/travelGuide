@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/spacing_small"
-        android:src="@drawable/icon_art" />
+        android:src="@drawable/tag_icon_art" />
 
     <TextView
         android:id="@+id/text_tag_name"

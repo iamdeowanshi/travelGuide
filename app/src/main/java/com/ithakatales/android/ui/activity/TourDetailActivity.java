@@ -209,8 +209,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         viewTagTypeTwo.setBackgroundColor(ContextCompat.getColor(this, R.color.gray_light));
 
         // initialize mapView
-        mapView.setMarkerDrawable(R.drawable.icon_map_marker);
-        mapView.setMarkerSelectedDrawable(R.drawable.icon_map_marker_selected);
+        mapView.setMarkerDrawable(R.drawable.img_map_marker);
+        mapView.setMarkerSelectedDrawable(R.drawable.img_map_marker_selected);
     }
 
     private void showTourDetails(Attraction attraction) {
