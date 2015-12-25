@@ -40,6 +40,7 @@ import com.ithakatales.android.ui.actions.TourDownloadRetryAction;
 import com.ithakatales.android.ui.actions.TourStartAction;
 import com.ithakatales.android.ui.actions.TourUpdateAction;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
+import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.util.Bakery;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
@@ -85,6 +86,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Bind(R.id.button_tour_action) Button buttonTourActon;
     @Bind(R.id.progress) ProgressBar progress;
+
+    @Bind(R.id.view_no_network) NoNetworkView viewNoNetwork;
 
     private Attraction attraction;
     private int tourAction;
@@ -162,6 +165,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Override
     public void onNoNetwork() {
         bakery.toastShort("No network !");
+        viewNoNetwork.show();
     }
 
     @Override
@@ -178,6 +182,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     public void onNetworkError(Throwable e) {
         bakery.toastShort(e.getMessage());
         Timber.e(e.getMessage(), e);
+        viewNoNetwork.show();
     }
 
     @OnClick(R.id.button_preview_player)
@@ -211,6 +216,19 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         // initialize mapView
         mapView.setMarkerDrawable(R.drawable.img_map_marker);
         mapView.setMarkerSelectedDrawable(R.drawable.img_map_marker_selected);
+
+        // initialize no network view
+        viewNoNetwork.hide();
+        viewNoNetwork.setNetworkRetryListener(new NoNetworkView.NetworkRetryListener() {
+            @Override
+            public void onNetworkAvailable() {
+                finish();
+                startActivity(getIntent());
+            }
+
+            @Override
+            public void onNetworkNotAvailable() {}
+        });
     }
 
     private void showTourDetails(Attraction attraction) {

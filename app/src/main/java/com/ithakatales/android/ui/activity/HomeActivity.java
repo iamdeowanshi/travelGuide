@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.City;
+import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.ui.fragment.MyToursFragment;
 import com.ithakatales.android.ui.fragment.NavigationDrawerFragment;
 import com.ithakatales.android.ui.fragment.TourListFragment;
@@ -114,6 +115,18 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
         }
     }
 
+    private void setupNetworkRetryListener(TourListFragment tourListFragment) {
+        tourListFragment.setNetworkRetryListener(new NoNetworkView.NetworkRetryListener() {
+            @Override
+            public void onNetworkAvailable() {
+                drawerFragment.loadCities();
+            }
+
+            @Override
+            public void onNetworkNotAvailable() {}
+        });
+    }
+
     private class HomePageAdapter extends FragmentStatePagerAdapter {
         public HomePageAdapter(FragmentManager fm) {
             super(fm);
@@ -125,7 +138,9 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
 
             switch (position) {
                 case POSITION_TOUR_LIST:
-                    fragment = new TourListFragment();
+                    TourListFragment tourListFragment = new TourListFragment();
+                    setupNetworkRetryListener(tourListFragment);
+                    fragment = tourListFragment;
                     break;
                 case POSITION_MY_TOURS:
                     fragment = new MyToursFragment();
@@ -178,6 +193,7 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
         public Fragment getFragment(int position) {
             return pageFragmentMap.get(position);
         }
+
     }
 
 }

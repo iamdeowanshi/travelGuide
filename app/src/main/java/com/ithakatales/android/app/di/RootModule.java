@@ -30,6 +30,7 @@ import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
+import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.ui.fragment.MyToursFragment;
 import com.ithakatales.android.ui.fragment.NavigationDrawerFragment;
 import com.ithakatales.android.ui.fragment.TourListFragment;
@@ -86,6 +87,9 @@ import dagger.Provides;
                 TagGridAdapter.class,
                 MyToursExpandableListAdapter.class,
 
+                // Custom view
+                NoNetworkView.class,
+
                 // Presenters
                 SamplePresenterImpl.class,
                 NavigationDrawerPresenterImpl.class,
@@ -98,7 +102,7 @@ import dagger.Provides;
                 AudioRepositoryRealm.class,
                 ImageRepositoryRealm.class,
 
-                // TourDownloadAction
+                // Tour Downloader
                 TourDownloader.class,
                 TourDownloadProgressReader.class,
                 TourDownloadProgressObserver.class,

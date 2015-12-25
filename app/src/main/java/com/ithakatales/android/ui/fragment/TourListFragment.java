@@ -20,6 +20,7 @@ import com.ithakatales.android.presenter.TourListViewInteractor;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.adapter.RecyclerItemClickListener;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
+import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.util.Bakery;
 
 import java.util.ArrayList;
@@ -41,10 +42,14 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
 
     @Bind(R.id.recycler_tours) RecyclerView recyclerTours;
     @Bind(R.id.progress) ProgressBar progress;
+    @Bind(R.id.view_no_network) NoNetworkView viewNoNetwork;
 
     private ToursListRecyclerAdapter toursListRecyclerAdapter;
 
     private List<Attraction> attractions = new ArrayList<>();
+    private City selectedCity;
+
+    private NoNetworkView.NetworkRetryListener networkRetryListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +70,8 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
         toursListRecyclerAdapter = new ToursListRecyclerAdapter(attractions, this);
         recyclerTours.setAdapter(toursListRecyclerAdapter);
         recyclerTours.setLayoutManager(new LinearLayoutManager(context));
+
+        viewNoNetwork.setNetworkRetryListener(networkRetryListener);
 
         // TODO: 18/12/15 - dummy user - to be updated
         presenter.loadAttractionUpdates(User.dummy());
@@ -101,7 +108,12 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
     }
 
     public void onCitySelectionChanged(City city) {
+        selectedCity = city;
         presenter.loadAttractions(city.getId());
+    }
+
+    public void setNetworkRetryListener(NoNetworkView.NetworkRetryListener networkRetryListener) {
+        this.networkRetryListener = networkRetryListener;
     }
 
 }

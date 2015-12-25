@@ -72,6 +72,10 @@ public class NavigationDrawerFragment extends BaseFragment implements Navigation
         recyclerCities.setAdapter(adapter);
         recyclerCities.setLayoutManager(new LinearLayoutManager(context));
 
+        loadCities();
+    }
+
+    public void loadCities() {
         presenter.loadCities();
     }
 
