@@ -348,7 +348,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             case TourAction.DOWNLOAD:
                 return new TourDownloadAction(buttonTourActon, presenter);
             case TourAction.START:
-                return new TourStartAction(buttonTourActon, this);
+                return new TourStartAction(buttonTourActon);
             case TourAction.RETRY:
                 return new TourDownloadRetryAction(buttonTourActon, presenter);
             case TourAction.UPDATE:

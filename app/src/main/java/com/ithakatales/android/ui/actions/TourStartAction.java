@@ -1,18 +1,27 @@
 package com.ithakatales.android.ui.actions;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
+import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.DialogUtil;
+
+import javax.inject.Inject;
 
 public class TourStartAction extends TourAction {
 
-    private BaseActivity context;
+    @Inject Bakery bakery;
 
-    public TourStartAction(Button button, BaseActivity context) {
+    public TourStartAction(Button button) {
         super(button);
-        this.context = context;
+        Injector.instance().inject(this);
+
         text = "Start Tour";
         enable = true;
 
@@ -22,7 +31,7 @@ public class TourStartAction extends TourAction {
     @Override
     public void perform(Attraction attraction) {
         // start tour here
-        Toast.makeText(context, "Under Development !", Toast.LENGTH_SHORT).show();
+        bakery.toastShort("Under Development !");
     }
 
 }

@@ -8,6 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +50,6 @@ import timber.log.Timber;
 /**
  * @author farhanali
  */
-
 public class MyToursExpandableListAdapter extends BaseExpandableListAdapter implements TourDownloadProgressListener {
 
     @Inject Context context;
@@ -245,24 +247,16 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             switch (download.getStatus()) {
                 case DownloadManager.STATUS_SUCCESSFUL:
                     tourAction = checkForUpdateOrDelete(attraction);
-                    buttonTourAction.setVisibility(View.VISIBLE);
-                    textProgress.setVisibility(View.GONE);
-                    progress.setVisibility(View.GONE);
+                    showTourActionButton("Start Tour", R.drawable.ic_button_start_tour, R.drawable.bg_button_teal_rounded, android.R.color.white);
                     break;
                 case DownloadManager.STATUS_FAILED:
                     tourAction = TourAction.RETRY;
-                    buttonTourAction.setText("Retry");
-                    buttonTourAction.setVisibility(View.VISIBLE);
-                    textProgress.setVisibility(View.GONE);
-                    progress.setVisibility(View.GONE);
+                    showTourActionButton("Retry", R.drawable.ic_button_retry, R.drawable.bg_button_gray_rounded, R.color.primary);
                     break;
                 case DownloadManager.STATUS_RUNNING:
                     tourAction = TourAction.DOWNLOADING;
                     requestCreator = Picasso.with(context).load(attraction.getFeaturedImage().getUrl());
-                    textProgress.setText(String.format("%d%%", download.getProgress()));
-                    int progressDrawableId = download.getProgress() < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
-                    progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
-                    progress.setProgress(download.getProgress());
+                    showProgressView(download.getProgress());
                     break;
             }
 
@@ -308,6 +302,40 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             }
 
             return TourAction.START;
+        }
+
+        private void showTourActionButton(String text, int leftDrawableId, int backgroundDrawableId, int textColorId) {
+            hideProgressView();
+
+            buttonTourAction.setVisibility(View.VISIBLE);
+            buttonTourAction.setBackground(ContextCompat.getDrawable(context, backgroundDrawableId));
+            buttonTourAction.setTextColor(ContextCompat.getColor(context, textColorId));
+            buttonTourAction.setAllCaps(false);
+
+            Spannable buttonLabel = new SpannableString("   " + text.toUpperCase());
+            buttonLabel.setSpan(new ImageSpan(context, leftDrawableId,
+                    ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            buttonTourAction.setText(buttonLabel);
+        }
+
+        private void showProgressView(int progressValue) {
+            hidTourActionButton();
+
+            textProgress.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.VISIBLE);
+            textProgress.setText(String.format("%d%%", progressValue));
+            int progressDrawableId = progressValue < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
+            progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
+            progress.setProgress(progressValue);
+        }
+
+        private void hidTourActionButton() {
+            buttonTourAction.setVisibility(View.INVISIBLE);
+        }
+
+        private void hideProgressView() {
+            textProgress.setVisibility(View.GONE);
+            progress.setVisibility(View.GONE);
         }
     }
 

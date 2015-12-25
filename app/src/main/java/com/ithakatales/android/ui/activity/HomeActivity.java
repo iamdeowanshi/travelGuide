@@ -64,13 +64,18 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
     @Override
     public void onDrawerItemSelected(City city) {
         selectedCity = city;
-        notifyCitySelection();
+        TourListFragment tourListFragment = (TourListFragment) homePageAdapter.getFragment(POSITION_TOUR_LIST);
+
+        if (tourListFragment != null && selectedCity != null) {
+            getSupportActionBar().setTitle(selectedCity.getName());
+            tourListFragment.onCitySelectionChanged(selectedCity);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        notifyCitySelection();
+        refreshMyToursView();
     }
 
     private void setupActionBar() {
@@ -101,13 +106,8 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
         });
     }
 
-    void notifyCitySelection() {
-        TourListFragment tourListFragment = (TourListFragment) homePageAdapter.getFragment(POSITION_TOUR_LIST);
+    private void refreshMyToursView() {
         MyToursFragment myToursFragment = (MyToursFragment) homePageAdapter.getFragment(POSITION_MY_TOURS);
-
-        if (tourListFragment != null && selectedCity != null) {
-            tourListFragment.onCitySelectionChanged(selectedCity);
-        }
 
         if (myToursFragment != null) {
             myToursFragment.updateAdapter();
