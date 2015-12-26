@@ -17,6 +17,7 @@ import com.ithakatales.android.presenter.TourDetailViewInteractor;
 import com.ithakatales.android.ui.actions.TourAction;
 import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.DialogUtil;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
 
     @Inject Bakery bakery;
     @Inject DialogUtil dialogUtil;
+    @Inject ConnectivityUtil connectivityUtil;
 
     @Inject TourDetailPresenter presenter;
 
@@ -124,6 +126,11 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
         dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
             @Override
             public void onPositiveClick() {
+                if ( ! connectivityUtil.isConnected()) {
+                    bakery.toastShort("No network, Try later");
+                    return;
+                }
+
                 isAdapterNotified = false;
                 bakery.toastShort("Updating..");
                 presenter.updateAttraction(attraction);

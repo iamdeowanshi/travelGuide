@@ -6,6 +6,7 @@ import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.presenter.TourDetailPresenter;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.DialogUtil;
 
 import javax.inject.Inject;
@@ -14,6 +15,7 @@ public class TourUpdateAction extends TourAction {
 
     @Inject DialogUtil dialogUtil;
     @Inject Bakery bakery;
+    @Inject ConnectivityUtil connectivityUtil;
 
     private TourDetailPresenter presenter;
 
@@ -34,6 +36,11 @@ public class TourUpdateAction extends TourAction {
         dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
             @Override
             public void onPositiveClick() {
+                if ( ! connectivityUtil.isConnected()) {
+                    bakery.toastShort("No network, Try later");
+                    return;
+                }
+
                 bakery.toastShort("Updating..");
                 presenter.updateAttraction(attraction);
             }
