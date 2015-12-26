@@ -9,8 +9,6 @@ import android.widget.ExpandableListView;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseFragment;
 import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.data.repository.AttractionRepository;
-import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.ithakatales.android.presenter.TourDetailPresenter;
 import com.ithakatales.android.presenter.TourDetailViewInteractor;
@@ -19,9 +17,6 @@ import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.DialogUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -33,19 +28,15 @@ import timber.log.Timber;
  */
 public class MyToursFragment extends BaseFragment implements TourDetailViewInteractor, MyToursExpandableListAdapter.TourActionClickListener {
 
-    @Inject AttractionRepository attractionRepo;
-    @Inject TourDownloader tourDownloader;
+    @Inject TourDetailPresenter presenter;
 
     @Inject Bakery bakery;
     @Inject DialogUtil dialogUtil;
     @Inject ConnectivityUtil connectivityUtil;
 
-    @Inject TourDetailPresenter presenter;
-
     @Bind(R.id.list_my_tours) ExpandableListView listMyTours;
 
     private MyToursExpandableListAdapter adapter;
-    private List<Attraction> attractions = new ArrayList<>();
 
     private boolean isAdapterNotified;
 
@@ -65,8 +56,7 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        attractions = attractionRepo.readAll();
-        adapter = new MyToursExpandableListAdapter(attractions);
+        adapter = new MyToursExpandableListAdapter();
         adapter.setTourActionClickListener(this);
         listMyTours.setAdapter(adapter);
     }
@@ -103,10 +93,10 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     public void onTourActionClick(Attraction attraction, int tourAction) {
         switch (tourAction) {
             case TourAction.START:
-                bakery.toastShort("Under development");
+                startTour(attraction);
                 break;
             case TourAction.RETRY:
-                tourDownloader.retryDownload(attraction);
+                retryDownload(attraction);
                 break;
             case TourAction.UPDATE:
                 showUpdateAvailableDialog(attraction);
@@ -122,11 +112,25 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
         adapter.notifyDataSetChanged();
     }
 
+    private void retryDownload(Attraction attraction) {
+        if (!connectivityUtil.isConnected()) {
+            bakery.toastShort("No network, Try later");
+            return;
+        }
+
+        isAdapterNotified = false;
+        presenter.retryDownloadAttraction(attraction);
+    }
+
+    private void startTour(Attraction attraction) {
+        bakery.toastShort("Under Development !");
+    }
+
     private void showUpdateAvailableDialog(final Attraction attraction) {
         dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
             @Override
             public void onPositiveClick() {
-                if ( ! connectivityUtil.isConnected()) {
+                if (!connectivityUtil.isConnected()) {
                     bakery.toastShort("No network, Try later");
                     return;
                 }
@@ -154,7 +158,8 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
             @Override
             public void onPositiveClick() {
                 bakery.toastShort("Deleting..");
-                tourDownloader.delete(attraction);
+                presenter.deleteAttraction(attraction);
+                updateAdapter();
             }
 
             @Override
@@ -168,10 +173,6 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
                 .setPositiveButtonText("Remove")
                 .setNegativeButtonText("Continue")
                 .show(getActivity());
-    }
-
-    private void startTour(Attraction attraction) {
-        bakery.toastShort("Under Development !");
     }
 
 }

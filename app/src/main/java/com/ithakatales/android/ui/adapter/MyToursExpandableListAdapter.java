@@ -24,6 +24,7 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.AttractionUpdate;
+import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.data.repository.AttractionUpdateRepository;
 import com.ithakatales.android.download.TourDownloadProgressListener;
 import com.ithakatales.android.download.TourDownloader;
@@ -56,6 +57,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     @Inject LayoutInflater inflater;
 
     @Inject TourDownloader tourDownloader;
+    @Inject AttractionRepository attractionRepo;
     @Inject AttractionUpdateRepository attractionUpdateRepo;
 
     private TourActionClickListener tourActionClickListener;
@@ -65,9 +67,9 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     private List<Attraction> attractions;
     private Map<Long, TourDownloadProgress> downloadProgressMap = new HashMap<>();
 
-    public MyToursExpandableListAdapter(List<Attraction> attractions) {
+    public MyToursExpandableListAdapter() {
         Injector.instance().inject(this);
-        this.attractions = attractions;
+        this.attractions = attractionRepo.readAll();
         updateProgressMap();
     }
 
