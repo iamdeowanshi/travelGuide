@@ -134,7 +134,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         return super.onOptionsItemSelected(item);
     }
 
-    // required for handling collapsing toolbar & coordinator layout interaction
+    // required for handling map view interaction
     @Override
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
         try {
@@ -284,7 +284,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                 .into(imageFeatured, featuredImageLoadCallback);
     }
 
-    // declared here because it is specific to method under this
+    // declared here because it is specific to method under this, target instance got garbage collected,
+    // that's why it should be an instance variable
     private Target mapViewPicassoTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -320,7 +321,6 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
     };
 
-    // TODO: 09/12/15 load actual data
     private void loadPoiMap() {
         RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction != TourAction.DOWNLOADING)
                 ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))

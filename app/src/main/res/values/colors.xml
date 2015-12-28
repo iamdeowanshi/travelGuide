@@ -9,6 +9,7 @@
     <color name="pink_pressed">#c61557</color>
     <color name="pink_disabled">#d785a4</color>
 
+    <color name="white">@android:color/white</color>
     <color name="black_transparent_50">#80000000</color>
     <color name="gray_light">#dddddd</color>
     <color name="gray_normal">#cecfcf</color>
@@ -16,4 +17,5 @@
 
     <color name="progress_partial">#37abb7</color>
     <color name="progress_full">#35D866</color>
+    <color name="progress_yellow">#FDEB65</color>
 </resources>
