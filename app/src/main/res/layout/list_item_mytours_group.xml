@@ -59,10 +59,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/bg_button_teal"
+        android:layout_margin="@dimen/spacing_medium"
+        android:background="@drawable/bg_button_teal_rounded"
+        android:gravity="center"
         android:text="Start Tour"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:visibility="gone"/>
+        android:textColor="@android:color/white"/>
 
 </RelativeLayout>

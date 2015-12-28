@@ -2,6 +2,7 @@ package com.ithakatales.android.app.di;
 
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
+import com.ithakatales.android.util.DialogUtil;
 import com.ithakatales.android.util.PreferenceUtil;
 
 import javax.inject.Singleton;
@@ -36,6 +37,11 @@ public class UtilModule {
     @Singleton
     public Bakery provideBakery() {
         return new Bakery();
+    }
+
+    @Provides
+    public DialogUtil provideDialogUtil() {
+        return new DialogUtil();
     }
 
 }

@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
 public class AttractionUpdate extends RealmObject {
 
     @PrimaryKey
-    @SerializedName("attractionId")
+    @SerializedName("attraction_id")
     private long attractionId;
     @SerializedName("createdAt")
     private String createdAt;

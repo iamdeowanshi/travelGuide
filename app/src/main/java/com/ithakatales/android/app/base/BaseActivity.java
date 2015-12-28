@@ -47,6 +47,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             case R.id.action_send_feedback:
                 bakery.toastShort("send feedback clicked");
                 break;
+            case android.R.id.home:
+                onBackPressed();
+                break;
         }
 
         return super.onOptionsItemSelected(item);

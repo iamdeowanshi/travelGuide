@@ -8,6 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +23,15 @@ import android.widget.TextView;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.data.model.AttractionUpdate;
 import com.ithakatales.android.data.repository.AttractionRepository;
-import com.ithakatales.android.data.repository.AudioRepository;
+import com.ithakatales.android.data.repository.AttractionUpdateRepository;
 import com.ithakatales.android.download.TourDownloadProgressListener;
 import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.model.AudioDownloadProgress;
 import com.ithakatales.android.download.model.TourDownloadProgress;
+import com.ithakatales.android.ui.actions.TourAction;
+import com.ithakatales.android.util.Bakery;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
@@ -39,29 +45,36 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
  * @author farhanali
  */
-
 public class MyToursExpandableListAdapter extends BaseExpandableListAdapter implements TourDownloadProgressListener {
 
     @Inject Context context;
     @Inject LayoutInflater inflater;
 
-    @Inject AttractionRepository attractionRepo;
-    @Inject AudioRepository audioRepo;
-
     @Inject TourDownloader tourDownloader;
+    @Inject AttractionRepository attractionRepo;
+    @Inject AttractionUpdateRepository attractionUpdateRepo;
+
+    private TourActionClickListener tourActionClickListener;
+
+    @Inject Bakery bakery;
 
     private List<Attraction> attractions;
     private Map<Long, TourDownloadProgress> downloadProgressMap = new HashMap<>();
 
-    public MyToursExpandableListAdapter(List<Attraction> attractions) {
+    public MyToursExpandableListAdapter() {
         Injector.instance().inject(this);
-        this.attractions = attractions;
+        this.attractions = attractionRepo.readAll();
         updateProgressMap();
+    }
+
+    public void setTourActionClickListener(TourActionClickListener tourActionClickListener) {
+        this.tourActionClickListener = tourActionClickListener;
     }
 
     @Override
@@ -124,7 +137,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         GroupViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item_mytours_group, null);
+            convertView = inflater.inflate(R.layout.list_item_mytours_group, parent, false);
             viewHolder = new GroupViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
@@ -210,23 +223,23 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     }
 
     public class GroupViewHolder implements Target {
-        @Bind(R.id.layout_item_container)
-        RelativeLayout layoutItemContainer;
-        @Bind(R.id.text_name)
-        TextView textName;
-        @Bind(R.id.text_caption)
-        TextView textCaption;
-        @Bind(R.id.text_progress)
-        TextView textProgress;
-        @Bind(R.id.progress)
-        ProgressBar progress;
+        @Bind(R.id.layout_item_container) RelativeLayout layoutItemContainer;
+        @Bind(R.id.text_name) TextView textName;
+        @Bind(R.id.text_caption) TextView textCaption;
+        @Bind(R.id.text_progress) TextView textProgress;
+        @Bind(R.id.progress) ProgressBar progress;
         @Bind(R.id.button_tour_action) Button buttonTourAction;
+
+        private Attraction attraction;
+        private int tourAction;
 
         public GroupViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
         }
 
         public void bindData(Attraction attraction) {
+            this.attraction = attraction;
+
             textName.setText(attraction.getName());
             textCaption.setText(attraction.getCaption());
 
@@ -235,22 +248,17 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
 
             switch (download.getStatus()) {
                 case DownloadManager.STATUS_SUCCESSFUL:
-                    buttonTourAction.setVisibility(View.VISIBLE);
-                    textProgress.setVisibility(View.GONE);
-                    progress.setVisibility(View.GONE);
+                    tourAction = checkForUpdateOrDelete(attraction);
+                    showTourActionButton("Start Tour", R.drawable.ic_button_start_tour, R.drawable.bg_button_teal_rounded, android.R.color.white);
                     break;
                 case DownloadManager.STATUS_FAILED:
-                    buttonTourAction.setText("Retry");
-                    buttonTourAction.setVisibility(View.VISIBLE);
-                    textProgress.setVisibility(View.GONE);
-                    progress.setVisibility(View.GONE);
+                    tourAction = TourAction.RETRY;
+                    showTourActionButton("Retry", R.drawable.ic_button_retry, R.drawable.bg_button_gray_rounded, R.color.primary);
                     break;
                 case DownloadManager.STATUS_RUNNING:
+                    tourAction = TourAction.DOWNLOADING;
                     requestCreator = Picasso.with(context).load(attraction.getFeaturedImage().getUrl());
-                    textProgress.setText(String.format("%d%%", download.getProgress()));
-                    int progressDrawableId = download.getProgress() < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
-                    progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
-                    progress.setProgress(download.getProgress());
+                    showProgressView(download.getProgress());
                     break;
             }
 
@@ -259,6 +267,13 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
                     .error(R.drawable.placeholder_ratio_3_2)
                     .resize(600, 400)
                     .into(this);
+        }
+
+        @OnClick(R.id.button_tour_action)
+        void onTourActionClick() {
+            if (tourActionClickListener != null) {
+                tourActionClickListener.onTourActionClick(attraction, tourAction);
+            }
         }
 
         @Override
@@ -275,13 +290,60 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         public void onPrepareLoad(Drawable placeHolderDrawable) {
             layoutItemContainer.setBackground(placeHolderDrawable);
         }
+
+        private int checkForUpdateOrDelete(Attraction attraction) {
+            AttractionUpdate attractionUpdate = attractionUpdateRepo.find(attraction.getId());
+            // if deleted
+            if (attractionUpdate != null && attractionUpdate.getDeletedAt() != null) {
+                return TourAction.DELETE;
+            }
+
+            // if updated
+            if (attractionUpdate != null && ! attractionUpdate.getUpdatedAt().equals(attraction.getUpdatedAt())) {
+                return TourAction.UPDATE;
+            }
+
+            return TourAction.START;
+        }
+
+        private void showTourActionButton(String text, int leftDrawableId, int backgroundDrawableId, int textColorId) {
+            hideProgressView();
+
+            buttonTourAction.setVisibility(View.VISIBLE);
+            buttonTourAction.setBackground(ContextCompat.getDrawable(context, backgroundDrawableId));
+            buttonTourAction.setTextColor(ContextCompat.getColor(context, textColorId));
+            buttonTourAction.setAllCaps(false);
+
+            Spannable buttonLabel = new SpannableString("   " + text.toUpperCase());
+            buttonLabel.setSpan(new ImageSpan(context, leftDrawableId,
+                    ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            buttonTourAction.setText(buttonLabel);
+        }
+
+        private void showProgressView(int progressValue) {
+            hidTourActionButton();
+
+            textProgress.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.VISIBLE);
+            textProgress.setText(String.format("%d%%", progressValue));
+            int progressDrawableId = progressValue < 100 ? R.drawable.progress_tour_partial : R.drawable.progress_tour_full;
+            progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
+            progress.setProgress(progressValue);
+        }
+
+        private void hidTourActionButton() {
+            buttonTourAction.setVisibility(View.INVISIBLE);
+        }
+
+        private void hideProgressView() {
+            textProgress.setVisibility(View.GONE);
+            progress.setVisibility(View.GONE);
+        }
     }
 
     public class ChildViewHolder {
-        @Bind(R.id.text_title)
-        TextView textTitle;
-        @Bind(R.id.progress)
-        ProgressBar progress;
+        @Bind(R.id.text_title) TextView textTitle;
+        @Bind(R.id.progress) ProgressBar progress;
 
         public ChildViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
@@ -309,6 +371,10 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             progress.setProgressDrawable(ContextCompat.getDrawable(context, progressDrawableId));
             progress.setProgress(progressValue);
         }
+    }
+
+    public static interface TourActionClickListener {
+        void onTourActionClick(Attraction attraction, int tourAction);
     }
 
 }
