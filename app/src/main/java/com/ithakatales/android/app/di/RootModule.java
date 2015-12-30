@@ -16,6 +16,12 @@ import com.ithakatales.android.presenter.concrete.NavigationDrawerPresenterImpl;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourDetailPresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourListPresenterImpl;
+import com.ithakatales.android.ui.actions.TourAction;
+import com.ithakatales.android.ui.actions.TourDeleteAction;
+import com.ithakatales.android.ui.actions.TourDownloadAction;
+import com.ithakatales.android.ui.actions.TourDownloadRetryAction;
+import com.ithakatales.android.ui.actions.TourStartAction;
+import com.ithakatales.android.ui.actions.TourUpdateAction;
 import com.ithakatales.android.ui.activity.HomeActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
@@ -24,12 +30,13 @@ import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
-import com.ithakatales.android.ui.fragment.HomeFragment;
+import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.ui.fragment.MyToursFragment;
 import com.ithakatales.android.ui.fragment.NavigationDrawerFragment;
 import com.ithakatales.android.ui.fragment.TourListFragment;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
+import com.ithakatales.android.util.DialogUtil;
 import com.ithakatales.android.util.PreferenceUtil;
 
 import javax.inject.Singleton;
@@ -38,7 +45,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Include all other modules, provide Context dependency. All activity, fragment, presenter and
+ * Include all other modules, provide BaseActivity dependency. All activity, fragment, presenter and
  * any classes that are going to use dependency injection should be registered here.
  *
  * @author Farhan Ali
@@ -62,16 +69,26 @@ import dagger.Provides;
                 TourDetailActivity.class,
 
                 // Fragments
-                HomeFragment.class,
                 NavigationDrawerFragment.class,
                 TourListFragment.class,
                 MyToursFragment.class,
+
+                // Tour Actions
+                TourAction.class,
+                TourDeleteAction.class,
+                TourDownloadAction.class,
+                TourDownloadRetryAction.class,
+                TourStartAction.class,
+                TourUpdateAction.class,
 
                 // Adapters
                 ToursListRecyclerAdapter.class,
                 NavigationDrawerAdapter.class,
                 TagGridAdapter.class,
                 MyToursExpandableListAdapter.class,
+
+                // Custom view
+                NoNetworkView.class,
 
                 // Presenters
                 SamplePresenterImpl.class,
@@ -85,7 +102,7 @@ import dagger.Provides;
                 AudioRepositoryRealm.class,
                 ImageRepositoryRealm.class,
 
-                // TourDownloadAction
+                // Tour Downloader
                 TourDownloader.class,
                 TourDownloadProgressReader.class,
                 TourDownloadProgressObserver.class,
@@ -94,6 +111,7 @@ import dagger.Provides;
                 PreferenceUtil.class,
                 Bakery.class,
                 ConnectivityUtil.class,
+                DialogUtil.class,
         }
 )
 public class RootModule {

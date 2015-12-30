@@ -95,7 +95,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_below="@+id/text_description"
-                        android:src="@drawable/icon_walk_dark"/>
+                        android:src="@drawable/ic_tagtype_walk_dark"/>
 
                     <ImageView
                         android:id="@+id/icon_duration"
@@ -105,7 +105,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
                         android:layout_toLeftOf="@+id/text_duration"
-                        android:src="@drawable/icon_clock_dark"/>
+                        android:src="@drawable/ic_clock_dark"/>
 
                     <TextView
                         android:id="@+id/text_duration"
@@ -305,5 +305,10 @@
             android:enabled="false"/>
 
     </RelativeLayout>
+
+    <com.ithakatales.android.ui.custom.NoNetworkView
+        android:id="@+id/view_no_network"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </android.support.design.widget.CoordinatorLayout>

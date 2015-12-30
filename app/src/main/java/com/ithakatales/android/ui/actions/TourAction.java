@@ -10,6 +10,7 @@ import com.ithakatales.android.data.model.Attraction;
 public abstract class TourAction {
 
     public static final int DOWNLOAD      = 1;
+    public static final int DOWNLOADING   = 2;
     public static final int START         = 3;
     public static final int RETRY         = 4;
     public static final int UPDATE        = 5;

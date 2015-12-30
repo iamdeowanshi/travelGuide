@@ -3,6 +3,7 @@ package com.ithakatales.android.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -25,6 +26,7 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
+import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.model.TagType;
 import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.ithakatales.android.map.MapView;
@@ -38,11 +40,13 @@ import com.ithakatales.android.ui.actions.TourDownloadRetryAction;
 import com.ithakatales.android.ui.actions.TourStartAction;
 import com.ithakatales.android.ui.actions.TourUpdateAction;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
+import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.util.Bakery;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 
@@ -83,7 +87,10 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.button_tour_action) Button buttonTourActon;
     @Bind(R.id.progress) ProgressBar progress;
 
+    @Bind(R.id.view_no_network) NoNetworkView viewNoNetwork;
+
     private Attraction attraction;
+    private int tourAction;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,6 +148,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Override
     public void onAttractionLoaded(Attraction attraction, int tourAction) {
+        this.tourAction = tourAction;
         showTourDetails(attraction);
         buttonTourActon.setTag(getTourAction(tourAction));
     }
@@ -157,6 +165,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Override
     public void onNoNetwork() {
         bakery.toastShort("No network !");
+        viewNoNetwork.show();
     }
 
     @Override
@@ -173,6 +182,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     public void onNetworkError(Throwable e) {
         bakery.toastShort(e.getMessage());
         Timber.e(e.getMessage(), e);
+        viewNoNetwork.show();
     }
 
     @OnClick(R.id.button_preview_player)
@@ -204,8 +214,21 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         viewTagTypeTwo.setBackgroundColor(ContextCompat.getColor(this, R.color.gray_light));
 
         // initialize mapView
-        mapView.setMarkerDrawable(R.drawable.icon_map_marker);
-        mapView.setMarkerSelectedDrawable(R.drawable.icon_map_marker_selected);
+        mapView.setMarkerDrawable(R.drawable.img_map_marker);
+        mapView.setMarkerSelectedDrawable(R.drawable.img_map_marker_selected);
+
+        // initialize no network view
+        viewNoNetwork.hide();
+        viewNoNetwork.setNetworkRetryListener(new NoNetworkView.NetworkRetryListener() {
+            @Override
+            public void onNetworkAvailable() {
+                finish();
+                startActivity(getIntent());
+            }
+
+            @Override
+            public void onNetworkNotAvailable() {}
+        });
     }
 
     private void showTourDetails(Attraction attraction) {
@@ -234,40 +257,75 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         expandableTextCredits.setText(attraction.getCredits());
     }
 
+    // declared here because it is specific to method under this
+    private Callback featuredImageLoadCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            Bitmap bitmap = ((BitmapDrawable) imageFeatured.getDrawable()).getBitmap();
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                public void onGenerated(Palette palette) {
+                    applyPalette(palette);
+                }
+            });
+        }
+
+        @Override
+        public void onError() {}
+    };
+
     private void loadFeaturedImage() {
-        RequestCreator requestCreator = attraction.getFeaturedImage().getPath() != null
+        RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction != TourAction.DOWNLOADING)
                 ? Picasso.with(this).load(new File(attraction.getFeaturedImage().getPath()))
                 : Picasso.with(this).load(attraction.getFeaturedImage().getUrl());
 
         requestCreator.placeholder(R.drawable.placeholder_ratio_1_1)
                 .error(R.drawable.placeholder_ratio_1_1)
                 .resize(600, 600)
-                .into(imageFeatured, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Bitmap bitmap = ((BitmapDrawable) imageFeatured.getDrawable()).getBitmap();
-                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                            public void onGenerated(Palette palette) {
-                                applyPalette(palette);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
+                .into(imageFeatured, featuredImageLoadCallback);
     }
+
+    // declared here because it is specific to method under this
+    private Target mapViewPicassoTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            mapView.recycle();
+
+            if (bitmap == null || bitmap.isRecycled()) {
+                loadPoiMap();
+                return;
+            }
+
+            mapView.setImage(ImageSource.bitmap(bitmap));
+
+            int bitmapWidth = bitmap.getWidth();
+            int bitmapHeight = bitmap.getHeight();
+
+            int index = 1;
+            for (Poi poi : attraction.getPois()) {
+                float x = (float) (poi.getxPercent() * bitmapWidth / 100);
+                float y = (float) (poi.getyPercent() * bitmapHeight / 100);
+                mapView.addMarker(new Marker(index, x, y, poi.getName(), "5 Min"));
+                index ++;
+            }
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            bakery.toastShort("Blueprint loading failed");
+            mapView.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
 
     // TODO: 09/12/15 load actual data
     private void loadPoiMap() {
-        mapView.setImage(ImageSource.asset("map_sample.jpg"));
-
-        mapView.addMarker(new Marker(1, 175f, 445f, "Poi 1", "76 min"));
-        mapView.addMarker(new Marker(2, 400f, 200f, "Poi 2", "42 min"));
-        mapView.addMarker(new Marker(3, 500f, 420f, "Poi 2", "18 min"));
-        mapView.addMarker(new Marker(4, 895f, 555f, "Poi 4", "24 min"));
-        mapView.addMarker(new Marker(5, 1100f, 300f, "Poi 5", "35 min"));
+        RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction != TourAction.DOWNLOADING)
+                ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
+                : Picasso.with(this).load(attraction.getBlueprintUrl());
+       requestCreator.into(mapViewPicassoTarget);
     }
 
     private void loadTagTypes() {
@@ -307,10 +365,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         switch (tourAction) {
             case TourAction.DOWNLOAD:
                 return new TourDownloadAction(buttonTourActon, presenter);
-            /*case TourAction.DOWNLOADING:
-                return new TourDownloadingAction(buttonTourActon);*/
             case TourAction.START:
-                return new TourStartAction(buttonTourActon, this);
+                return new TourStartAction(buttonTourActon);
             case TourAction.RETRY:
                 return new TourDownloadRetryAction(buttonTourActon, presenter);
             case TourAction.UPDATE:

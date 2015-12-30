@@ -12,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
-        android:src="@drawable/icon_globe_light" />
+        android:src="@drawable/img_globe_light" />
 
     <TextView
         android:id="@+id/text_title"

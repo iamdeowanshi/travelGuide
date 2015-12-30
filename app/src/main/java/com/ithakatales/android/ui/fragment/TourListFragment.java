@@ -13,12 +13,14 @@ import android.widget.ProgressBar;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseFragment;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.data.model.City;
 import com.ithakatales.android.data.model.User;
 import com.ithakatales.android.presenter.TourListPresenter;
 import com.ithakatales.android.presenter.TourListViewInteractor;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.adapter.RecyclerItemClickListener;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
+import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.util.Bakery;
 
 import java.util.ArrayList;
@@ -40,10 +42,14 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
 
     @Bind(R.id.recycler_tours) RecyclerView recyclerTours;
     @Bind(R.id.progress) ProgressBar progress;
+    @Bind(R.id.view_no_network) NoNetworkView viewNoNetwork;
 
     private ToursListRecyclerAdapter toursListRecyclerAdapter;
 
     private List<Attraction> attractions = new ArrayList<>();
+    private City selectedCity;
+
+    private NoNetworkView.NetworkRetryListener networkRetryListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +71,7 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
         recyclerTours.setAdapter(toursListRecyclerAdapter);
         recyclerTours.setLayoutManager(new LinearLayoutManager(context));
 
-        presenter.loadAttractions(getArguments().getLong("city_id", 0));
+        viewNoNetwork.setNetworkRetryListener(networkRetryListener);
 
         // TODO: 18/12/15 - dummy user - to be updated
         presenter.loadAttractionUpdates(User.dummy());
@@ -99,6 +105,15 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
         Bundle bundle = new Bundle();
         bundle.putLong("attraction_id", item.getId());
         startActivity(TourDetailActivity.class, bundle);
+    }
+
+    public void onCitySelectionChanged(City city) {
+        selectedCity = city;
+        presenter.loadAttractions(city.getId());
+    }
+
+    public void setNetworkRetryListener(NoNetworkView.NetworkRetryListener networkRetryListener) {
+        this.networkRetryListener = networkRetryListener;
     }
 
 }
