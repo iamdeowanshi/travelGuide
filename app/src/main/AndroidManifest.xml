@@ -24,7 +24,15 @@
         <activity android:name=".ui.activity.test.ApiTestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestResultActivity"/>
         <activity android:name=".ui.activity.test.UiTestActivity"/>
-
+        <activity android:name=".ui.activity.LoginActivity"/>
+        <activity android:name=".RegisterActivity">
+        </activity>
+        <activity android:name=".ResetPassword">
+        </activity>
+        <activity android:name=".ForgotPassword">
+        </activity>
+        <activity android:name=".VerifyAccount">
+        </activity>
     </application>
 
 </manifest>
