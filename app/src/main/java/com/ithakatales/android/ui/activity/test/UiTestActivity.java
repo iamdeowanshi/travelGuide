@@ -7,6 +7,7 @@ import com.ithakatales.android.ForgotPassword;
 import com.ithakatales.android.R;
 import com.ithakatales.android.RegisterActivity;
 import com.ithakatales.android.ResetPassword;
+import com.ithakatales.android.Settings;
 import com.ithakatales.android.VerifyAccount;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.ui.activity.LoginActivity;
@@ -56,6 +57,11 @@ public class UiTestActivity extends BaseActivity {
     @OnClick(R.id.btn_ui_verify_account)
     void setBtnUiVerifyAccount() {
         startActivity(VerifyAccount.class, null);
+    }
+
+    @OnClick(R.id.btn_ui_settings)
+    void setBtnUiSettings() {
+        startActivity(Settings.class, null);
     }
 
 }

@@ -33,6 +33,7 @@
         </activity>
         <activity android:name=".VerifyAccount">
         </activity>
+        <activity android:name=".Settings"></activity>
     </application>
 
 </manifest>

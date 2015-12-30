@@ -5,6 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.ithakatales.android"
         minSdkVersion 16
         targetSdkVersion 23
@@ -21,6 +22,10 @@ android {
     packagingOptions {
         // conflict- added by both realm & butterknife
         exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
 }
 
