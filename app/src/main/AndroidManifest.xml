@@ -26,16 +26,18 @@
         <activity android:name=".ui.activity.test.ApiTestResultActivity"/>
         <activity android:name=".ui.activity.test.UiTestActivity"/>
         <activity android:name=".ui.activity.LoginActivity"/>
-        <activity android:name=".RegisterActivity">
+        <activity android:name=".ui.activity.RegisterActivity">
         </activity>
-        <activity android:name=".ResetPassword">
+        <activity android:name=".ui.activity.ResetPasswordActivity">
         </activity>
-        <activity android:name=".ForgotPassword">
+        <activity android:name=".ui.activity.ForgotPasswordActivity">
         </activity>
-        <activity android:name=".VerifyAccount">
+        <activity android:name=".ui.activity.VerifyAccount">
         </activity>
-        <activity android:name=".Settings"/>
-        <activity android:name=".EndTour">
+        <activity android:name=".ui.activity.SettingsActivity"/>
+        <activity android:name=".ui.activity.EndTourActivity">
+        </activity>
+        <activity android:name=".ui.activity.UserOnBoardActivity">
         </activity>
     </application>
 
