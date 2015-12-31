@@ -27,11 +27,11 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
     @Inject LayoutInflater inflater;
     @Inject Context context;
 
-    private RecyclerItemClickListener<Audio> itemClickListener;
+    private PlaylistItemClickListener itemClickListener;
 
     private List<Audio> audios;
 
-    public PlayListRecyclerAdapter(List<Audio> audios, RecyclerItemClickListener<Audio> itemClickListener) {
+    public PlayListRecyclerAdapter(List<Audio> audios, PlaylistItemClickListener itemClickListener) {
         Injector.instance().inject(this);
         this.audios = audios;
         this.itemClickListener = itemClickListener;
@@ -46,7 +46,7 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindData(audios.get(position));
+        holder.bindData(position);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
         @Bind(R.id.text_name) TextView textName;
         @Bind(R.id.text_duration) TextView textDuration;
 
-        private Audio audio;
+        private int postion;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -69,14 +69,14 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClickListener.onItemClick(audio);
+                    itemClickListener.onAudioItemClick(postion);
                 }
             });
         }
 
-        public void bindData(Audio audio) {
-            this.audio = audio;
-
+        public void bindData(int position) {
+            this.postion = position;
+            Audio audio = audios.get(position);
             textName.setText(audio.getName());
             int durationInMinute = (int) (audio.getDuration() / 60);
             textDuration.setText(String.format("%d Min", durationInMinute));

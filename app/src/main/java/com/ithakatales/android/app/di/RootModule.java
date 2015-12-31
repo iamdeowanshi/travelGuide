@@ -113,7 +113,7 @@ import dagger.Provides;
                 TourDownloadProgressReader.class,
                 TourDownloadProgressObserver.class,
 
-                // Utilities
+                // PlayerDurationUtil
                 PreferenceUtil.class,
                 Bakery.class,
                 ConnectivityUtil.class,
