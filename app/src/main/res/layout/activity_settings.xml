@@ -8,57 +8,194 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.ithakatales.android.Settings">
+    tools:context=".ui.activity.SettingsActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/layout_about_user">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txt_about_me"
+        <RelativeLayout
+            android:id="@+id/layout_about_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/pink_normal"
-            android:text="About Me"
-            android:textSize="22sp"/>
+            android:visibility="gone"
+            android:layout_marginBottom="10dp">
 
-        <ImageView
-            android:layout_width="@dimen/profile_pic"
-            android:layout_height="@dimen/profile_pic"
-            android:id="@+id/img_user"
-            android:layout_below="@id/txt_about_me"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/prof_pic_holder"/>
+            <TextView
+                android:id="@+id/txt_about_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Me"
+                android:textColor="@color/pink_normal"
+                android:textSize="22sp"/>
 
-        <TextView
+            <ImageView
+                android:id="@+id/img_user"
+                android:layout_width="@dimen/profile_pic"
+                android:layout_height="@dimen/profile_pic"
+                android:layout_below="@id/txt_about_me"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/prof_pic_holder"/>
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_about_me"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@+id/img_user"
+                android:text="Samridhi Tiwari"
+                android:textColor="@color/black"
+                android:textSize="24sp"/>
+
+            <TextView
+                android:id="@+id/txt_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/txt_name"
+                android:layout_below="@+id/txt_name"
+                android:layout_marginTop="10dp"
+                android:text="Samridhitiwari@gmail.com"
+                android:textColor="@color/black"
+                android:textSize="14sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/img_user"
+                android:layout_alignLeft="@+id/txt_name"
+                android:src="@drawable/btn_upload_normal"/>
+
+            <TextView
+                android:id="@+id/txt_travel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_user"
+                android:layout_marginTop="20dp"
+                android:text="I travel for..."
+                android:textColor="@color/black_transparent_70"
+                android:textSize="10sp"/>
+
+            <EditText
+                android:id="@+id/edt_travel_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_travel"
+                android:background="@color/gray_extra_light"
+                android:padding="5dp"
+                android:text="I like to travel because I am jobless but I have too much money to spend and I like to travel because I am jobless I like to travel because I am jobless I like to travel because I am jobless"
+                android:textColor="@color/black_transparent_70"
+                android:textSize="11sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/edt_travel_info"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/btn_save_normal"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/gray_light"/>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Samridhi Tiwari"
-            android:layout_marginTop="20dp"
-            android:textSize="24sp"
-            android:textColor="@color/black"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/txt_name"
-            android:layout_below="@id/txt_about_me"
-            android:layout_toRightOf="@+id/img_user"/>
+            android:id="@+id/layout_about_app">
 
-        <TextView
+            <TextView
+                android:id="@+id/txt_about_ithaka"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Ithaka"
+                android:textColor="@color/pink_normal"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_about_app_detail"
+                android:layout_below="@+id/txt_about_ithaka"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:layout_marginTop="10dp"
+                android:text="i dont know what to do i don't know what to do because i am jobless i am jobless"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_privacy"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/teal_normal"
+                android:textSize="11sp"
+                android:text="@string/privacy"
+                android:layout_below="@+id/txt_about_app_detail"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_terms"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/teal_normal"
+                android:textSize="11sp"
+                android:text="@string/terms"
+                android:layout_marginBottom="15dp"
+                android:layout_below="@+id/txt_privacy"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_email"
-            android:layout_below="@+id/txt_name"
-            android:layout_marginTop="10dp"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_alignLeft="@+id/txt_name"
-            android:text="samridhitiwari@gmail.com"/>
+            android:visibility="gone"
+            android:id="@+id/layout_download">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upload Photo"
-            ali/>
-    </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/gray_light"/>
+
+            <TextView
+                android:id="@+id/txt_manage_downloads"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Manage Downloads"
+                android:textColor="@color/pink_normal"
+                android:textSize="22sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_delete_downloads"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/txt_manage_downloads"
+                android:src="@drawable/btn_del_attr_normal"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/btn_delete_downloads"
+                android:background="@color/black"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:layout_below="@+id/btn_delete_downloads"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </ScrollView>

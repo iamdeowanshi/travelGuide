@@ -1,13 +1,15 @@
-package com.ithakatales.android;
+package com.ithakatales.android.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class VerifyAccount extends AppCompatActivity {
+import com.ithakatales.android.R;
+
+public class UserOnBoardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verify_account);
+        setContentView(R.layout.activity_user_on_board);
     }
 }

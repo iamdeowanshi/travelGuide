@@ -3,11 +3,12 @@ package com.ithakatales.android.ui.activity.test;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.ithakatales.android.ForgotPassword;
+import com.ithakatales.android.ui.activity.ForgotPasswordActivity;
 import com.ithakatales.android.R;
-import com.ithakatales.android.RegisterActivity;
-import com.ithakatales.android.ResetPassword;
-import com.ithakatales.android.VerifyAccount;
+import com.ithakatales.android.ui.activity.RegisterActivity;
+import com.ithakatales.android.ui.activity.ResetPasswordActivity;
+import com.ithakatales.android.ui.activity.SettingsActivity;
+import com.ithakatales.android.ui.activity.VerifyAccount;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.ui.activity.LoginActivity;
 
@@ -45,17 +46,22 @@ public class UiTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_ui_reset_password)
     void setBtnUiResetPassword() {
-        startActivity(ResetPassword.class, null);
+        startActivity(ResetPasswordActivity.class, null);
     }
 
     @OnClick(R.id.btn_ui_forgot_password)
     void setBtnUiForgotPassword() {
-        startActivity(ForgotPassword.class, null);
+        startActivity(ForgotPasswordActivity.class, null);
     }
 
     @OnClick(R.id.btn_ui_verify_account)
     void setBtnUiVerifyAccount() {
         startActivity(VerifyAccount.class, null);
+    }
+
+    @OnClick(R.id.btn_ui_settings)
+    void setBtnUiSettings() {
+        startActivity(SettingsActivity.class, null);
     }
 
 }
