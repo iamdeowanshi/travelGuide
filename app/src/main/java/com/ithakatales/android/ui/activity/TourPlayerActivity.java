@@ -189,6 +189,12 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelNotification();
+    }
+
     private void toggleMapAndGalleryOptionVisibility() {
         MenuItem mapItem = menu.findItem(R.id.action_map);
         MenuItem galleryItem = menu.findItem(R.id.action_gallery);
@@ -396,9 +402,13 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
         PendingIntent intentBack = PendingIntent.getActivity(getApplicationContext(), 0, toLaunch, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(intentBack);
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(100, builder.build());
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(999, builder.build());
+    }
+
+    private void cancelNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(999);
     }
 
 }
