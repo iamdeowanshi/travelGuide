@@ -3,6 +3,8 @@ package com.ithakatales.android.data.repository.realm;
 import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.repository.ImageRepository;
 
+import java.util.List;
+
 /**
  * @author Farhan Ali
  */
@@ -24,6 +26,11 @@ public class ImageRepositoryRealm extends BaseRepositoryRealm<Image> implements 
         realm.beginTransaction();
         find(imageId).setDownloadId(downloadId);
         realm.commitTransaction();
+    }
+
+    @Override
+    public List<Image> readByAttractionId(long attractionId) {
+        return realm.where(modelType).equalTo("attraction_id", attractionId).findAll();
     }
 
 }

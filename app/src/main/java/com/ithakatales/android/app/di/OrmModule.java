@@ -7,10 +7,12 @@ import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.data.repository.AttractionUpdateRepository;
 import com.ithakatales.android.data.repository.AudioRepository;
 import com.ithakatales.android.data.repository.ImageRepository;
+import com.ithakatales.android.data.repository.PoiRepository;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AttractionUpdateRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.ImageRepositoryRealm;
+import com.ithakatales.android.data.repository.realm.PoiRepositoryRealm;
 
 import javax.inject.Singleton;
 
@@ -67,6 +69,12 @@ public class OrmModule {
     @Singleton
     public ImageRepository provideImageRepository() {
         return new ImageRepositoryRealm();
+    }
+
+    @Provides
+    @Singleton
+    public PoiRepository providePoiRepository() {
+        return new PoiRepositoryRealm();
     }
 
 }
