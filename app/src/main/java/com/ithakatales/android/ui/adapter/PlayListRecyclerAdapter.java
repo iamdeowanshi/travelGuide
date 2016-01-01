@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ithakatales.android.R;
@@ -28,8 +27,9 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
     @Inject Context context;
 
     private PlaylistItemClickListener itemClickListener;
-
     private List<Audio> audios;
+    private View lastItemSelected;
+    private int selectedItemPosition;
 
     public PlayListRecyclerAdapter(List<Audio> audios, PlaylistItemClickListener itemClickListener) {
         Injector.instance().inject(this);
@@ -54,8 +54,12 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
         return audios.size();
     }
 
+    public void setSelectedItemPosition(int itemPosition) {
+        this.selectedItemPosition = itemPosition;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.layout_item_container) RelativeLayout layoutItemContainer;
         @Bind(R.id.text_name) TextView textName;
         @Bind(R.id.text_duration) TextView textDuration;
 
@@ -68,7 +72,7 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     itemClickListener.onAudioItemClick(postion);
                 }
             });
@@ -80,6 +84,20 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
             textName.setText(audio.getName());
             int durationInMinute = (int) (audio.getDuration() / 60);
             textDuration.setText(String.format("%d Min", durationInMinute));
+
+            if (position == selectedItemPosition) {
+                updateItemSelection();
+            }
+        }
+
+        private void updateItemSelection() {
+            itemView.setSelected(true);
+
+            if (lastItemSelected != null) {
+                lastItemSelected.setSelected(false);
+            }
+
+            lastItemSelected = itemView;
         }
 
     }

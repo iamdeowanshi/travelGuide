@@ -2,6 +2,7 @@ package com.ithakatales.android.ui.actions;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Button;
 
 import com.ithakatales.android.app.di.Injector;
@@ -31,7 +32,11 @@ public class TourStartAction extends TourAction {
 
     @Override
     public void perform(Attraction attraction) {
-        activityContext.startActivity(new Intent(activityContext, TourPlayerActivity.class));
+        Intent intent = new Intent(activityContext, TourPlayerActivity.class);
+        Bundle bundle = new Bundle();
+        intent.putExtra("attraction_id", attraction.getId());
+        intent.putExtras(bundle);
+        activityContext.startActivity(intent);
     }
 
 }
