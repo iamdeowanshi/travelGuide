@@ -32,7 +32,7 @@ public class AudioRepositoryRealm extends BaseRepositoryRealm<Audio> implements 
 
     @Override
     public List<Audio> readByAttractionId(long attractionId) {
-        RealmResults<Audio> audios = realm.where(modelType).equalTo("attraction_id", attractionId).findAll();
+        RealmResults<Audio> audios = realm.where(modelType).equalTo("attractionId", attractionId).findAll();
         audios.sort("priority");
 
         return audios;

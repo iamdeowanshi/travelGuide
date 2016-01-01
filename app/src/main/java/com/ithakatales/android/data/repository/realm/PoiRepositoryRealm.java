@@ -18,7 +18,7 @@ public class PoiRepositoryRealm extends BaseRepositoryRealm<Poi> implements PoiR
 
     @Override
     public List<Poi> readByAttractionId(long attractionId) {
-        return realm.where(modelType).equalTo("attraction_id", attractionId).findAll();
+        return realm.where(modelType).equalTo("attractionId", attractionId).findAll();
     }
 
 }

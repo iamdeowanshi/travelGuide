@@ -32,7 +32,7 @@ public class ImageRepositoryRealm extends BaseRepositoryRealm<Image> implements 
 
     @Override
     public List<Image> readByAttractionId(long attractionId) {
-        RealmResults<Image> images = realm.where(modelType).equalTo("attraction_id", attractionId).findAll();
+        RealmResults<Image> images = realm.where(modelType).equalTo("attractionId", attractionId).findAll();
         images.sort("priority");
 
         return images;
@@ -40,7 +40,7 @@ public class ImageRepositoryRealm extends BaseRepositoryRealm<Image> implements 
 
     @Override
     public List<Image> readByPoiId(long poiId) {
-        RealmResults<Image> images = realm.where(modelType).equalTo("poi_id", poiId).findAll();
+        RealmResults<Image> images = realm.where(modelType).equalTo("poiId", poiId).findAll();
         images.sort("priority");
 
         return images;
@@ -48,7 +48,7 @@ public class ImageRepositoryRealm extends BaseRepositoryRealm<Image> implements 
 
     @Override
     public List<Image> readByAudioId(long audioId) {
-        RealmResults<Image> images = realm.where(modelType).equalTo("audio_id", audioId).findAll();
+        RealmResults<Image> images = realm.where(modelType).equalTo("audioId", audioId).findAll();
         images.sort("priority");
 
         return images;
