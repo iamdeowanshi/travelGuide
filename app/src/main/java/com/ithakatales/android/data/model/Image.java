@@ -17,6 +17,8 @@ public class Image extends RealmObject {
     private long attractionId;
     @SerializedName("poi_id")
     private long poiId;
+    @SerializedName("audio_id")
+    private long audioId;
     @SerializedName("name")
     private String name;
     @SerializedName("url")
@@ -61,6 +63,14 @@ public class Image extends RealmObject {
 
     public void setPoiId(long poiId) {
         this.poiId = poiId;
+    }
+
+    public long getAudioId() {
+        return audioId;
+    }
+
+    public void setAudioId(long audioId) {
+        this.audioId = audioId;
     }
 
     public String getName() {

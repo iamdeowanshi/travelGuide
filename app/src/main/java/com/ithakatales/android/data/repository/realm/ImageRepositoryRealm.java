@@ -5,6 +5,8 @@ import com.ithakatales.android.data.repository.ImageRepository;
 
 import java.util.List;
 
+import io.realm.RealmResults;
+
 /**
  * @author Farhan Ali
  */
@@ -30,7 +32,26 @@ public class ImageRepositoryRealm extends BaseRepositoryRealm<Image> implements 
 
     @Override
     public List<Image> readByAttractionId(long attractionId) {
-        return realm.where(modelType).equalTo("attraction_id", attractionId).findAll();
+        RealmResults<Image> images = realm.where(modelType).equalTo("attraction_id", attractionId).findAll();
+        images.sort("priority");
+
+        return images;
+    }
+
+    @Override
+    public List<Image> readByPoiId(long poiId) {
+        RealmResults<Image> images = realm.where(modelType).equalTo("poi_id", poiId).findAll();
+        images.sort("priority");
+
+        return images;
+    }
+
+    @Override
+    public List<Image> readByAudioId(long audioId) {
+        RealmResults<Image> images = realm.where(modelType).equalTo("audio_id", audioId).findAll();
+        images.sort("priority");
+
+        return images;
     }
 
 }

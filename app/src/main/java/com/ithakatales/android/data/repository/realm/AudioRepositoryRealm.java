@@ -5,6 +5,8 @@ import com.ithakatales.android.data.repository.AudioRepository;
 
 import java.util.List;
 
+import io.realm.RealmResults;
+
 /**
  * @author Farhan Ali
  */
@@ -30,7 +32,10 @@ public class AudioRepositoryRealm extends BaseRepositoryRealm<Audio> implements 
 
     @Override
     public List<Audio> readByAttractionId(long attractionId) {
-        return realm.where(modelType).equalTo("attraction_id", attractionId).findAll();
+        RealmResults<Audio> audios = realm.where(modelType).equalTo("attraction_id", attractionId).findAll();
+        audios.sort("priority");
+
+        return audios;
     }
 
 }

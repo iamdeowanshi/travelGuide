@@ -15,4 +15,8 @@ public interface ImageRepository extends BaseRepository<Image> {
 
     List<Image> readByAttractionId(long attractionId);
 
+    List<Image> readByPoiId(long poiId);
+
+    List<Image> readByAudioId(long audioId);
+
 }
