@@ -122,7 +122,8 @@ class MediaStreamingTask {
             output.write(headers.getBytes());
             InputStream data = dataSource.getInputStream();
 
-            dataSource.skipFully(data, cbSkip);//try to skip as much as possible
+            // TODO: 01/01/16 missing last few seconds
+            //dataSource.skipFully(data, cbSkip);//try to skip as much as possible
 
             // Loop as long as there's stuff to send and client has not closed
             int cbRead;

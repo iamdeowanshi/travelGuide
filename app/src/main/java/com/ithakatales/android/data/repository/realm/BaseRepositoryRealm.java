@@ -2,7 +2,6 @@ package com.ithakatales.android.data.repository.realm;
 
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.repository.BaseRepository;
-import com.ithakatales.android.data.repository.RepoCallback;
 
 import java.util.List;
 

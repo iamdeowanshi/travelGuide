@@ -1,8 +1,6 @@
 package com.ithakatales.android.data.repository.realm;
 
-import com.ithakatales.android.data.model.Audio;
 import com.ithakatales.android.data.model.Poi;
-import com.ithakatales.android.data.repository.AudioRepository;
 import com.ithakatales.android.data.repository.PoiRepository;
 
 import java.util.List;

@@ -7,6 +7,10 @@ package com.ithakatales.android.player;
  */
 public class PlayerDurationUtil {
 
+    public static String secondsToTimer(long seconds) {
+        return milliSecondsToTimer(seconds * 1000);
+    }
+
     /**
      * Function to convert milliseconds time to
      * Timer Format
