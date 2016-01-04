@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true" >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/primary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        local:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <!-- ViewPager to show image gallery -->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/gallery_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_player_control"
+        android:layout_below="@+id/toolbar"/>
+
+    <!-- MapView to show poi map -->
+    <com.ithakatales.android.map.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_player_control"
+        android:layout_below="@+id/toolbar"/>
+
+    <!-- RecyclerView to show audio list -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_audio_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_player_control"
+        android:layout_below="@+id/layout_poi_info"
+        android:background="@color/black_transparent_50" />
+
+    <!--poi info-->
+    <RelativeLayout
+        android:id="@+id/layout_poi_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/black_transparent_50"
+        android:padding="@dimen/spacing_small">
+
+        <TextView
+            android:id="@+id/text_poi_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Poi Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/text_poi_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_poi_name"
+            android:layout_centerHorizontal="true"
+            android:text="3 of 8 Spots"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+
+    <!--player controls-->
+    <RelativeLayout
+        android:id="@+id/layout_player_control"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/primary">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_alignParentTop="true"
+            android:indeterminate="false"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_tour_player"/>
+
+        <TextView
+            android:id="@+id/text_duration_played"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/progress"
+            android:layout_margin="3dp"
+            android:text="0:00"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white"
+            android:textSize="11sp"/>
+
+        <TextView
+            android:id="@+id/text_duration_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/progress"
+            android:layout_margin="3dp"
+            android:text="0:00"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white"
+            android:textSize="11sp"/>
+
+        <TextView
+            android:id="@+id/text_audio_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progress"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/spacing_small"
+            android:text="The Track Name"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/button_play_pause"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/spacing_medium"
+            android:background="@drawable/player_button_play"/>
+
+        <Button
+            android:id="@+id/button_rewind"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:layout_toLeftOf="@+id/button_play_pause"
+            android:layout_toStartOf="@+id/button_play_pause"
+            android:background="@drawable/player_button_rewind_inset"/>
+
+        <Button
+            android:id="@+id/button_skip"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:layout_toEndOf="@+id/button_play_pause"
+            android:layout_toRightOf="@+id/button_play_pause"
+            android:background="@drawable/player_button_skip_inset"/>
+
+        <Button
+            android:id="@+id/button_playlist"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/spacing_medium"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/player_button_playlist_inset_normal"/>
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text=">>"
+            android:id="@+id/button_forward"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

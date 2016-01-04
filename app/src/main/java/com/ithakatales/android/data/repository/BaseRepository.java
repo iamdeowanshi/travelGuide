@@ -11,8 +11,6 @@ public interface BaseRepository<T> {
 
     void save(List<T> collection);
 
-    void saveAsync(T obj, RepoCallback callback);
-
     T find(long id);
 
     List<T> readAll();

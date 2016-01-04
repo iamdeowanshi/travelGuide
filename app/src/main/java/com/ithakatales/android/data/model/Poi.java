@@ -14,6 +14,8 @@ public class Poi extends RealmObject {
     @PrimaryKey
     @SerializedName("id")
     private long id;
+    @SerializedName("attraction_id")
+    private long attractionId;
     @SerializedName("name")
     private String name;
     @SerializedName("description")
@@ -42,6 +44,14 @@ public class Poi extends RealmObject {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getAttractionId() {
+        return attractionId;
+    }
+
+    public void setAttractionId(long attractionId) {
+        this.attractionId = attractionId;
     }
 
     public String getName() {

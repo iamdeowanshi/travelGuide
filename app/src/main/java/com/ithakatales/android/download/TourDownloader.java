@@ -195,7 +195,7 @@ public class TourDownloader {
     private String getAudioPath(Audio audio, long tourId) {
         String audioName = audio.getName().replace(" ", "_");
         return tourStorage.getAudioDir(tourId)
-                .getAbsolutePath() + "/" + audio.getId() + "_" + audioName;
+                .getAbsolutePath() + "/" + audio.getId() + "_" + audioName + getExtensionFromUrl(audio.getEncUrl());
     }
 
     private String getImagePath(Image image, long tourId) {

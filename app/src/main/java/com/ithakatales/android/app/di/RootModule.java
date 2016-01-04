@@ -24,10 +24,13 @@ import com.ithakatales.android.ui.actions.TourStartAction;
 import com.ithakatales.android.ui.actions.TourUpdateAction;
 import com.ithakatales.android.ui.activity.HomeActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
+import com.ithakatales.android.ui.activity.TourPlayerActivity;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
 import com.ithakatales.android.ui.activity.test.TestActivity;
+import com.ithakatales.android.ui.adapter.GalleryPagerAdapter;
 import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
+import com.ithakatales.android.ui.adapter.PlayListRecyclerAdapter;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
 import com.ithakatales.android.ui.custom.NoNetworkView;
@@ -67,6 +70,7 @@ import dagger.Provides;
                 ApiTestActivity.class,
                 HomeActivity.class,
                 TourDetailActivity.class,
+                TourPlayerActivity.class,
 
                 // Fragments
                 NavigationDrawerFragment.class,
@@ -86,6 +90,8 @@ import dagger.Provides;
                 NavigationDrawerAdapter.class,
                 TagGridAdapter.class,
                 MyToursExpandableListAdapter.class,
+                GalleryPagerAdapter.class,
+                PlayListRecyclerAdapter.class,
 
                 // Custom view
                 NoNetworkView.class,
@@ -107,7 +113,7 @@ import dagger.Provides;
                 TourDownloadProgressReader.class,
                 TourDownloadProgressObserver.class,
 
-                // Utilities
+                // PlayerDurationUtil
                 PreferenceUtil.class,
                 Bakery.class,
                 ConnectivityUtil.class,

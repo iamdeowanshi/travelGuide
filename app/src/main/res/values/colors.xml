@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary">#333333</color>
+    <color name="primary_light">#555555</color>
     <color name="primary_dark">@android:color/black</color>
 
     <color name="teal_normal">#37abb7</color>
@@ -12,6 +13,7 @@
     <color name="login_normal">#379fac</color>
     <color name="login_selected">#31909b</color>
 
+    <color name="white">@android:color/white</color>
     <color name="black_transparent_50">#80000000</color>
     <color name="gray_light">#dddddd</color>
     <color name="gray_extra_light">#6fdddddd</color>
@@ -23,4 +25,5 @@
 
     <color name="progress_partial">#37abb7</color>
     <color name="progress_full">#35D866</color>
+    <color name="progress_yellow">#FDEB65</color>
 </resources>

@@ -14,6 +14,12 @@ public class Audio extends RealmObject {
     @PrimaryKey
     @SerializedName("id")
     private long id;
+    @SerializedName("attraction_id")
+    private long attractionId;
+    @SerializedName("poi_id")
+    private long poiId;
+    @SerializedName("priority")
+    private int priority;
     @SerializedName("name")
     private String name;
     @SerializedName("encUrl")
@@ -45,6 +51,30 @@ public class Audio extends RealmObject {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getAttractionId() {
+        return attractionId;
+    }
+
+    public void setAttractionId(long attractionId) {
+        this.attractionId = attractionId;
+    }
+
+    public long getPoiId() {
+        return poiId;
+    }
+
+    public void setPoiId(long poiId) {
+        this.poiId = poiId;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public String getName() {

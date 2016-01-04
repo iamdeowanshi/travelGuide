@@ -20,7 +20,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.HomeActivity"/>
-        <activity android:name=".ui.activity.TourDetailActivity"/>
+        <activity android:name=".ui.activity.TourDetailActivity" />
+        <activity android:name=".ui.activity.TourPlayerActivity"
+            android:launchMode="singleTop"/>
         <activity android:name=".ui.activity.test.TestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestResultActivity"/>

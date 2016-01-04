@@ -13,6 +13,7 @@ import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.ithakatales.android.presenter.TourDetailPresenter;
 import com.ithakatales.android.presenter.TourDetailViewInteractor;
 import com.ithakatales.android.ui.actions.TourAction;
+import com.ithakatales.android.ui.activity.TourPlayerActivity;
 import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
@@ -123,7 +124,9 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     }
 
     private void startTour(Attraction attraction) {
-        bakery.toastShort("Under Development !");
+        Bundle bundle = new Bundle();
+        bundle.putLong("attraction_id", attraction.getId());
+        startActivity(TourPlayerActivity.class, bundle);
     }
 
     private void showUpdateAvailableDialog(final Attraction attraction) {
