@@ -23,8 +23,8 @@ public class EncryptedAudioHttpServer implements Runnable {
 
     private Thread thread;
     private ServerSocket socket;
-    Socket client;
-    MediaStreamingTask streamTask;
+    private Socket client;
+    private MediaStreamingTask streamTask;
 
     private boolean isRunning;
     private int port;

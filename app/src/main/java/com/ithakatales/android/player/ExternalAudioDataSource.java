@@ -24,18 +24,18 @@ import timber.log.Timber;
  */
 public class ExternalAudioDataSource {
 
-    private final String mKey;
-    private final String mIV;
-    private final File mFileResource;
-    long contentLength;
+    private final String key;
+    private final String iv;
+    private final File file;
+    private long contentLength;
 
     public ExternalAudioDataSource(File resource, String key, String iv) {
         //it is your duty to ensure that the file exists
-        mFileResource = resource;
-        mKey = key;
-        mIV = iv;
-        contentLength = mFileResource.length();
-        Timber.i("path: " + mFileResource.getPath() + ", exists: " + mFileResource.exists() + ", length: " + contentLength);
+        file = resource;
+        this.key = key;
+        this.iv = iv;
+        contentLength = file.length();
+        Timber.i("path: " + file.getPath() + ", exists: " + file.exists() + ", length: " + contentLength);
     }
 
     /**
@@ -93,15 +93,15 @@ public class ExternalAudioDataSource {
     public InputStream getInputStream() {
         try {
             byte[] iv = new byte[16];
-            System.arraycopy(mIV.getBytes(), 0, iv, 0, 16);
+            System.arraycopy(this.iv.getBytes(), 0, iv, 0, 16);
             IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
-            SecretKeySpec sks = new SecretKeySpec(mKey.getBytes(), "AES");//I use a custom decryption here on a key retrieved from the server
+            SecretKeySpec sks = new SecretKeySpec(key.getBytes(), "AES");//I use a custom decryption here on a key retrieved from the server
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");///CBC/NoPadding", "BC");//Bouncy Castle is specified. Seems the safest bet on android
             cipher.init(Cipher.DECRYPT_MODE, sks, ivSpec);
 
-            return new CipherInputStream(new FileInputStream(mFileResource), cipher);
+            return new CipherInputStream(new FileInputStream(file), cipher);
         } catch (InvalidKeyException e) {
             Timber.e("failed to create input stream", e);
         } catch (NoSuchAlgorithmException e) {
