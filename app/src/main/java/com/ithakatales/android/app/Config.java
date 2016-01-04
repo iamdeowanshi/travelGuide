@@ -22,45 +22,38 @@ public class Config {
     // Active base url
     public static final String API_BASE_URL = API_BASE_URL_DEVELOP;
 
-    /**
-     * GET: all cities as a list
-     */
+    // authentication related apis
+
+    // POST: user normal registration
+    public static final String API_SIGNUP           = "/users/signup";
+    // POST: verify after registration using otp
+    public static final String API_EMAIL_VERIFY     = "/users/email_verification";
+    // POST: normal/social login
+    public static final String API_LOGIN            = "/users/login";
+    // POST: request for a password change
+    public static final String API_FORGOT_PASSWORD  = "/users/forgot_password";
+    // POST: request for resetting a password
+    public static final String API_RESET_PASSWORD   = "/users/reset_password";
+    // POST: profile pic upload
+    public static final String API_AVATAR_UPLOAD    = "/images/upload";
+    // PUT: user profile update | Path param: user_id : required
+    public static final String API_PROFILE_UPDATE   = "/users/{user_id}/profile";
+
+    // attraction related apis
+
+    // GET: get cities
     public static final String API_CITIES               = "/cities";
-
-    /**
-     * GET: all attractions for a city with basic details.
-     *
-     * Query param : city_id : required
-     */
+    // GET: get attractions | Query param : city_id : required
     public static final String API_ATTRACTIONS          = "/attractions";
-
-    /**
-     * GET: full information of an attraction including pois, audios & images.
-     *
-     * Path param : attraction_id : required
-     */
+    // GET: get full attraction info | Path param : attraction_id : required
     public static final String API_ATTRACTION_INFO      = "/attractions/{attraction_id}";
-
-    /**
-     * POST: send an attraction download status after success full download.
-     */
+    // POST: send an attraction download status after success full download.
     public static final String API_DOWNLOADS_SAVE       = "/attraction_downloads";
-
-    /**
-     * GET: updated attractions list for a user with attraction id and timestamps.
-     *
-     * Query param : user_id : required
-     */
+    // GET: updated attractions list for a user | Query param : user_id : required
     public static final String API_DOWNLOADS_UPDATED    = "/attraction_downloads";
-
-    /**
-     * POST: send an attraction view status.
-     */
+    // POST: send an attraction view status.
     public static final String API_VIEWS_CREATE         = "/attraction_views";
-
-    /**
-     * POST: send an attraction rating by the user.
-     */
+    // POST: send an attraction rating by the user.
     public static final String API_RATINGS_CREATE       = "/attraction_ratings";
 
     // Cache size in bytes, 50 MB = 50 * 1024 KB, 1 KB  = 1024 Bytes

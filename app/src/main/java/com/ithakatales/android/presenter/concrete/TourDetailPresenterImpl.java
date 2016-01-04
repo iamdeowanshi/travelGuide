@@ -5,10 +5,10 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.ithakatales.android.app.base.BaseNetworkPresenter;
+import com.ithakatales.android.data.api.ApiModels;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
 import com.ithakatales.android.data.model.Attraction;
-import com.ithakatales.android.data.model.AttractionAccess;
 import com.ithakatales.android.data.model.AttractionUpdate;
 import com.ithakatales.android.data.model.User;
 import com.ithakatales.android.data.repository.AttractionRepository;
@@ -177,8 +177,8 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
     }
 
     private void updateAttractionView(User user, long attractionId) {
-        AttractionAccess attractionAccess = new AttractionAccess(user.getId(), attractionId);
-        Observable<Response> observable = api.attractionViewed(user.getAccessToken(), attractionAccess);
+        ApiModels.AttractionViewedRequest requestBody = new ApiModels.AttractionViewedRequest();
+        Observable<Response> observable = api.attractionViewed(user.getAccessToken(), requestBody);
 
         subscribeForNetwork(observable, new ApiObserver<Response>() {
             @Override
@@ -193,9 +193,11 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
     }
 
     private void updateAttractionDownload(User user, long attractionId) {
-        AttractionAccess attractionAccess = new AttractionAccess(user.getId(), attractionId);
+        ApiModels.AttractionDownloadedRequest requestBody = new ApiModels.AttractionDownloadedRequest();
+        requestBody.userId = user.getId();
+        requestBody.attractionId = attractionId;
 
-        Observable<Response> observable = api.attractionDownloaded(user.getAccessToken(), attractionAccess);
+        Observable<Response> observable = api.attractionDownloaded(user.getAccessToken(), requestBody);
 
         subscribeForNetwork(observable, new ApiObserver<Response>() {
             @Override

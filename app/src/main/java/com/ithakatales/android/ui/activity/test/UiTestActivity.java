@@ -3,14 +3,14 @@ package com.ithakatales.android.ui.activity.test;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.ithakatales.android.ui.activity.ForgotPasswordActivity;
 import com.ithakatales.android.R;
+import com.ithakatales.android.app.base.BaseActivity;
+import com.ithakatales.android.ui.activity.ForgotPasswordActivity;
+import com.ithakatales.android.ui.activity.LoginActivity;
 import com.ithakatales.android.ui.activity.RegisterActivity;
 import com.ithakatales.android.ui.activity.ResetPasswordActivity;
 import com.ithakatales.android.ui.activity.SettingsActivity;
 import com.ithakatales.android.ui.activity.VerifyAccount;
-import com.ithakatales.android.app.base.BaseActivity;
-import com.ithakatales.android.ui.activity.LoginActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

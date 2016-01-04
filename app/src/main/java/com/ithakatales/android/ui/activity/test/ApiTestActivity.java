@@ -5,10 +5,9 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
+import com.ithakatales.android.data.api.ApiModels;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
-import com.ithakatales.android.data.model.AttractionAccess;
-import com.ithakatales.android.data.model.AttractionRating;
 import com.ithakatales.android.util.JsonUtil;
 import com.ithakatales.android.util.RxUtil;
 
@@ -73,19 +72,26 @@ public class ApiTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_create_download)
     void createAttractionDownload() {
-        AttractionAccess body = new AttractionAccess(1, 1);
+        ApiModels.AttractionDownloadedRequest body = new ApiModels.AttractionDownloadedRequest();
+        body.userId = 1;
+        body.attractionId = 1;
         subscribeForNetwork(ithakaApi.attractionDownloaded(AUTHORIZATION, body), observer);
     }
 
     @OnClick(R.id.btn_create_view)
     void createAttractionView() {
-        AttractionAccess body = new AttractionAccess(1, 1);
+        ApiModels.AttractionViewedRequest body = new ApiModels.AttractionViewedRequest();
+        body.userId = 1;
+        body.attractionId = 1;
         subscribeForNetwork(ithakaApi.attractionViewed(AUTHORIZATION, body), observer);
     }
 
     @OnClick(R.id.btn_rate_attraction)
     void rateAttraction() {
-        AttractionRating body = new AttractionRating(1, 1, 4);
+        ApiModels.AttractionRatingRequest body = new ApiModels.AttractionRatingRequest();
+        body.userId = 1;
+        body.attractionId = 1;
+        body.rating = 4;
         subscribeForNetwork(ithakaApi.rateAttraction(AUTHORIZATION, body), observer);
     }
 

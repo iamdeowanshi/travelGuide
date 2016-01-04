@@ -22,12 +22,18 @@ public class LaunchActivity extends BaseActivity {
 
     @OnClick(R.id.button_login)
     void launchLogin() {
-        launchActivity(TestActivity.class);
+        launchActivity(LoginActivity.class);
     }
 
     @OnClick(R.id.button_sneak_peak)
     void launchHomeAsGuest() {
         launchActivity(HomeActivity.class);
+    }
+
+    // TODO: 04/01/16 to remove - only for development purpose
+    @OnClick(R.id.button_dev_options)
+    void onDevOptionsClick() {
+        launchActivity(TestActivity.class);
     }
 
     private void launchActivity(Class<? extends Activity> activityClass) {
