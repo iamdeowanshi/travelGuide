@@ -9,12 +9,19 @@
     <color name="pink_normal">#d91a5e</color>
     <color name="pink_pressed">#c61557</color>
     <color name="pink_disabled">#d785a4</color>
+    <color name="login_disabled">#b7dcde</color>
+    <color name="login_normal">#379fac</color>
+    <color name="login_selected">#31909b</color>
 
     <color name="white">@android:color/white</color>
     <color name="black_transparent_50">#80000000</color>
     <color name="gray_light">#dddddd</color>
+    <color name="gray_extra_light">#6fdddddd</color>
     <color name="gray_normal">#cecfcf</color>
     <color name="gray_pressed">#ababab</color>
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+    <color name="black_transparent_70">#bb000000</color>
 
     <color name="progress_partial">#37abb7</color>
     <color name="progress_full">#35D866</color>
