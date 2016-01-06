@@ -16,7 +16,8 @@ public class Config {
     // API related constants/configurations - used in ApiModule & Api class, prefix with API_
     //--------------------------------------------------------------------------------
     public static final String API_BASE_URL_PRODUCTION  = "";
-    public static final String API_BASE_URL_DEVELOP     = "http://52.77.211.228:1337/v1";
+    //public static final String API_BASE_URL_DEVELOP     = "http://52.77.211.228:1337/v1";
+    public static final String API_BASE_URL_DEVELOP     = "http://52.74.156.9:1337/v1/";
     public static final String API_BASE_URL_MOCK        = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
@@ -28,8 +29,10 @@ public class Config {
     public static final String API_SIGNUP           = "/users/signup";
     // POST: verify after registration using otp
     public static final String API_EMAIL_VERIFY     = "/users/email_verification";
-    // POST: normal/social login
-    public static final String API_LOGIN            = "/users/login";
+    // POST: normal loginNormal
+    public static final String API_NORMAL_LOGIN     = "/users/login";
+    // POST: social loginNormal
+    public static final String API_SOCIAL_LOGIN     = "/users/signup";
     // POST: request for a password change
     public static final String API_FORGOT_PASSWORD  = "/users/forgot_password";
     // POST: request for resetting a password

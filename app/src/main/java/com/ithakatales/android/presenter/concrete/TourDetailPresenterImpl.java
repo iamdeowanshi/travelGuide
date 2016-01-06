@@ -24,7 +24,6 @@ import com.ithakatales.android.util.Bakery;
 
 import javax.inject.Inject;
 
-import retrofit.client.Response;
 import rx.Observable;
 
 /**
@@ -42,6 +41,8 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
 
     @Inject Bakery bakery;
 
+    private boolean isPaused;
+
     private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private TourDownloadProgressListener progressListener = new TourDownloadProgressListener() {
@@ -55,8 +56,11 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
                 public void run() {
                     viewInteractor.onDownloadProgressChange(tourDownloadProgress);
 
-                    if (tourDownloadProgress.getProgress() >= 100) {
+                    if (isPaused || tourDownloadProgress.getProgress() >= 100) {
                         tourDownloader.stopProgressListening(tourDownloadProgress.getAttractionId());
+                    }
+
+                    if ( ! isPaused && tourDownloadProgress.getProgress() >= 100) {
                         loadAttraction(tourDownloadProgress.getAttractionId());
                     }
                 }
@@ -66,6 +70,18 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
 
     public TourDetailPresenterImpl() {
         injectDependencies();
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+        isPaused = true;
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        isPaused = false;
     }
 
     @Override
@@ -178,37 +194,16 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
 
     private void updateAttractionView(User user, long attractionId) {
         ApiModels.AttractionViewedRequest requestBody = new ApiModels.AttractionViewedRequest();
-        Observable<Response> observable = api.attractionViewed(user.getAccessToken(), requestBody);
-
-        subscribeForNetwork(observable, new ApiObserver<Response>() {
-            @Override
-            public void onResult(Response response) {
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                viewInteractor.onNetworkError(e);
-            }
-        });
+        requestBody.userId = user.getId();
+        requestBody.attractionId = attractionId;
+        subscribeForNetwork(api.attractionViewed(user.getAccessToken(), requestBody), ApiObserver.DEFAULT);
     }
 
     private void updateAttractionDownload(User user, long attractionId) {
         ApiModels.AttractionDownloadedRequest requestBody = new ApiModels.AttractionDownloadedRequest();
         requestBody.userId = user.getId();
         requestBody.attractionId = attractionId;
-
-        Observable<Response> observable = api.attractionDownloaded(user.getAccessToken(), requestBody);
-
-        subscribeForNetwork(observable, new ApiObserver<Response>() {
-            @Override
-            public void onResult(Response response) {
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                viewInteractor.onNetworkError(e);
-            }
-        });
+        subscribeForNetwork(api.attractionDownloaded(user.getAccessToken(), requestBody), ApiObserver.DEFAULT);
     }
 
 }

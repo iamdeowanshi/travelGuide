@@ -29,13 +29,16 @@ public interface IthakaApi {
     // user/auth related apis
 
     @POST(Config.API_SIGNUP)
-    Observable<User> signup(User user);
+    Observable<User> register(@Body User user);
 
     @POST(Config.API_EMAIL_VERIFY)
     Observable<User> verifyEmail(@Body ApiModels.EmailVerificationRequest body);
 
-    @POST(Config.API_LOGIN)
-    Observable<User> login(@Body User user);
+    @POST(Config.API_NORMAL_LOGIN)
+    Observable<User> loginNormal(@Body User user);
+
+    @POST(Config.API_SOCIAL_LOGIN)
+    Observable<User> loginSocial(@Body User user);
 
     @POST(Config.API_FORGOT_PASSWORD)
     Observable<Response> forgotPassword(@Body ApiModels.ForgotPasswordRequest body);

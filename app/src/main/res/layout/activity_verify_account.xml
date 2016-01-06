@@ -4,12 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:padding="@dimen/spacing_medium"
     android:background="@drawable/bg_login_activity"
-    tools:context=".ui.activity.VerifyAccount">
+    tools:context=".ui.activity.VerifyAccountActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,24 +19,34 @@
         android:layout_marginTop="100dp"/>
 
     <EditText
-        android:id="@+id/edt_verification_code"
+        android:id="@+id/input_verification_code"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/txt_verify_account"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="@dimen/spacing_large"
         android:background="@drawable/bg_text_box"
         android:hint="Enter verification code"
-        android:paddingLeft="10dp"
-        android:textStyle="italic"/>
+        android:padding="@dimen/spacing_small"
+        android:textStyle="italic"
+        android:inputType="text"/>
 
     <Button
-        android:id="@+id/btn_verify"
-        android:layout_marginTop="10dp"
+        android:id="@+id/button_verify"
+        android:layout_marginTop="@dimen/spacing_medium"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/edt_verification_code"
-        android:background="@drawable/bg_button_login_normal"
+        android:layout_below="@+id/input_verification_code"
+        android:background="@drawable/bg_button_teal_rounded"
         android:text="VERIFY"
         android:textColor="@color/white"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="false"
+        android:visibility="gone"/>
 
 </RelativeLayout>

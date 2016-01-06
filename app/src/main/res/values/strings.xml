@@ -18,4 +18,6 @@
     <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur ipsum in placerat molestie. Fusce quis mauris a enim sollicitudin ultrices non eget velit. Aliquam eu pulvinar enim. Praesent libero nisl, ultricies vel maximus eu.</string>
     <string name="lorem_ipsum_small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur ipsum in placerat molestie.</string>
     <string name="lorem_ipsum_tiny">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+
+    <string name="facebook_app_id">1641419146121424</string>
 </resources>

@@ -222,8 +222,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         viewNoNetwork.setNetworkRetryListener(new NoNetworkView.NetworkRetryListener() {
             @Override
             public void onNetworkAvailable() {
-                finish();
-                startActivity(getIntent());
+                restartActivity();
             }
 
             @Override

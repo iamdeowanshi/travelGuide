@@ -13,8 +13,6 @@ import javax.inject.Inject;
 
 public class PreferenceUtil {
 
-    public static final String PREF_USER_KEY = "_USER" ;
-
     @Inject Context context;
     @Inject Gson gson;
 

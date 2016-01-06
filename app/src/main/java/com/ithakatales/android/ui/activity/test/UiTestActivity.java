@@ -5,12 +5,12 @@ import android.widget.Button;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
-import com.ithakatales.android.ui.activity.ForgotPasswordActivity;
 import com.ithakatales.android.ui.activity.LoginActivity;
-import com.ithakatales.android.ui.activity.RegisterActivity;
-import com.ithakatales.android.ui.activity.ResetPasswordActivity;
+import com.ithakatales.android.ui.activity.PasswordForgotActivity;
+import com.ithakatales.android.ui.activity.PasswordResetActivity;
+import com.ithakatales.android.ui.activity.RegistrationActivity;
 import com.ithakatales.android.ui.activity.SettingsActivity;
-import com.ithakatales.android.ui.activity.VerifyAccount;
+import com.ithakatales.android.ui.activity.VerifyAccountActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,22 +41,22 @@ public class UiTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_ui_register)
     void setBtnUiRegister() {
-        startActivity(RegisterActivity.class, null);
+        startActivity(RegistrationActivity.class, null);
     }
 
     @OnClick(R.id.btn_ui_reset_password)
     void setBtnUiResetPassword() {
-        startActivity(ResetPasswordActivity.class, null);
+        startActivity(PasswordResetActivity.class, null);
     }
 
     @OnClick(R.id.btn_ui_forgot_password)
     void setBtnUiForgotPassword() {
-        startActivity(ForgotPasswordActivity.class, null);
+        startActivity(PasswordForgotActivity.class, null);
     }
 
     @OnClick(R.id.btn_ui_verify_account)
     void setBtnUiVerifyAccount() {
-        startActivity(VerifyAccount.class, null);
+        startActivity(VerifyAccountActivity.class, null);
     }
 
     @OnClick(R.id.btn_ui_settings)
