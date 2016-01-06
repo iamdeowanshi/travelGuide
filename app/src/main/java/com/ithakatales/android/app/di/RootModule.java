@@ -18,6 +18,7 @@ import com.ithakatales.android.presenter.concrete.PasswordForgotPresenterImpl;
 import com.ithakatales.android.presenter.concrete.PasswordResetPresenterImpl;
 import com.ithakatales.android.presenter.concrete.RegistrationPresenterImpl;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
+import com.ithakatales.android.presenter.concrete.SettingsPresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourDetailPresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourListPresenterImpl;
 import com.ithakatales.android.presenter.concrete.VerifyAccountPresenterImpl;
@@ -125,6 +126,7 @@ import dagger.Provides;
         PasswordForgotPresenterImpl.class,
         PasswordResetPresenterImpl.class,
         VerifyAccountPresenterImpl.class,
+        SettingsPresenterImpl.class,
         NavigationDrawerPresenterImpl.class,
         TourListPresenterImpl.class,
         TourDetailPresenterImpl.class,

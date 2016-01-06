@@ -48,10 +48,10 @@ public interface IthakaApi {
 
     @Multipart
     @POST(Config.API_AVATAR_UPLOAD)
-    Observable<ApiModels.ProfilePicUploadResponse> uploadProfilePic(@Header("Authorization") String accessToken, @Part("image") TypedFile profilePic);
+    Observable<ApiModels.ProfilePicUploadResponse> uploadProfilePic(@Header("Authorization") String authorization, @Part("image") TypedFile profilePic);
 
     @PUT(Config.API_PROFILE_UPDATE)
-    Observable<User> updateProfile(@Body User user);
+    Observable<User> updateProfile(@Header("Authorization") String authorization, @Path("user_id") long userId, @Body User user);
 
     // attraction related apis
 
@@ -66,7 +66,7 @@ public interface IthakaApi {
 
     @POST(Config.API_DOWNLOADS_SAVE)
     Observable<Response> attractionDownloaded(
-            @Header("Authorization") String authorization,@Body ApiModels.AttractionDownloadedRequest body);
+            @Header("Authorization") String authorization, @Body ApiModels.AttractionDownloadedRequest body);
 
     @GET(Config.API_DOWNLOADS_UPDATED)
     Observable<List<AttractionUpdate>> getAttractionUpdates(

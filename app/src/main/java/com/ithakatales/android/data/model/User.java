@@ -125,7 +125,7 @@ public class User {
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return "Bearer " + accessToken;
     }
 
     public void setAccessToken(String accessToken) {
@@ -138,6 +138,13 @@ public class User {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public String getFullName() {
+        String fName = firstName != null ? firstName : "";
+        String lName = lastName != null ? lastName : "";
+
+        return firstName + " " + lastName;
     }
 
     /**
@@ -158,14 +165,6 @@ public class User {
         this.googleId = user.googleId != null ? user.googleId : this.googleId;
         this.facebookId = user.facebookId != null ? user.facebookId : this.facebookId;
         this.accessToken = user.accessToken != null ? user.accessToken : this.accessToken;
-    }
-
-    public static User dummy() {
-        User user = new User();
-        user.setId(1);
-        user.setAccessToken("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-
-        return user;
     }
 
 }

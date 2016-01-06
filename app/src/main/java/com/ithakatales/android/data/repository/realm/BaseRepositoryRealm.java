@@ -55,4 +55,11 @@ public abstract class BaseRepositoryRealm<T extends RealmObject> implements Base
         realm.commitTransaction();
     }
 
+    @Override
+    public void removeAll() {
+        realm.beginTransaction();
+        realm.where(modelType).findAll().clear();
+        realm.commitTransaction();
+    }
+
 }

@@ -10,7 +10,10 @@ import android.view.View;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
+import com.ithakatales.android.ui.activity.LoginActivity;
+import com.ithakatales.android.ui.activity.SettingsActivity;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.UserPreference;
 
 import javax.inject.Inject;
 
@@ -24,6 +27,7 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Inject Bakery bakery;
+    @Inject UserPreference preference;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -35,6 +39,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        if (preference.readUser() != null) {
+            menu.findItem(R.id.action_login).setVisible(false);
+        }
+
         return true;
     }
 
@@ -42,10 +50,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                bakery.toastShort("setting clicked");
+                startActivity(SettingsActivity.class, null);
                 break;
             case R.id.action_send_feedback:
                 bakery.toastShort("send feedback clicked");
+                break;
+            case R.id.action_login:
+                startActivityClearTop(LoginActivity.class, null);
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -96,6 +107,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (bundle != null) intent.putExtras(bundle);
 
         startActivity(intent);
+        finish();
     }
 
     /**

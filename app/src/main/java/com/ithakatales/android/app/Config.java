@@ -84,4 +84,12 @@ public class Config {
     public static final boolean STORAGE_USE_INTERNAL    = false;
     public static final boolean STORAGE_HIDE_FILES      = false;
 
+    //--------------------------------------------------------------------------------
+    // // TODO: 06/01/16 commenting
+    //--------------------------------------------------------------------------------
+
+    public static final String LINK_PRIVACY_POLICY  = "http://www.google.com";
+    public static final String LINK_TERMS           = "http://www.google.com";
+    public static final String URL_TOUR_SHARE_BASE  = "http://www.ithakatales.com/tours/";
+
 }

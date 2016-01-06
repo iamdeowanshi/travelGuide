@@ -23,6 +23,9 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import timber.log.Timber;
 
+/**
+ * @author farhanali
+ */
 public class RegistrationActivity extends SocialLoginEnabledActivity implements RegistrationViewInteractor {
 
     @Inject RegistrationPresenter registrationPresenter;

@@ -21,6 +21,7 @@ import com.ithakatales.android.presenter.TourDetailPresenter;
 import com.ithakatales.android.presenter.TourDetailViewInteractor;
 import com.ithakatales.android.ui.actions.TourAction;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.UserPreference;
 
 import javax.inject.Inject;
 
@@ -39,6 +40,7 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
     @Inject AttractionRepository attractionRepo;
     @Inject AttractionUpdateRepository attractionUpdateRepo;
 
+    @Inject UserPreference preference;
     @Inject Bakery bakery;
 
     private boolean isPaused;
@@ -118,8 +120,7 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
         tourDownloader.download(attraction);
         tourDownloader.startProgressListening(attraction.getId(), progressListener);
 
-        // TODO: 21/12/15 dummy user
-        updateAttractionDownload(User.dummy(), attraction.getId());
+        updateAttractionDownload(preference.readUser(), attraction.getId());
     }
 
     @Override
@@ -162,8 +163,7 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
                 viewInteractor.onAttractionLoaded(result, TourAction.DOWNLOAD);
                 viewInteractor.hideProgress();
 
-                // TODO: 21/12/15 dummy user
-                updateAttractionView(User.dummy(), attractionId);
+                updateAttractionView(preference.readUser(), attractionId);
             }
 
             @Override
@@ -193,6 +193,8 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
     }
 
     private void updateAttractionView(User user, long attractionId) {
+        if (user == null) return;
+
         ApiModels.AttractionViewedRequest requestBody = new ApiModels.AttractionViewedRequest();
         requestBody.userId = user.getId();
         requestBody.attractionId = attractionId;
@@ -200,6 +202,8 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
     }
 
     private void updateAttractionDownload(User user, long attractionId) {
+        if (user == null) return;
+
         ApiModels.AttractionDownloadedRequest requestBody = new ApiModels.AttractionDownloadedRequest();
         requestBody.userId = user.getId();
         requestBody.attractionId = attractionId;

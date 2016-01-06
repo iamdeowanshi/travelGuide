@@ -10,12 +10,13 @@ import com.ithakatales.android.util.DialogUtil;
 
 import javax.inject.Inject;
 
+/**
+ * @author farhanali
+ */
 public class TourDeleteAction extends TourAction {
 
-    @Inject
-    DialogUtil dialogUtil;
-    @Inject
-    Bakery bakery;
+    @Inject DialogUtil dialogUtil;
+    @Inject Bakery bakery;
 
     private TourDetailPresenter presenter;
 

@@ -7,7 +7,7 @@ import com.ithakatales.android.presenter.TourDetailPresenter;
 
 public class TourDownloadRetryAction extends TourAction {
 
-    TourDetailPresenter presenter;
+    private TourDetailPresenter presenter;
 
     public TourDownloadRetryAction(Button button, TourDetailPresenter presenter) {
         super(button);
