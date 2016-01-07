@@ -31,7 +31,6 @@ import com.ithakatales.android.data.model.Audio;
 import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.repository.AttractionRepository;
-import com.ithakatales.android.data.repository.AudioRepository;
 import com.ithakatales.android.data.repository.ImageRepository;
 import com.ithakatales.android.map.MapView;
 import com.ithakatales.android.map.Marker;
@@ -41,6 +40,7 @@ import com.ithakatales.android.ui.adapter.GalleryPagerAdapter;
 import com.ithakatales.android.ui.adapter.PlayListRecyclerAdapter;
 import com.ithakatales.android.ui.adapter.PlaylistItemClickListener;
 import com.ithakatales.android.ui.custom.VerticalSpaceItemDecoration;
+import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -74,7 +74,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
     @Inject Bakery bakery;
     @Inject ImageRepository imageRepo;
-    @Inject AudioRepository audioRepo;
     @Inject AttractionRepository attractionRepo;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
@@ -156,7 +155,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         loadPoiMap();
 
         // initialize audio list
-        audios = audioRepo.readByAttractionId(attraction.getId());
+        audios = AttractionUtil.getAllAudioExceptPreview(attraction);
         recyclerAudioList.setLayoutManager(new LinearLayoutManager(this));
         recyclerAudioList.addItemDecoration(new VerticalSpaceItemDecoration(5));
         playlistAdapter = new PlayListRecyclerAdapter(audios, this);
@@ -274,7 +273,9 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             for (Poi poi : pois) {
                 float x = (float) (poi.getxPercent() * bitmapWidth / 100);
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
-                Marker marker = new Marker(index, x, y, poi.getName(), PlayerDurationUtil.secondsToTimer(poi.getAudio().getDuration()));
+                long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
+                Marker marker = new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes));
+                mapView.addMarker(marker);
                 mapView.addMarker(marker);
                 markerPoiMap.put(marker, poi);
                 index ++;

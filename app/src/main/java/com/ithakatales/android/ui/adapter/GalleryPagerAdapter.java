@@ -49,6 +49,11 @@ public class GalleryPagerAdapter extends PagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public Object instantiateItem(ViewGroup view, int position) {
         View pageView = inflater.inflate(R.layout.page_item_gallery, view, false);
 

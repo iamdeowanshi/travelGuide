@@ -33,15 +33,17 @@ public class TourGalleryActivity extends BaseActivity {
 
         injectDependencies();
 
+        Map<String, String> imageCaptionMap = (HashMap<String, String>) getIntent().getSerializableExtra("image_caption_map");
+        boolean isLoadFromUrl = getIntent().getBooleanExtra("is_load_from_url", false);
+        String attractionName = getIntent().getStringExtra("attraction_name");
+
         // setup toolbar
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
+            getSupportActionBar().setTitle(attractionName);
         }
 
-        Map<String, String> imageCaptionMap = (HashMap<String, String>) getIntent().getSerializableExtra("image_caption_map");
-        boolean isLoadFromUrl = getIntent().getBooleanExtra("is_load_from_url", false);
 
         for (Map.Entry<String, String> entry : imageCaptionMap.entrySet()) {
             Image image = new Image();

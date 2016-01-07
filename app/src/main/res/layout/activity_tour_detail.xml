@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
+    android:id="@+id/layout_coordinator"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -29,12 +29,12 @@
                 android:id="@+id/image_featured"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                android:clickable="true"
                 android:fitsSystemWindows="true"
                 android:minHeight="80dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_ratio_1_1"
-                app:layout_collapseMode="parallax"
-                android:clickable="true"/>
+                app:layout_collapseMode="parallax"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -116,7 +116,6 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/text_description"
                         android:paddingTop="5dp"
-                        android:text="35 Mins"
                         android:textColor="@android:color/black"
                         android:textSize="12sp"/>
 
@@ -233,18 +232,18 @@
                 <include
                     android:id="@+id/view_tag_type_one"
                     layout="@layout/view_tag_type"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <include
                     android:id="@+id/view_tag_type_two"
                     layout="@layout/view_tag_type"
-                    android:visibility="gone"
-                    android:background="@color/gray_light" />
+                    android:background="@color/gray_light"
+                    android:visibility="gone"/>
 
                 <include
                     android:id="@+id/view_tag_type_three"
                     layout="@layout/view_tag_type"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <!--Behind the scenes-->
 
@@ -299,11 +298,11 @@
             android:layout_height="64dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/bg_button_pink"
+            android:enabled="false"
             android:text="Begin Ithakatale"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:enabled="false"/>
+            android:textSize="18sp"/>
 
     </RelativeLayout>
 

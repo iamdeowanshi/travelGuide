@@ -219,6 +219,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         Bundle bundle = new Bundle();
+        bundle.putString("attraction_name", attraction.getName());
         bundle.putBoolean("is_load_from_url", isLoadFromUrl);
         bundle.putSerializable("image_caption_map", imageCaptionMap);
         startActivity(TourGalleryActivity.class, bundle);
@@ -329,7 +330,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             for (Poi poi : attraction.getPois()) {
                 float x = (float) (poi.getxPercent() * bitmapWidth / 100);
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
-                mapView.addMarker(new Marker(index, x, y, poi.getName(), "5 Min"));
+                long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
+                mapView.addMarker(new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes)));
                 index ++;
             }
         }
