@@ -33,7 +33,7 @@ public class GalleryPagerAdapter extends PagerAdapter {
 
     public GalleryPagerAdapter(List<Image> images) {
         Injector.instance().inject(this);
-        this.images=images;
+        this.images = images;
     }
 
     @Override

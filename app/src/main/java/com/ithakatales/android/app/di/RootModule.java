@@ -47,6 +47,7 @@ import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
 import com.ithakatales.android.ui.adapter.PlayListRecyclerAdapter;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
+import com.ithakatales.android.ui.adapter.UserOnBoardPagerAdapter;
 import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.ui.fragment.MyToursFragment;
 import com.ithakatales.android.ui.fragment.NavigationDrawerFragment;
@@ -109,6 +110,7 @@ import dagger.Provides;
         TourUpdateAction.class,
 
         // Adapters
+        UserOnBoardPagerAdapter.class,
         ToursListRecyclerAdapter.class,
         NavigationDrawerAdapter.class,
         TagGridAdapter.class,

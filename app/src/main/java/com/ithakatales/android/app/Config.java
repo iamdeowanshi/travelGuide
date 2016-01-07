@@ -90,6 +90,10 @@ public class Config {
 
     public static final String LINK_PRIVACY_POLICY  = "http://www.google.com";
     public static final String LINK_TERMS           = "http://www.google.com";
-    public static final String URL_TOUR_SHARE_BASE  = "http://www.ithakatales.com/tours/";
+
+    public static final String SHARE_TOUR_URL_BASE  = "http://www.ithakatales.com/tours/";
+
+    public static final String FEEDBACK_EMAIL_TO    = "ithakatales@gmail.com";
+    public static final String FEEDBACK_SUBJECT     = "Ithakatales Feedback";
 
 }

@@ -6,6 +6,7 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.User;
 import com.ithakatales.android.ui.activity.test.TestActivity;
+import com.ithakatales.android.util.PreferenceUtil;
 import com.ithakatales.android.util.UserPreference;
 
 import javax.inject.Inject;
@@ -17,6 +18,7 @@ import butterknife.OnClick;
  */
 public class LaunchActivity extends BaseActivity {
 
+    @Inject PreferenceUtil preference;
     @Inject UserPreference userPreference;
 
     @Override
@@ -24,6 +26,12 @@ public class LaunchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
         injectDependencies();
+
+        if (! preference.readBoolean(PreferenceUtil.FIRST_LAUNCH_DONE, false)) {
+            preference.save(PreferenceUtil.FIRST_LAUNCH_DONE, true);
+            startActivityClearTop(UserOnBoardActivity.class, null);
+            return;
+        }
 
         User user = userPreference.readUser();
         if (user != null && user.isVerified()) {

@@ -2,6 +2,7 @@ package com.ithakatales.android.app.base;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ithakatales.android.R;
+import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.ui.activity.LoginActivity;
 import com.ithakatales.android.ui.activity.SettingsActivity;
@@ -53,7 +55,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 startActivity(SettingsActivity.class, null);
                 break;
             case R.id.action_send_feedback:
-                bakery.toastShort("send feedback clicked");
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Config.FEEDBACK_EMAIL_TO));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, Config.FEEDBACK_SUBJECT);
+                startActivity(Intent.createChooser(emailIntent, "Share Ithakatales Feedback"));
                 break;
             case R.id.action_login:
                 startActivityClearTop(LoginActivity.class, null);
