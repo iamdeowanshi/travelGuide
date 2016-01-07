@@ -41,15 +41,6 @@ public class UserOnBoardPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        /*View view = (View) object;
-
-        ImageView imageView = (ImageView) view.findViewById(R.id.image_view);
-        Drawable drawable = imageView.getDrawable();
-        if(drawable != null && drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            bitmapDrawable.getBitmap().recycle();
-        }*/
-
         container.removeView((View) object);
     }
 
