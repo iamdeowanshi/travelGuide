@@ -39,6 +39,7 @@ import com.ithakatales.android.ui.activity.SocialLoginEnabledActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.TourGalleryActivity;
 import com.ithakatales.android.ui.activity.TourPlayerActivity;
+import com.ithakatales.android.ui.activity.UserOnBoardActivity;
 import com.ithakatales.android.ui.activity.VerifyAccountActivity;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
 import com.ithakatales.android.ui.activity.test.TestActivity;
@@ -86,6 +87,7 @@ import dagger.Provides;
         TestActivity.class,
         ApiTestActivity.class,
         LaunchActivity.class,
+        UserOnBoardActivity.class,
         SocialLoginEnabledActivity.class,
         LoginActivity.class,
         RegistrationActivity.class,
