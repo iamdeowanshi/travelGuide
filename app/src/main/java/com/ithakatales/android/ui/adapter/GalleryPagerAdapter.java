@@ -30,10 +30,12 @@ public class GalleryPagerAdapter extends PagerAdapter {
     @Inject LayoutInflater inflater;
 
     private List<Image> images;
+    private boolean isLoadFromUrl;
 
-    public GalleryPagerAdapter(List<Image> images) {
+    public GalleryPagerAdapter(List<Image> images, boolean isLoadFromUrl) {
         Injector.instance().inject(this);
         this.images = images;
+        this.isLoadFromUrl = isLoadFromUrl;
     }
 
     @Override
@@ -72,8 +74,14 @@ public class GalleryPagerAdapter extends PagerAdapter {
         }
 
         public void bindData(Image image) {
-            Picasso.with(context).load(new File(image.getPath())).into(imageView);
             textCaption.setText(image.getCaption());
+
+            if (isLoadFromUrl) {
+                Picasso.with(context).load(image.getUrl()).into(imageView);
+                return;
+            }
+
+            Picasso.with(context).load(new File(image.getPath())).into(imageView);
         }
     }
 

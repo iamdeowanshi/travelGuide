@@ -32,6 +32,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Inject UserPreference preference;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        injectDependencies();
+    }
+
+    @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         bindViews();

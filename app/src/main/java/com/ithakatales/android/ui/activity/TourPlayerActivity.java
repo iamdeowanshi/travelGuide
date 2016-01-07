@@ -163,7 +163,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         recyclerAudioList.setAdapter(playlistAdapter);
 
         // initialize gallery
-        galleryPagerAdapter = new GalleryPagerAdapter(images);
+        galleryPagerAdapter = new GalleryPagerAdapter(images, false);
         galleryPager.setAdapter(galleryPagerAdapter);
 
         // By default play first song

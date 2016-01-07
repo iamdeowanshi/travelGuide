@@ -37,6 +37,7 @@ import com.ithakatales.android.ui.activity.RegistrationActivity;
 import com.ithakatales.android.ui.activity.SettingsActivity;
 import com.ithakatales.android.ui.activity.SocialLoginEnabledActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
+import com.ithakatales.android.ui.activity.TourGalleryActivity;
 import com.ithakatales.android.ui.activity.TourPlayerActivity;
 import com.ithakatales.android.ui.activity.VerifyAccountActivity;
 import com.ithakatales.android.ui.activity.test.ApiTestActivity;
@@ -95,6 +96,7 @@ import dagger.Provides;
         HomeActivity.class,
         TourDetailActivity.class,
         TourPlayerActivity.class,
+        TourGalleryActivity.class,
 
         // Fragments
         NavigationDrawerFragment.class,

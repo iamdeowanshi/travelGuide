@@ -28,6 +28,7 @@ import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
+import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.model.TagType;
 import com.ithakatales.android.download.model.TourDownloadProgress;
@@ -43,6 +44,7 @@ import com.ithakatales.android.ui.actions.TourStartAction;
 import com.ithakatales.android.ui.actions.TourUpdateAction;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.custom.NoNetworkView;
+import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
@@ -51,6 +53,8 @@ import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -199,6 +203,25 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         if (action != null) {
             action.perform(attraction);
         }
+    }
+
+    @OnClick(R.id.image_featured)
+    void onFeaturedImageClick() {
+        if (attraction == null) return;
+
+        HashMap<String, String> imageCaptionMap = new HashMap<>();
+        boolean isLoadFromUrl = tourAction != TourAction.START;
+        List<Image> images = AttractionUtil.getAllImages(attraction);
+
+        for (Image image : images) {
+            String url = isLoadFromUrl ? image.getUrl() : image.getPath();
+            imageCaptionMap.put(url, image.getCaption());
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("is_load_from_url", isLoadFromUrl);
+        bundle.putSerializable("image_caption_map", imageCaptionMap);
+        startActivity(TourGalleryActivity.class, bundle);
     }
 
     private void initialize() {

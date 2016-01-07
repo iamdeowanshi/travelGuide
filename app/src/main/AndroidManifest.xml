@@ -28,6 +28,7 @@
         <activity
             android:name=".ui.activity.TourPlayerActivity"
             android:launchMode="singleTop"/>
+        <activity android:name=".ui.activity.TourGalleryActivity"/>
         <activity android:name=".ui.activity.test.TestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestActivity"/>
         <activity android:name=".ui.activity.test.ApiTestResultActivity"/>
