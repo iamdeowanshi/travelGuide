@@ -60,12 +60,11 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     @Inject AttractionRepository attractionRepo;
     @Inject AttractionUpdateRepository attractionUpdateRepo;
 
-    private TourActionClickListener tourActionClickListener;
-
     @Inject Bakery bakery;
 
-    private List<Attraction> attractions;
+    private TourActionClickListener tourActionClickListener;
     private Map<Long, TourDownloadProgress> downloadProgressMap = new HashMap<>();
+    private List<Attraction> attractions;
 
     public MyToursExpandableListAdapter() {
         Injector.instance().inject(this);
