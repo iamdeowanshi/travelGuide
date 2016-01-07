@@ -1,5 +1,6 @@
 package com.ithakatales.android.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.ithakatales.android.R;
+import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
@@ -127,7 +129,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                bakery.toastShort("share clicked");
+                shareAttraction();
                 break;
         }
 
@@ -222,8 +224,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         viewNoNetwork.setNetworkRetryListener(new NoNetworkView.NetworkRetryListener() {
             @Override
             public void onNetworkAvailable() {
-                finish();
-                startActivity(getIntent());
+                restartActivity();
             }
 
             @Override
@@ -383,6 +384,19 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         int primary = ContextCompat.getColor(this, R.color.primary);
         collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(primary));
         collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
+    }
+
+    private void shareAttraction() {
+        if (attraction == null) {
+            bakery.snackShort(getContentView(), "Nothing to share !");
+            return;
+        }
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Ithaka Tales - " + attraction.getName());
+        i.putExtra(Intent.EXTRA_TEXT, Config.SHARE_TOUR_URL_BASE + attraction.getId());
+        startActivity(Intent.createChooser(i, "Ithaka Tales - " + attraction.getName()));
     }
 
 }

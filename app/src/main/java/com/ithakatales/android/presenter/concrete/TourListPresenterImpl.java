@@ -61,9 +61,7 @@ public class TourListPresenterImpl extends BaseNetworkPresenter<TourListViewInte
             }
 
             @Override
-            public void onError(Throwable e) {
-                viewInteractor.onNetworkError(e);
-            }
+            public void onError(Throwable e) {}
         });
     }
 

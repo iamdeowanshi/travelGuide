@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_id": "ithaka-tales-243f3",
+    "project_number": "606240215039",
+    "name": "Ithaka Tales"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606240215039:android:c67d152d264d2695",
+        "client_id": "android:com.ithakatales.android",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.ithakatales.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606240215039-uga096kinpdlu0vlu0ae2oe3cf482ao8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ithakatales.android",
+            "certificate_hash": "FBDBA6BE8D4B58D24C9349AAFB27355F8AACD31A"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

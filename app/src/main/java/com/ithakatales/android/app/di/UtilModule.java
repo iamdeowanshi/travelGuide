@@ -1,9 +1,12 @@
 package com.ithakatales.android.app.di;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.DialogUtil;
 import com.ithakatales.android.util.PreferenceUtil;
+import com.ithakatales.android.util.UserPreference;
 
 import javax.inject.Singleton;
 
@@ -22,9 +25,20 @@ import dagger.Provides;
 public class UtilModule {
 
     @Provides
+    public AwesomeValidation provideValidator() {
+        return new AwesomeValidation(ValidationStyle.BASIC);
+    }
+
+    @Provides
     @Singleton
     public PreferenceUtil providePreferenceUtil() {
         return new PreferenceUtil();
+    }
+
+    @Provides
+    @Singleton
+    public UserPreference provideUserPreference() {
+        return new UserPreference();
     }
 
     @Provides

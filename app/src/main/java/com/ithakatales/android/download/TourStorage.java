@@ -60,6 +60,10 @@ public class TourStorage {
         delete(getTourDir(tourId));
     }
 
+    public void removeAllTours() {
+        delete(getIthakaDir());
+    }
+
     private File getIthakaInternalDir() {
         File internal = context.getFilesDir();
 

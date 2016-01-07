@@ -17,4 +17,6 @@ public interface BaseRepository<T> {
 
     void remove(long id);
 
+    void removeAll();
+
 }

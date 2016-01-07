@@ -46,9 +46,7 @@ public class TourUpdateAction extends TourAction {
             }
 
             @Override
-            public void onNegativeClick() {
-                bakery.toastShort("Under Development !");
-            }
+            public void onNegativeClick() {}
         });
 
         dialogUtil.setTitle("Update Available !")

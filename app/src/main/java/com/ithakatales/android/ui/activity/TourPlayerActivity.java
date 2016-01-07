@@ -368,6 +368,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         }
     }
 
+    // TODO: 04/01/16 to remove - only for development purpose
     @OnClick(R.id.button_forward)
     void onButtonForwardClick() {
         int currentPosition = mediaPlayer.getCurrentPosition();

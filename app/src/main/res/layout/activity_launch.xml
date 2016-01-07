@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_launch_activity"
-    android:padding="@dimen/spacing_medium">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_launch_activity"
+                android:padding="@dimen/spacing_medium">
 
     <ImageView
         android:id="@+id/image_logo"
@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:src="@drawable/logo_launch" />
+        android:src="@drawable/logo_launch"/>
 
     <Button
         android:id="@+id/button_sneak_peak"
@@ -23,7 +23,7 @@
         android:layout_marginBottom="40dp"
         android:background="@drawable/bg_button_pink_rounded"
         android:text="Sneak Peak"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"/>
 
     <Button
         android:id="@+id/button_login"
@@ -34,5 +34,18 @@
         android:layout_marginBottom="15dp"
         android:background="@drawable/bg_button_teal_rounded"
         android:text="Login"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"/>
+
+    <Button
+        android:id="@+id/button_dev_options"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:text="*"
+        android:textColor="@color/gray_pressed"
+        android:layout_marginRight="-16dp"
+        android:layout_marginBottom="-16dp"/>
 </RelativeLayout>

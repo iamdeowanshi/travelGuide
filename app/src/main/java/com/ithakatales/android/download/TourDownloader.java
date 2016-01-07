@@ -91,6 +91,11 @@ public class TourDownloader {
         attractionRepo.remove(attraction.getId());
     }
 
+    public void deleteAll() {
+        tourStorage.removeAllTours();
+        attractionRepo.removeAll();
+    }
+
     public TourDownloadProgress readProgress(long attractionId) {
         return progressReader.readProgress(attractionId);
     }

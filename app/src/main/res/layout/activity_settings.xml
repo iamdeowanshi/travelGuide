@@ -1,201 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ui.activity.SettingsActivity">
+    android:animateLayoutChanges="true">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/primary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        local:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        <RelativeLayout
-            android:id="@+id/layout_about_user"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:padding="@dimen/spacing_medium"
+        android:scrollbars="none">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginBottom="10dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txt_about_me"
+            <RelativeLayout
+                android:id="@+id/layout_about_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="About Me"
-                android:textColor="@color/pink_normal"
-                android:textSize="22sp"/>
+                android:layout_marginBottom="10dp"
+                android:visibility="visible">
 
-            <ImageView
-                android:id="@+id/img_user"
-                android:layout_width="@dimen/profile_pic"
-                android:layout_height="@dimen/profile_pic"
-                android:layout_below="@id/txt_about_me"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/prof_pic_holder"/>
+                <TextView
+                    android:id="@+id/txt_about_me"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="About Me"
+                    android:textColor="@color/pink_normal"
+                    android:textSize="22sp"/>
 
-            <TextView
-                android:id="@+id/txt_name"
+                <ImageView
+                    android:id="@+id/image_user"
+                    android:layout_width="@dimen/profile_pic"
+                    android:layout_height="@dimen/profile_pic"
+                    android:layout_below="@id/txt_about_me"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/prof_pic_holder"/>
+
+                <TextView
+                    android:id="@+id/text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txt_about_me"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/image_user"
+                    android:text="Samridhi Tiwari"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"/>
+
+                <TextView
+                    android:id="@+id/text_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/text_name"
+                    android:layout_below="@+id/text_name"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:text="Samridhitiwari@gmail.com"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
+
+                <Button
+                    android:id="@+id/button_upload"
+                    android:layout_width="120dp"
+                    android:layout_height="35dp"
+                    android:layout_alignBottom="@+id/image_user"
+                    android:layout_alignLeft="@+id/text_name"
+                    android:background="@drawable/bg_button_teal_rounded"
+                    android:text="Upload Photo"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/txt_travel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image_user"
+                    android:layout_marginTop="20dp"
+                    android:text="I travel for..."
+                    android:textColor="@color/black_transparent_70"
+                    android:textSize="10sp"/>
+
+                <EditText
+                    android:id="@+id/input_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_travel"
+                    android:background="@color/gray_extra_light"
+                    android:gravity="top"
+                    android:minLines="3"
+                    android:padding="5dp"
+                    android:text="@string/lorem_ipsum_medium"
+                    android:textColor="@color/black_transparent_70"
+                    android:textSize="11sp"/>
+
+                <Button
+                    android:id="@+id/button_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/input_about"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_button_teal_rounded"
+                    android:text="Save"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"/>
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/gray_light"/>
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:indeterminate="false"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_about_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txt_about_ithaka"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="About Ithaka"
+                    android:textColor="@color/pink_normal"
+                    android:textSize="22sp"/>
+
+                <TextView
+                    android:id="@+id/text_about_app"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_about_ithaka"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/about_ithaka"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:id="@+id/text_privacy_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_about_app"
+                    android:layout_marginTop="10dp"
+                    android:clickable="true"
+                    android:text="@string/privacy"
+                    android:textColor="@color/teal_normal"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:id="@+id/text_terms_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_privacy_link"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="5dp"
+                    android:clickable="true"
+                    android:text="@string/terms"
+                    android:textColor="@color/teal_normal"
+                    android:textSize="11sp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_manage_downloads"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt_about_me"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@+id/img_user"
-                android:text="Samridhi Tiwari"
-                android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:visibility="visible">
 
-            <TextView
-                android:id="@+id/txt_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/txt_name"
-                android:layout_below="@+id/txt_name"
-                android:layout_marginTop="10dp"
-                android:text="Samridhitiwari@gmail.com"
-                android:textColor="@color/black"
-                android:textSize="14sp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/gray_light"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/img_user"
-                android:layout_alignLeft="@+id/txt_name"
-                android:src="@drawable/btn_upload_normal"/>
+                <TextView
+                    android:id="@+id/txt_manage_downloads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Manage Downloads"
+                    android:textColor="@color/pink_normal"
+                    android:textSize="22sp"/>
 
-            <TextView
-                android:id="@+id/txt_travel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/img_user"
-                android:layout_marginTop="20dp"
-                android:text="I travel for..."
-                android:textColor="@color/black_transparent_70"
-                android:textSize="10sp"/>
+                <Button
+                    android:id="@+id/button_delete_downloads"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_manage_downloads"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_button_teal_rounded"
+                    android:text="Delete Downloads"
+                    android:textColor="@color/white"/>
 
-            <EditText
-                android:id="@+id/edt_travel_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_travel"
-                android:background="@color/gray_extra_light"
-                android:padding="5dp"
-                android:text="I like to travel because I am jobless but I have too much money to spend and I like to travel because I am jobless I like to travel because I am jobless I like to travel because I am jobless"
-                android:textColor="@color/black_transparent_70"
-                android:textSize="11sp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/button_delete_downloads"
+                    android:background="@color/black"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/edt_travel_info"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/btn_save_normal"/>
+                <Button
+                    android:id="@+id/button_logout"
+                    android:layout_width="90dp"
+                    android:layout_height="18dp"
+                    android:layout_below="@+id/button_delete_downloads"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/settings_button_logout"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/gray_light"/>
-        </RelativeLayout>
+            </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/layout_about_app">
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/txt_about_ithaka"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="About Ithaka"
-                android:textColor="@color/pink_normal"
-                android:textSize="22sp"/>
+    </ScrollView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_about_app_detail"
-                android:layout_below="@+id/txt_about_ithaka"
-                android:textColor="@color/black"
-                android:textSize="11sp"
-                android:layout_marginTop="10dp"
-                android:text="i dont know what to do i don't know what to do because i am jobless i am jobless"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_privacy"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/teal_normal"
-                android:textSize="11sp"
-                android:text="@string/privacy"
-                android:layout_below="@+id/txt_about_app_detail"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_terms"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/teal_normal"
-                android:textSize="11sp"
-                android:text="@string/terms"
-                android:layout_marginBottom="15dp"
-                android:layout_below="@+id/txt_privacy"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:id="@+id/layout_download">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/gray_light"/>
-
-            <TextView
-                android:id="@+id/txt_manage_downloads"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Manage Downloads"
-                android:textColor="@color/pink_normal"
-                android:textSize="22sp"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_delete_downloads"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_below="@+id/txt_manage_downloads"
-                android:src="@drawable/btn_del_attr_normal"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/btn_delete_downloads"
-                android:background="@color/black"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/logout"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:layout_below="@+id/btn_delete_downloads"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-</ScrollView>
+</RelativeLayout>

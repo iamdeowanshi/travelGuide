@@ -68,6 +68,8 @@ public class NoNetworkView extends RelativeLayout implements View.OnClickListene
     }
 
     private void init() {
+        if (isInEditMode()) return;
+
         Injector.instance().inject(this);
         inflate(getContext(), R.layout.view_no_network, this);
         buttonRetry = (Button) findViewById(R.id.button_retry);

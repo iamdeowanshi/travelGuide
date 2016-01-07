@@ -22,6 +22,7 @@ import com.ithakatales.android.ui.adapter.RecyclerItemClickListener;
 import com.ithakatales.android.ui.adapter.ToursListRecyclerAdapter;
 import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.UserPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
     @Inject TourListPresenter presenter;
     @Inject Context context;
     @Inject Bakery bakery;
+    @Inject UserPreference preference;
 
     @Bind(R.id.recycler_tours) RecyclerView recyclerTours;
     @Bind(R.id.progress) ProgressBar progress;
@@ -73,8 +75,10 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
 
         viewNoNetwork.setNetworkRetryListener(networkRetryListener);
 
-        // TODO: 18/12/15 - dummy user - to be updated
-        presenter.loadAttractionUpdates(User.dummy());
+        User user = preference.readUser();
+        if (user != null) {
+            presenter.loadAttractionUpdates(user);
+        }
     }
 
     @Override

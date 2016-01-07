@@ -9,6 +9,14 @@ import rx.Observer;
  */
 public abstract class ApiObserver<T> implements Observer<T> {
 
+    public static final ApiObserver DEFAULT = new ApiObserver() {
+        @Override
+        public void onResult(Object result) {}
+
+        @Override
+        public void onError(Throwable e) {}
+    };
+
     /**
      * Publish result to observer.
      *

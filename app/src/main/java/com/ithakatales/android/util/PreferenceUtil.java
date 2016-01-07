@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 public class PreferenceUtil {
 
-    public static final String PREF_USER_KEY = "_USER" ;
+    public static final String FIRST_LAUNCH_DONE = "_first_launch_done";
 
     @Inject Context context;
     @Inject Gson gson;
