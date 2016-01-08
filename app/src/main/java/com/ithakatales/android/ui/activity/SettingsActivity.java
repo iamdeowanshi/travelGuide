@@ -66,7 +66,6 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
 
     private User user;
     private Uri imageCaptureUri;
-    private File imageFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +118,9 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         }
 
         if (uri != null) {
-            imageFile = new File(getRealPathFromURI(uri));
+            File imageFile = new File(getRealPathFromURI(uri));
             Picasso.with(this).load(imageFile).into(imageUser);
+            presenter.uploadProfilePic(user, imageFile);
         }
     }
 
@@ -134,6 +134,9 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
     @Override
     public void onProfileUpdateSuccess(User user) {
         bakery.snackLong(getContentView(), "Profile updated");
+        this.user = user;
+        preference.saveUser(user);
+        loadUserInfo();
     }
 
     @Override
@@ -152,8 +155,8 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         bakery.snackLong(getContentView(), "Update failed !, Confirm inputs are correct");
     }
 
-    @OnClick(R.id.image_user)
-    void onUerImageClick() {
+    @OnClick(R.id.button_upload)
+    void onUploadClick() {
         dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
             @Override
             public void onPositiveClick() {
@@ -181,13 +184,6 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
                 .setPositiveButtonText("Camera")
                 .setNegativeButtonText("Gallery")
                 .show(this);
-    }
-
-    @OnClick(R.id.button_upload)
-    void onUploadClick() {
-        if (imageFile != null) {
-            presenter.uploadProfilePic(user, imageFile);
-        }
     }
 
     @OnClick(R.id.button_save)

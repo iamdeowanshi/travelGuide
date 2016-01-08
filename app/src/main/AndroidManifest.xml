@@ -39,7 +39,7 @@
         <activity android:name=".ui.activity.PasswordForgotActivity"/>
         <activity android:name=".ui.activity.VerifyAccountActivity"/>
         <activity android:name=".ui.activity.SettingsActivity"/>
-        <activity android:name=".ui.activity.EndTourActivity"/>
+        <activity android:name=".ui.activity.TourFinishActivity"/>
 
         <!--facebook loginNormal related-->
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>

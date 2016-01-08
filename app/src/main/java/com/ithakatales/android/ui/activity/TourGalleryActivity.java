@@ -44,7 +44,6 @@ public class TourGalleryActivity extends BaseActivity {
             getSupportActionBar().setTitle(attractionName);
         }
 
-
         for (Map.Entry<String, String> entry : imageCaptionMap.entrySet()) {
             Image image = new Image();
             image.setCaption(entry.getValue());

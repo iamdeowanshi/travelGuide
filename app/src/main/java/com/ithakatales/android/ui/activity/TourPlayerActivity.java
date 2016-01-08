@@ -382,13 +382,16 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
     // @Override
     public void onCompletion(MediaPlayer mp) {
-        if (currentAudioIndex < (audios.size() - 1)) {
-            playAudio(currentAudioIndex + 1);
-            currentAudioIndex ++;
+        if (currentAudioIndex == audios.size() - 1) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("attraction_id", attraction.getId());
+            bundle.putString("attraction_name", attraction.getName());
+            startActivity(TourFinishActivity.class, bundle);
             return;
         }
 
-        currentAudioIndex = 0;
+        playAudio(currentAudioIndex + 1);
+        currentAudioIndex ++;
     }
 
     private void playAudio(int audioIndex) {

@@ -125,7 +125,7 @@ public class User {
     }
 
     public String getAccessToken() {
-        return "Bearer " + accessToken;
+        return accessToken;
     }
 
     public void setAccessToken(String accessToken) {

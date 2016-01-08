@@ -421,7 +421,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_SUBJECT, "Ithaka Tales - " + attraction.getName());
         i.putExtra(Intent.EXTRA_TEXT, Config.SHARE_TOUR_URL_BASE + attraction.getId());
-        startActivity(Intent.createChooser(i, "Ithaka Tales - " + attraction.getName()));
+        startActivity(Intent.createChooser(i, "Share Ithaka - " + attraction.getName()));
     }
 
 }

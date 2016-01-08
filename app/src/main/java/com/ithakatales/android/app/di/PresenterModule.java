@@ -8,6 +8,7 @@ import com.ithakatales.android.presenter.RegistrationPresenter;
 import com.ithakatales.android.presenter.SamplePresenter;
 import com.ithakatales.android.presenter.SettingsPresenter;
 import com.ithakatales.android.presenter.TourDetailPresenter;
+import com.ithakatales.android.presenter.TourFinishPresenter;
 import com.ithakatales.android.presenter.TourListPresenter;
 import com.ithakatales.android.presenter.VerifyAccountPresenter;
 import com.ithakatales.android.presenter.concrete.LoginPresenterImpl;
@@ -18,6 +19,7 @@ import com.ithakatales.android.presenter.concrete.RegistrationPresenterImpl;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
 import com.ithakatales.android.presenter.concrete.SettingsPresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourDetailPresenterImpl;
+import com.ithakatales.android.presenter.concrete.TourFinishPresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourListPresenterImpl;
 import com.ithakatales.android.presenter.concrete.VerifyAccountPresenterImpl;
 
@@ -83,6 +85,11 @@ public class PresenterModule {
     @Provides
     public TourDetailPresenter provideTourDetailPresenter() {
         return new TourDetailPresenterImpl();
+    }
+
+    @Provides
+    public TourFinishPresenter provideTourFinishPresenter() {
+        return new TourFinishPresenterImpl();
     }
 
 }
