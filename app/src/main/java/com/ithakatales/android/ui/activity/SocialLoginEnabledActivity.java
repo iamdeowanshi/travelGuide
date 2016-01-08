@@ -63,7 +63,7 @@ public abstract class SocialLoginEnabledActivity extends BaseActivity implements
     public void onAuthError(Throwable e) {
         hideProgress();
         Timber.e(e.getMessage(), e);
-        bakery.snackShort(getContentView(), "Authentication Failed");
+        bakery.toastShort("Authentication Failed");
     }
 
     @Override

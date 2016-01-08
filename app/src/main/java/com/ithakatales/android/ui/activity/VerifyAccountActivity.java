@@ -66,13 +66,13 @@ public class VerifyAccountActivity extends BaseActivity implements VerifyAccount
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.snackShort(getContentView(), "Verification failed !, Confirm code is correct");
+        bakery.toastShort("Verification failed !, Confirm code is correct");
     }
 
     @OnClick(R.id.button_verify)
     void onVerifyClick() {
         if ( ! connectivityUtil.isConnected()) {
-            bakery.snackShort(getContentView(), "No network connection !");
+            bakery.toastShort("No network connection !");
             return;
         }
 

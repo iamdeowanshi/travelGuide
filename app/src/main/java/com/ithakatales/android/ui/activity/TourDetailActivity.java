@@ -193,7 +193,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_preview_player)
     void onPreviewPlayerClick() {
-        bakery.snackShort(getContentView(), "Under Development !");
+        bakery.toastShort("Under Development !");
     }
 
     @OnClick(R.id.button_tour_action)
@@ -413,7 +413,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     private void shareAttraction() {
         if (attraction == null) {
-            bakery.snackShort(getContentView(), "Nothing to share !");
+            bakery.toastShort("Nothing to share !");
             return;
         }
 

@@ -53,7 +53,7 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
 
     @Override
     public void onTourRated() {
-        bakery.snackShort(getContentView(), "Rating Done..");
+        bakery.toastShort("Rating Done..");
     }
 
     @OnClick(R.id.button_share)
@@ -72,7 +72,7 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
         User user = preference.readUser();
 
         if (user == null) {
-            bakery.snackShort(getContentView(), "You should be logged in for rating..");
+            bakery.toastShort("You should be logged in for rating..");
             return;
         }
 
@@ -81,7 +81,7 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
 
     private void shareAttraction() {
         if (attractionName == null) {
-            bakery.snackShort(getContentView(), "Nothing to share !");
+            bakery.toastShort("Nothing to share !");
             return;
         }
 

@@ -126,14 +126,14 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
 
     @Override
     public void onProfilePicUploadSuccess(String url) {
-        bakery.snackLong(getContentView(), "Profile pic uploaded");
+        bakery.toastShort("Profile pic uploaded");
         user.setAvatar(url);
         presenter.updateProfile(user);
     }
 
     @Override
     public void onProfileUpdateSuccess(User user) {
-        bakery.snackLong(getContentView(), "Profile updated");
+        bakery.toastShort("Profile updated");
         this.user = user;
         preference.saveUser(user);
         loadUserInfo();
@@ -152,7 +152,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.snackLong(getContentView(), "Update failed !, Confirm inputs are correct");
+        bakery.toastShort("Update failed !, Confirm inputs are correct");
     }
 
     @OnClick(R.id.button_upload)
@@ -195,7 +195,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
     @OnClick(R.id.button_delete_downloads)
     void onDeleteDownloadsClick() {
         tourDownloader.deleteAll();
-        bakery.snackLong(getContentView(), "All tours deleted !");
+        bakery.toastShort("All tours deleted !");
     }
 
     @OnClick(R.id.button_logout)

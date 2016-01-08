@@ -70,7 +70,7 @@ public class LoginActivity extends SocialLoginEnabledActivity {
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.snackShort(getContentView(), "Login failed !, Verify email and password");
+        bakery.toastShort("Login failed !, Verify email and password");
     }
 
     // onClick actions
@@ -78,7 +78,7 @@ public class LoginActivity extends SocialLoginEnabledActivity {
     @OnClick(R.id.button_login)
     void onLoginClick() {
         if ( ! connectivityUtil.isConnected()) {
-            bakery.snackShort(getContentView(), "No network connection !");
+            bakery.toastShort("No network connection !");
             return;
         }
 
