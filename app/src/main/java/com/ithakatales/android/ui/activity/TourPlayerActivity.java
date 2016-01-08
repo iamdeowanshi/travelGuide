@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -32,6 +34,7 @@ import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.data.repository.ImageRepository;
+import com.ithakatales.android.download.TourStorage;
 import com.ithakatales.android.map.MapView;
 import com.ithakatales.android.map.Marker;
 import com.ithakatales.android.player.EncryptedAudioHttpServer;
@@ -47,9 +50,11 @@ import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +76,12 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     public static final String IV = "tecsolbangalorek";
 
     private static final int NOTIFICATION_ID = 999;
+    private static final int REQUEST_CAMERA  = 100;
 
     @Inject Bakery bakery;
     @Inject ImageRepository imageRepo;
     @Inject AttractionRepository attractionRepo;
+    @Inject TourStorage tourStorage;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.gallery_view_pager) ViewPager galleryPager;
@@ -186,7 +193,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_camera:
-                bakery.toastShort("camera clicked");
+                startCameraIntent();
                 break;
             case R.id.action_map:
                 toggleMapAndGalleryOptionVisibility();
@@ -308,6 +315,16 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     private void updateHeaderTexts(Audio audio, int index) {
         textPoiName.setText(audio.getName());
         textPoiProgress.setText(String.format("%d of %d Audios", index + 1, audios.size()));
+    }
+
+    private void startCameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String imageName = "ITK_" + dateFormat.format(new Date()) + ".jpg";
+        Uri imageUri = Uri.fromFile(new File(tourStorage.getIthakaCapturedImageDir(), imageName));
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     //----------------------------------------------------------------------------------
