@@ -225,6 +225,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         @Bind(R.id.layout_item_container) RelativeLayout layoutItemContainer;
         @Bind(R.id.text_name) TextView textName;
         @Bind(R.id.text_caption) TextView textCaption;
+        @Bind(R.id.text_city) TextView textCity;
         @Bind(R.id.text_progress) TextView textProgress;
         @Bind(R.id.progress) ProgressBar progress;
         @Bind(R.id.button_tour_action) Button buttonTourAction;
@@ -241,6 +242,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
 
             textName.setText(attraction.getName());
             textCaption.setText(attraction.getCaption());
+            textCity.setText(attraction.getCity().getName());
 
             RequestCreator requestCreator = Picasso.with(context).load(new File(attraction.getFeaturedImage().getPath()));
             TourDownloadProgress download = downloadProgressMap.get(attraction.getId());
