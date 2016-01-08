@@ -268,7 +268,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "IthakatalesProfile", null);
-        
+
         return Uri.parse(path);
     }
 
