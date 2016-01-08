@@ -158,11 +158,12 @@
         <TextView
             android:id="@+id/text_login"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
+            android:background="@color/black_transparent_50"
             android:gravity="center"
             android:text="Already a member? Login now"
             android:textColor="@color/white"
-            android:background="@color/black_transparent_50"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 

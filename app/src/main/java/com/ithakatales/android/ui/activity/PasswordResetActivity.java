@@ -91,4 +91,9 @@ public class PasswordResetActivity extends BaseActivity implements PasswordReset
         presenter.resetPassword(email, inputTempPassword.getText().toString(), inputNewPassword.getText().toString());
     }
 
+    @OnClick(R.id.text_back)
+    void onBackClick() {
+        startActivityClearTop(LoginActivity.class, null);
+    }
+
 }

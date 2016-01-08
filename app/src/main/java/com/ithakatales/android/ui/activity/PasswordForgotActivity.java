@@ -84,4 +84,9 @@ public class PasswordForgotActivity extends BaseActivity implements PasswordForg
         presenter.requestPasswordForgot(email);
     }
 
+    @OnClick(R.id.text_back)
+    void onBackClick() {
+        startActivityClearTop(LoginActivity.class, null);
+    }
+
 }
