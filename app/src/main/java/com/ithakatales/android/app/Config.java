@@ -65,7 +65,7 @@ public class Config {
     // Headers required to be added by interceptor
     public static final Map<String, String> API_HEADERS = new HashMap<String, String>() {{
         put("User-Agent", "Ithaka-Tales-Android-App");
-        put("Content-Type", "application/json");
+        //put("Content-Type", "application/json");
     }};
 
     //--------------------------------------------------------------------------------

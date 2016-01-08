@@ -1,6 +1,7 @@
 package com.ithakatales.android.presenter.concrete;
 
 import com.ithakatales.android.app.base.BaseNetworkPresenter;
+import com.ithakatales.android.data.api.ApiModels;
 import com.ithakatales.android.data.api.ApiObserver;
 import com.ithakatales.android.data.api.IthakaApi;
 import com.ithakatales.android.data.model.User;
@@ -13,6 +14,7 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import retrofit.mime.TypedFile;
 import rx.Observable;
 
 /**
@@ -30,7 +32,22 @@ public class SettingsPresenterImpl extends BaseNetworkPresenter<SettingsViewInte
 
     @Override
     public void uploadProfilePic(User user, File file) {
-        // TODO: 06/01/16
+        viewInteractor.showProgress();
+        TypedFile typedFile=new TypedFile("image/jpeg", file);
+        Observable<ApiModels.ProfilePicUploadResponse> observable = ithakaApi.uploadProfilePic(user.getAccessToken(), typedFile);
+        subscribeForNetwork(observable, new ApiObserver<ApiModels.ProfilePicUploadResponse>() {
+            @Override
+            public void onResult(ApiModels.ProfilePicUploadResponse result) {
+                viewInteractor.hideProgress();
+                viewInteractor.onProfilePicUploadSuccess(result.url);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                viewInteractor.hideProgress();
+                viewInteractor.onNetworkError(e);
+            }
+        });
     }
 
     @Override
