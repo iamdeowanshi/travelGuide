@@ -9,6 +9,7 @@ import android.widget.ExpandableListView;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseFragment;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.ithakatales.android.presenter.TourDetailPresenter;
 import com.ithakatales.android.presenter.TourDetailViewInteractor;
@@ -30,6 +31,7 @@ import timber.log.Timber;
 public class MyToursFragment extends BaseFragment implements TourDetailViewInteractor, MyToursExpandableListAdapter.TourActionClickListener {
 
     @Inject TourDetailPresenter presenter;
+    @Inject TourDownloader tourDownloader;
 
     @Inject Bakery bakery;
     @Inject DialogUtil dialogUtil;
@@ -74,6 +76,9 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     }
 
     @Override
+    public void onDownloadComplete(long attractionId) {}
+
+    @Override
     public void onNoNetwork() {
         bakery.toastShort("No Network");
     }
@@ -106,6 +111,28 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
                 showTourDeletedDialog(attraction);
                 break;
         }
+    }
+
+    @Override
+    public void onTourLongClick(final Attraction attraction) {
+        dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
+            @Override
+            public void onPositiveClick() {
+                String attractionName = attraction.getName();
+                tourDownloader.delete(attraction);
+                bakery.toastShort(String.format("%s deleted", attractionName));
+                updateAdapter();
+            }
+
+            @Override
+            public void onNegativeClick() {}
+        });
+
+        dialogUtil.setTitle("Tour Delete")
+                .setMessage(String.format("Are you sure to delete tour %s ?", attraction.getName()))
+                .setPositiveButtonText("Delete")
+                .setNegativeButtonText("Cancel")
+                .show(getActivity());
     }
 
     public void updateAdapter() {

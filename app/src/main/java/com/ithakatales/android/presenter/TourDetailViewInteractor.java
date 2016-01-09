@@ -13,6 +13,8 @@ public interface TourDetailViewInteractor extends NetworkViewInteractor {
 
     void onDownloadProgressChange(TourDownloadProgress downloadProgress);
 
+    void onDownloadComplete(long attractionId);
+
     void onNoNetwork();
 
 }

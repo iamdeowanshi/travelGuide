@@ -63,7 +63,7 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
                     }
 
                     if ( ! isPaused && tourDownloadProgress.getProgress() >= 100) {
-                        loadAttraction(tourDownloadProgress.getAttractionId());
+                        viewInteractor.onDownloadComplete(tourDownloadProgress.getAttractionId());
                     }
                 }
             });

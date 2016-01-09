@@ -169,6 +169,11 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     }
 
     @Override
+    public void onDownloadComplete(long attractionId) {
+        presenter.loadAttraction(attractionId);
+    }
+
+    @Override
     public void onNoNetwork() {
         bakery.toastShort("No network !");
         viewNoNetwork.show();
@@ -316,11 +321,6 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             mapView.recycle();
 
-            if (bitmap == null || bitmap.isRecycled()) {
-                loadPoiMap();
-                return;
-            }
-
             mapView.setImage(ImageSource.bitmap(bitmap));
 
             int bitmapWidth = bitmap.getWidth();
@@ -348,7 +348,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     };
 
     private void loadPoiMap() {
-        RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction != TourAction.DOWNLOADING)
+        RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction == TourAction.START)
                 ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
                 : Picasso.with(this).load(attraction.getBlueprintUrl());
        requestCreator.into(mapViewPicassoTarget);

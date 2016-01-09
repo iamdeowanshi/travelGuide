@@ -46,6 +46,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import timber.log.Timber;
 
 /**
@@ -277,6 +278,15 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             }
         }
 
+        @OnLongClick(R.id.layout_item_container)
+        boolean onTourLongClick() {
+            if (tourActionClickListener != null) {
+                tourActionClickListener.onTourLongClick(attraction);
+            }
+
+            return false;
+        }
+
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             layoutItemContainer.setBackground(new BitmapDrawable(context.getResources(), bitmap));
@@ -376,6 +386,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
 
     public static interface TourActionClickListener {
         void onTourActionClick(Attraction attraction, int tourAction);
+        void onTourLongClick(Attraction attraction);
     }
 
 }
