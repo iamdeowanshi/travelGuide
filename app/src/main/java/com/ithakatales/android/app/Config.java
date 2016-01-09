@@ -13,7 +13,8 @@ public class Config {
     public static final boolean DEBUG = true;
 
     //--------------------------------------------------------------------------------
-    // API related constants/configurations - used in ApiModule & Api class, prefix with API_
+    // API related constants/configurations - used in ApiModule & Api class,
+    // prefix with API_
     //--------------------------------------------------------------------------------
     public static final String API_BASE_URL_PRODUCTION  = "";
     public static final String API_BASE_URL_DEVELOP     = "http://52.77.211.228:1337/v1";
@@ -85,7 +86,7 @@ public class Config {
     public static final boolean STORAGE_HIDE_FILES      = false;
 
     //--------------------------------------------------------------------------------
-    // // TODO: 06/01/16 commenting
+    // App generic configurations
     //--------------------------------------------------------------------------------
 
     public static final String LINK_PRIVACY_POLICY  = "http://www.google.com";
@@ -95,5 +96,7 @@ public class Config {
 
     public static final String FEEDBACK_EMAIL_TO    = "ithakatales@gmail.com";
     public static final String FEEDBACK_SUBJECT     = "Ithakatales Feedback";
+
+    public static final boolean ORIENTATION_PORTRAIT_ONLY = true;
 
 }
