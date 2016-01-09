@@ -32,6 +32,7 @@ public class MapView extends SubsamplingScaleImageView {
 
     private List<Marker> markers = new ArrayList<>();
     private Marker selectedMarker;
+    private Marker selectedPopoverMarker;
 
     private Bitmap markerBitmap;
     private Bitmap markerSelectedBitmap;
@@ -66,6 +67,7 @@ public class MapView extends SubsamplingScaleImageView {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             PointF viewCoordinate = viewToSourceCoord(event.getX(), event.getY());
             notifyIfMarkerTouch((int) viewCoordinate.x, (int) viewCoordinate.y);
+            notifyIfMarkerPopoverTouch((int) viewCoordinate.x, (int) viewCoordinate.y);
         }
 
         return super.onTouchEvent(event);
@@ -140,9 +142,12 @@ public class MapView extends SubsamplingScaleImageView {
 
         // draw stroke
         resetPaint();
-        paint.setColor(Color.DKGRAY);
+
+        int strokeColor = selectedPopoverMarker != null && selectedMarker.equals(selectedPopoverMarker)
+                ? Color.parseColor("#37abb7") : Color.DKGRAY;
+        paint.setColor(strokeColor);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(3);
+        paint.setStrokeWidth(4);
         canvas.drawRoundRect(new RectF(rect), 10, 10, paint);
 
         // draw title
@@ -160,6 +165,8 @@ public class MapView extends SubsamplingScaleImageView {
         canvas.drawText(selectedMarker.getDuration(), rect.left + 150, rect.top + 80, paint);
     }
 
+    // Marker touch related
+
     private void notifyIfMarkerTouch(int x, int y) {
         PointF touchCoordinate = sourceToViewCoord(x, y);
 
@@ -172,7 +179,7 @@ public class MapView extends SubsamplingScaleImageView {
         if ( ! isMarkerTouch(marker, touchCoordinate)) return false;
 
         toggleMarkerSelection(marker);
-        markerClickListener.markerClicked(marker);
+        markerClickListener.onMarkerClicked(marker);
         reDraw();
 
         return true;
@@ -199,6 +206,34 @@ public class MapView extends SubsamplingScaleImageView {
         // make current selection
         marker.setSelected(true);
         selectedMarker = marker;
+    }
+
+    // Marker popover touch related
+
+    private void notifyIfMarkerPopoverTouch(int x, int y) {
+        PointF touchCoordinate = sourceToViewCoord(x, y);
+
+        for (Marker marker : markers) {
+            if (notifyIfMarkerPopoverTouch(marker, touchCoordinate)) return;
+        }
+    }
+
+    private boolean notifyIfMarkerPopoverTouch(Marker marker, PointF touchCoordinate) {
+        if (!isMarkerPopoverTouch(marker, touchCoordinate)) return false;
+
+        marker.setSelected(true);
+        selectedMarker = marker;
+        markerClickListener.onMarkerPopoverClicked(marker);
+        selectedPopoverMarker = marker;
+        reDraw();
+
+        return true;
+    }
+
+    private boolean isMarkerPopoverTouch(Marker marker, PointF touchCoordinate) {
+        Region region = new Region(getPopoverRectFromMarker(marker));
+
+        return region.contains((int)touchCoordinate.x, (int)touchCoordinate.y);
     }
 
     private Rect getRectFromMarker(Marker marker) {
@@ -269,10 +304,15 @@ public class MapView extends SubsamplingScaleImageView {
     public static interface MarkerClickListener {
         MarkerClickListener DEFAULT = new MarkerClickListener() {
             @Override
-            public void markerClicked(Marker marker) {}
+            public void onMarkerClicked(Marker marker) {}
+
+            @Override
+            public void onMarkerPopoverClicked(Marker marker) {}
         };
 
-        void markerClicked(Marker marker);
+        void onMarkerClicked(Marker marker);
+
+        void onMarkerPopoverClicked(Marker marker);
     }
 
 }

@@ -228,7 +228,10 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     }
 
     @Override
-    public void markerClicked(Marker marker) {
+    public void onMarkerClicked(Marker marker) {}
+
+    @Override
+    public void onMarkerPopoverClicked(Marker marker) {
         int index = 0;
         for (Audio audio : audios) {
             if (audio.getId() == markerPoiMap.get(marker).getAudio().getId()) {
