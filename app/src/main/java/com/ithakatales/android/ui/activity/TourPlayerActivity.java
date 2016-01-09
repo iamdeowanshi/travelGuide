@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -88,6 +89,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     @Bind(R.id.map_view) MapView mapView;
     @Bind(R.id.recycler_audio_list) RecyclerView recyclerAudioList;
 
+    @Bind(R.id.layout_poi_info) RelativeLayout layoutPoiInfo;
     @Bind(R.id.text_poi_name) TextView textPoiName;
     @Bind(R.id.text_poi_progress) TextView textPoiProgress;
 
@@ -102,13 +104,16 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     @Bind(R.id.button_playlist) Button buttonPlayList;
 
     private Menu menu;
-    private Attraction attraction;
+
     private Map<Marker, Poi> markerPoiMap = new HashMap<>();
+    private List<Poi> pois = new ArrayList<>();
     private List<Audio> audios = new ArrayList<>();
     private List<Image> images = new ArrayList<>();
+
     private GalleryPagerAdapter galleryPagerAdapter;
     private PlayListRecyclerAdapter playlistAdapter;
 
+    private Attraction attraction;
     private int currentAudioIndex = 0;
     private int seekBackwardTime = 10000; // milliseconds
 
@@ -267,7 +272,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             int bitmapHeight = bitmap.getHeight();
 
             // copy poi list to another list to detach from realm, then sort based on audio priority
-            List<Poi> pois = new ArrayList<>();
             pois.addAll(attraction.getPois());
             Collections.sort(pois, new Comparator<Poi>() {
                 @Override
@@ -313,8 +317,22 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     }
 
     private void updateHeaderTexts(Audio audio, int index) {
-        textPoiName.setText(audio.getName());
-        textPoiProgress.setText(String.format("%d of %d Audios", index + 1, audios.size()));
+        if (audio.getPoiId() <= 0) {
+            layoutPoiInfo.setVisibility(View.GONE);
+            return;
+        }
+
+        int poiPosition = 0;
+        for (Poi poi : pois) {
+            poiPosition ++;
+
+            if (poi.getAudio().getId() != audio.getId()) continue;
+
+            layoutPoiInfo.setVisibility(View.VISIBLE);
+            textPoiName.setText(poi.getName());
+            textPoiProgress.setText(String.format("%d of %d Pois", poiPosition, pois.size()));
+            break;
+        }
     }
 
     private void startCameraIntent() {
