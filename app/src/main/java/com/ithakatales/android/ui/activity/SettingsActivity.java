@@ -134,8 +134,8 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
     @Override
     public void onProfileUpdateSuccess(User user) {
         bakery.toastShort("Profile updated");
-        this.user = user;
         preference.saveUser(user);
+        this.user = preference.readUser();
         loadUserInfo();
     }
 
