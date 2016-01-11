@@ -117,12 +117,12 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void startActivityClearTop(Class<? extends Activity> activityClass, Bundle bundle) {
         Intent intent = new Intent(this, activityClass);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         if (bundle != null) intent.putExtras(bundle);
 
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     /**

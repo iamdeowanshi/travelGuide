@@ -24,19 +24,23 @@ public class LaunchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_launch);
         injectDependencies();
 
         if (! preference.readBoolean(PreferenceUtil.FIRST_LAUNCH_DONE, false)) {
             preference.save(PreferenceUtil.FIRST_LAUNCH_DONE, true);
-            startActivityClearTop(UserOnBoardActivity.class, null);
+            startActivity(UserOnBoardActivity.class, null);
+            finish();
             return;
         }
 
         User user = userPreference.readUser();
         if (user != null && user.isVerified()) {
-            startActivityClearTop(HomeActivity.class, null);
+            startActivity(HomeActivity.class, null);
+            finish();
+            return;
         }
+
+        setContentView(R.layout.activity_launch);
     }
 
     @OnClick(R.id.button_login)
