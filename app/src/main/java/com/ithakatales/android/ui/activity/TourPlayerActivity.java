@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.ithakatales.android.R;
+import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.Audio;
@@ -73,8 +74,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         MediaPlayer.OnCompletionListener, MapView.MarkerClickListener {
 
     public static final String URL_FORMAT = "http://127.0.0.1:%d%s?key=%s&iv=%s";
-    public static final String KEY = "tecsolsoftwarepvtltdbangalorekar";
-    public static final String IV = "tecsolbangalorek";
 
     private static final int NOTIFICATION_ID = 999;
     private static final int REQUEST_CAMERA  = 100;
@@ -451,7 +450,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
         try {
             String filePath = audio.getPath();
-            String url = String.format(URL_FORMAT, EncryptedAudioHttpServer.SERVER_PORT, filePath, KEY, IV);
+            String url = String.format(URL_FORMAT, EncryptedAudioHttpServer.SERVER_PORT, filePath, Config.ENCRYPTION_KEY, Config.ENCRYPTION_IV);
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
             mediaPlayer.start();

@@ -99,4 +99,7 @@ public class Config {
 
     public static final boolean ORIENTATION_PORTRAIT_ONLY = true;
 
+    public static final String ENCRYPTION_KEY       = "tecsolsoftwarepvtltdbangalorekar";
+    public static final String ENCRYPTION_IV        = "tecsolbangalorek";
+
 }

@@ -29,7 +29,7 @@ public class Image extends RealmObject {
     @SerializedName("caption")
     private String caption;
     @SerializedName("priority")
-    private long priority;
+    private int priority;
     @SerializedName("isPublished")
     private boolean isPublished;
     @SerializedName("createdAt")
@@ -113,11 +113,11 @@ public class Image extends RealmObject {
         this.caption = caption;
     }
 
-    public long getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(long priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 

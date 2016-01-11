@@ -6,6 +6,8 @@ import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.model.Poi;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -38,6 +40,13 @@ public class AttractionUtil {
             images.addAll(poi.getAudio().getImages());
         }
 
+        Collections.sort(images, new Comparator<Image>() {
+            @Override
+            public int compare(Image lhs, Image rhs) {
+                return lhs.getPriority() - rhs.getPriority();
+            }
+        });
+
         return images;
     }
 
@@ -58,6 +67,13 @@ public class AttractionUtil {
 
             audios.add(poi.getAudio());
         }
+
+        Collections.sort(audios, new Comparator<Audio>() {
+            @Override
+            public int compare(Audio lhs, Audio rhs) {
+                return lhs.getPriority() - rhs.getPriority();
+            }
+        });
 
         return audios;
     }
