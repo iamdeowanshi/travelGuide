@@ -47,10 +47,9 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
 
     @Bind(R.id.list_my_tours) ExpandableListView listMyTours;
     @Bind(R.id.layout_tour_empty) RelativeLayout layoutTourEmpty;
-    @Bind(R.id.layout_not_logged) RelativeLayout layoutNotLoggedin;
+    @Bind(R.id.layout_not_logged) RelativeLayout layoutNotLoggedIn;
 
     private MyToursExpandableListAdapter adapter;
-
     private boolean isAdapterNotified;
 
     @Override
@@ -68,6 +67,10 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        adapter = new MyToursExpandableListAdapter();
+        adapter.setTourActionClickListener(this);
+        listMyTours.setAdapter(adapter);
 
         refreshAdapterAndView();
     }
@@ -162,9 +165,6 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     }
 
     private void refreshAdapter() {
-        adapter = new MyToursExpandableListAdapter();
-        adapter.setTourActionClickListener(this);
-        listMyTours.setAdapter(adapter);
         adapter.updateProgressMap();
         adapter.notifyDataSetChanged();
     }
@@ -242,8 +242,8 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     private boolean changeViewIfNotLoggedIn() {
         boolean isLoggedIn = preference.isLoggedIn();
 
-        if ( ! isLoggedIn && layoutNotLoggedin.getVisibility() != View.VISIBLE) {
-            layoutNotLoggedin.setVisibility(View.VISIBLE);
+        if ( ! isLoggedIn && layoutNotLoggedIn.getVisibility() != View.VISIBLE) {
+            layoutNotLoggedIn.setVisibility(View.VISIBLE);
             layoutTourEmpty.setVisibility(View.GONE);
             listMyTours.setVisibility(View.GONE);
         }
@@ -256,14 +256,17 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
 
         if (isEmpty && layoutTourEmpty.getVisibility() != View.VISIBLE) {
             layoutTourEmpty.setVisibility(View.VISIBLE);
-            layoutNotLoggedin.setVisibility(View.GONE);
+            layoutNotLoggedIn.setVisibility(View.GONE);
             listMyTours.setVisibility(View.GONE);
         }
 
         if ( ! isEmpty && listMyTours.getVisibility() != View.VISIBLE) {
             layoutTourEmpty.setVisibility(View.GONE);
-            layoutNotLoggedin.setVisibility(View.GONE);
+            layoutNotLoggedIn.setVisibility(View.GONE);
             listMyTours.setVisibility(View.VISIBLE);
+            adapter = new MyToursExpandableListAdapter();
+            adapter.setTourActionClickListener(this);
+            listMyTours.setAdapter(adapter);
         }
 
         return isEmpty;
