@@ -1,8 +1,12 @@
 package com.ithakatales.android.ui.actions;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Button;
 
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.ui.activity.TourPlayerActivity;
 
 /**
  * @author Farhan Ali
@@ -20,9 +24,11 @@ public abstract class TourAction {
     public boolean enable;
 
     protected Button button;
+    protected Context activityContext;
 
     public TourAction(Button button) {
         this.button = button;
+        activityContext = button.getContext();
     }
 
     public abstract void perform(Attraction attraction);
@@ -30,6 +36,14 @@ public abstract class TourAction {
     public void init() {
         button.setText(text);
         button.setEnabled(enable);
+    }
+
+    protected void startTour(Attraction attraction) {
+        Intent intent = new Intent(activityContext, TourPlayerActivity.class);
+        Bundle bundle = new Bundle();
+        intent.putExtra("attraction_id", attraction.getId());
+        intent.putExtras(bundle);
+        activityContext.startActivity(intent);
     }
 
 }

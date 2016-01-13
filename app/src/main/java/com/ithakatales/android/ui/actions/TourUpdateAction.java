@@ -46,7 +46,9 @@ public class TourUpdateAction extends TourAction {
             }
 
             @Override
-            public void onNegativeClick() {}
+            public void onNegativeClick() {
+                startTour(attraction);
+            }
         });
 
         dialogUtil.setTitle("Update Available !")
