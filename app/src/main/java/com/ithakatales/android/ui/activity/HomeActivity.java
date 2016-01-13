@@ -108,7 +108,7 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
         MyToursFragment myToursFragment = (MyToursFragment) homePageAdapter.getFragment(POSITION_MY_TOURS);
 
         if (myToursFragment != null) {
-            myToursFragment.updateAdapter();
+            myToursFragment.refreshAdapterAndView();
         }
     }
 

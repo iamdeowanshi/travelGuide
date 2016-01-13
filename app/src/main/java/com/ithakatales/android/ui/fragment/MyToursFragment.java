@@ -5,24 +5,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.RelativeLayout;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseFragment;
 import com.ithakatales.android.data.model.Attraction;
+import com.ithakatales.android.data.repository.AttractionRepository;
 import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.download.model.TourDownloadProgress;
 import com.ithakatales.android.presenter.TourDetailPresenter;
 import com.ithakatales.android.presenter.TourDetailViewInteractor;
 import com.ithakatales.android.ui.actions.TourAction;
+import com.ithakatales.android.ui.activity.LoginActivity;
+import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.TourPlayerActivity;
 import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.DialogUtil;
+import com.ithakatales.android.util.UserPreference;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -32,12 +38,16 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
 
     @Inject TourDetailPresenter presenter;
     @Inject TourDownloader tourDownloader;
+    @Inject AttractionRepository attractionRepo;
 
     @Inject Bakery bakery;
     @Inject DialogUtil dialogUtil;
     @Inject ConnectivityUtil connectivityUtil;
+    @Inject UserPreference preference;
 
     @Bind(R.id.list_my_tours) ExpandableListView listMyTours;
+    @Bind(R.id.layout_tour_empty) RelativeLayout layoutTourEmpty;
+    @Bind(R.id.layout_not_logged) RelativeLayout layoutNotLoggedin;
 
     private MyToursExpandableListAdapter adapter;
 
@@ -59,9 +69,7 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new MyToursExpandableListAdapter();
-        adapter.setTourActionClickListener(this);
-        listMyTours.setAdapter(adapter);
+        refreshAdapterAndView();
     }
 
     @Override
@@ -70,7 +78,7 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     @Override
     public void onDownloadProgressChange(TourDownloadProgress downloadProgress) {
         if ( ! isAdapterNotified) {
-            updateAdapter();
+            refreshAdapter();
             isAdapterNotified = true;
         }
     }
@@ -114,6 +122,13 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
     }
 
     @Override
+    public void onTourClick(Attraction attraction) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("attraction_id", attraction.getId());
+        startActivity(TourDetailActivity.class, bundle);
+    }
+
+    @Override
     public void onTourLongClick(final Attraction attraction) {
         dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
             @Override
@@ -121,11 +136,12 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
                 String attractionName = attraction.getName();
                 tourDownloader.delete(attraction);
                 bakery.toastShort(String.format("%s deleted", attractionName));
-                updateAdapter();
+                refreshAdapterAndView();
             }
 
             @Override
-            public void onNegativeClick() {}
+            public void onNegativeClick() {
+            }
         });
 
         dialogUtil.setTitle("Tour Delete")
@@ -135,9 +151,27 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
                 .show(getActivity());
     }
 
-    public void updateAdapter() {
+    @OnClick(R.id.button_login)
+    void onLoginClick() {
+        startActivity(LoginActivity.class, null);
+    }
+
+    public void refreshAdapterAndView() {
+        refreshAdapter();
+        refreshView();
+    }
+
+    private void refreshAdapter() {
+        adapter = new MyToursExpandableListAdapter();
+        adapter.setTourActionClickListener(this);
+        listMyTours.setAdapter(adapter);
         adapter.updateProgressMap();
         adapter.notifyDataSetChanged();
+    }
+
+    private void refreshView() {
+        changeViewIfToursEmpty();
+        changeViewIfNotLoggedIn();
     }
 
     private void retryDownload(Attraction attraction) {
@@ -189,7 +223,7 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
             public void onPositiveClick() {
                 bakery.toastShort("Deleting..");
                 presenter.deleteAttraction(attraction);
-                updateAdapter();
+                refreshAdapterAndView();
             }
 
             @Override
@@ -203,6 +237,36 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
                 .setPositiveButtonText("Remove")
                 .setNegativeButtonText("Continue")
                 .show(getActivity());
+    }
+
+    private boolean changeViewIfNotLoggedIn() {
+        boolean isLoggedIn = preference.isLoggedIn();
+
+        if ( ! isLoggedIn && layoutNotLoggedin.getVisibility() != View.VISIBLE) {
+            layoutNotLoggedin.setVisibility(View.VISIBLE);
+            layoutTourEmpty.setVisibility(View.GONE);
+            listMyTours.setVisibility(View.GONE);
+        }
+
+        return isLoggedIn;
+    }
+
+    private boolean changeViewIfToursEmpty() {
+        boolean isEmpty = attractionRepo.readAll().size() <= 0;
+
+        if (isEmpty && layoutTourEmpty.getVisibility() != View.VISIBLE) {
+            layoutTourEmpty.setVisibility(View.VISIBLE);
+            layoutNotLoggedin.setVisibility(View.GONE);
+            listMyTours.setVisibility(View.GONE);
+        }
+
+        if ( ! isEmpty && listMyTours.getVisibility() != View.VISIBLE) {
+            layoutTourEmpty.setVisibility(View.GONE);
+            layoutNotLoggedin.setVisibility(View.GONE);
+            listMyTours.setVisibility(View.VISIBLE);
+        }
+
+        return isEmpty;
     }
 
 }

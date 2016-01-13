@@ -42,4 +42,8 @@ public class UserPreference {
         preferenceUtil.remove(USER);
     }
 
+    public boolean isLoggedIn() {
+        return readUser() != null;
+    }
+
 }
