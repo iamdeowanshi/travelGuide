@@ -64,10 +64,13 @@ public class MapView extends SubsamplingScaleImageView {
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            PointF viewCoordinate = viewToSourceCoord(event.getX(), event.getY());
-            notifyIfMarkerTouch((int) viewCoordinate.x, (int) viewCoordinate.y);
-            notifyIfMarkerPopoverTouch((int) viewCoordinate.x, (int) viewCoordinate.y);
+        if (event.getAction() != MotionEvent.ACTION_DOWN) return super.onTouchEvent(event);
+
+        PointF viewCoordinate = viewToSourceCoord(event.getX(), event.getY());
+        boolean markerTouch = false;
+        boolean popoverTouch = notifyIfMarkerPopoverTouch((int) viewCoordinate.x, (int) viewCoordinate.y);
+        if ( ! popoverTouch) {
+            markerTouch = notifyIfMarkerTouch((int) viewCoordinate.x, (int) viewCoordinate.y);
         }
 
         return super.onTouchEvent(event);
@@ -142,7 +145,6 @@ public class MapView extends SubsamplingScaleImageView {
 
         // draw stroke
         resetPaint();
-
         int strokeColor = selectedPopoverMarker != null && selectedMarker.equals(selectedPopoverMarker)
                 ? Color.parseColor("#37abb7") : Color.DKGRAY;
         paint.setColor(strokeColor);
@@ -155,24 +157,26 @@ public class MapView extends SubsamplingScaleImageView {
         paint.setColor(Color.DKGRAY);
         paint.setTextSize(32);
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(selectedMarker.getTitle(), rect.left + 150, rect.top + 50, paint);
+        canvas.drawText(selectedMarker.getTitle(), rect.left + rect.width()/2, rect.top + 50, paint);
 
         // draw duration
         resetPaint();
         paint.setColor(Color.DKGRAY);
         paint.setTextSize(24);
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(selectedMarker.getDuration(), rect.left + 150, rect.top + 80, paint);
+        canvas.drawText(selectedMarker.getDuration(), rect.left + rect.width()/2, rect.top + 80, paint);
     }
 
     // Marker touch related
 
-    private void notifyIfMarkerTouch(int x, int y) {
+    private boolean notifyIfMarkerTouch(int x, int y) {
         PointF touchCoordinate = sourceToViewCoord(x, y);
 
         for (Marker marker : markers) {
-            if (notifyIfMarkerTouch(marker, touchCoordinate)) return;
+            if (notifyIfMarkerTouch(marker, touchCoordinate)) return true;
         }
+
+        return false;
     }
 
     private boolean notifyIfMarkerTouch(Marker marker, PointF touchCoordinate) {
@@ -210,16 +214,18 @@ public class MapView extends SubsamplingScaleImageView {
 
     // Marker popover touch related
 
-    private void notifyIfMarkerPopoverTouch(int x, int y) {
+    private boolean notifyIfMarkerPopoverTouch(int x, int y) {
         PointF touchCoordinate = sourceToViewCoord(x, y);
 
         for (Marker marker : markers) {
-            if (notifyIfMarkerPopoverTouch(marker, touchCoordinate)) return;
+            if (notifyIfMarkerPopoverTouch(marker, touchCoordinate)) return true;
         }
+
+        return false;
     }
 
     private boolean notifyIfMarkerPopoverTouch(Marker marker, PointF touchCoordinate) {
-        if (!isMarkerPopoverTouch(marker, touchCoordinate)) return false;
+        if ( ! isMarkerPopoverTouch(marker, touchCoordinate)) return false;
 
         marker.setSelected(true);
         selectedMarker = marker;
@@ -231,6 +237,8 @@ public class MapView extends SubsamplingScaleImageView {
     }
 
     private boolean isMarkerPopoverTouch(Marker marker, PointF touchCoordinate) {
+        if (marker != selectedMarker) return false;
+
         Region region = new Region(getPopoverRectFromMarker(marker));
 
         return region.contains((int)touchCoordinate.x, (int)touchCoordinate.y);
@@ -250,9 +258,26 @@ public class MapView extends SubsamplingScaleImageView {
     private Rect getPopoverRectFromMarker(Marker marker) {
         PointF markerCoordinate = sourceToViewCoord(marker.getX(), marker.getY());
 
-        int left    = (int) markerCoordinate.x - 150;
+        resetPaint();
+        Rect textBounds = new Rect();
+        paint.setTextSize(32);
+        paint.getTextBounds(marker.getTitle(), 0, marker.getTitle().length(), textBounds);
+
+        int textHeight = textBounds.height();
+        int textWidth = textBounds.width();
+
+        int minMargin = 150;
+        int rightMargin = minMargin;
+        int leftMargin = minMargin;
+
+        if ((textWidth/2 + 20) > minMargin) {
+            leftMargin = textWidth/2 + 20;
+            rightMargin = textWidth/2 + 20;
+        }
+
+        int left    = (int) markerCoordinate.x - leftMargin;
         int top     = (int) markerCoordinate.y - 150;
-        int right   = (int) markerCoordinate.x + 150;
+        int right   = (int) markerCoordinate.x + rightMargin;
         int bottom  = (int) markerCoordinate.y - (markerBitmap.getHeight()/2 + 10);
 
         return fitIntoMapView(new Rect(left, top, right, bottom));
