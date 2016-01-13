@@ -93,9 +93,21 @@ public class MapView extends SubsamplingScaleImageView {
         this.markerSelectedDrawable = markerSelectedDrawable;
     }
 
-    private void reDraw() {
+    public void reDraw() {
         scaleMarkerBitmaps();
         invalidate();
+    }
+
+    public void setSelectedMarker(Marker marker) {
+        // remove existing selection
+        if (selectedMarker != null) {
+            selectedMarker.setSelected(false);
+        }
+
+        marker.setSelected(true);
+        selectedMarker = marker;
+        selectedPopoverMarker = marker;
+        reDraw();
     }
 
     private void scaleMarkerBitmaps() {

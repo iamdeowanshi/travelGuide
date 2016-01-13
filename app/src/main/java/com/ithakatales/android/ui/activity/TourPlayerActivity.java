@@ -178,7 +178,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
         // By default play first song
         if (audios.size() > 0) {
-            playAudio(0);
+            playAudio(currentAudioIndex);
         }
     }
 
@@ -312,6 +312,15 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
                 .into(mapViewPicassoTarget);
     }
 
+    private void updateMapMarkerSelection(Audio audio) {
+        for (Marker marker : markerPoiMap.keySet()) {
+            if (markerPoiMap.get(marker).getAudio().getId() == audio.getId()) {
+                mapView.setSelectedMarker(marker);
+                break;
+            }
+        }
+    }
+
     private void updateGallery(Audio audio) {
         images.clear();
         images.addAll(imageRepo.readByAudioId(audio.getId()));
@@ -354,8 +363,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     @Override
     public void onAudioItemClick(int position) {
         togglePlayListVisibility();
-        currentAudioIndex = position;
-        playAudio(currentAudioIndex);
+        playAudio(position);
     }
 
     @OnClick(R.id.button_playlist)
@@ -388,11 +396,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         // check if next song is there or not
         if (currentAudioIndex < (audios.size() - 1)) {
             playAudio(currentAudioIndex + 1);
-            currentAudioIndex = currentAudioIndex + 1;
-        } else {
-            // play first song
-            playAudio(0);
-            currentAudioIndex = 0;
         }
     }
 
@@ -428,7 +431,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         }
 
         playAudio(currentAudioIndex + 1);
-        currentAudioIndex ++;
     }
 
     private void playAudio(int audioIndex) {
@@ -446,6 +448,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         showNotification(audio);
         updateGallery(audio);
         updateHeaderTexts(audio, audioIndex);
+        updateMapMarkerSelection(audio);
         playlistAdapter.setSelectedItemPosition(audioIndex);
 
         try {
@@ -467,6 +470,8 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Timber.e(e.getMessage(), e);
         }
+
+        currentAudioIndex = audioIndex;
     }
 
     private void stopPlayer() {
