@@ -88,4 +88,19 @@ public class Bakery {
         Snackbar.make(view, message, length).show();
     }
 
+    /**
+     * Show snack bar with action.
+     *
+     * @param view
+     * @param message
+     * @param length
+     * @param action
+     * @param actionListener
+     */
+    public void snack(View view, String message, int length, String action, View.OnClickListener actionListener) {
+        Snackbar.make(view, message, length)
+                .setAction(action, actionListener)
+                .show();
+    }
+
 }
