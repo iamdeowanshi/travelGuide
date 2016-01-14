@@ -12,7 +12,9 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -114,14 +116,18 @@ public class MapView extends SubsamplingScaleImageView {
         markerBitmap = BitmapFactory.decodeResource(this.getResources(), markerDrawable);
         markerSelectedBitmap = BitmapFactory.decodeResource(this.getResources(), markerSelectedDrawable);
 
+        float divider = pixelToDp(180);
         float density = getResources().getDisplayMetrics().densityDpi;
+        if (density >= DisplayMetrics.DENSITY_XXHIGH) {
+            divider = pixelToDp(250);
+        }
 
-        float w = (density / 350f) * markerBitmap.getWidth();
-        float h = (density / 350f) * markerBitmap.getHeight();
+        float w = (density / divider) * markerBitmap.getWidth();
+        float h = (density / divider) * markerBitmap.getHeight();
         markerBitmap = Bitmap.createScaledBitmap(markerBitmap, (int) w, (int) h, true);
 
-        w = (density / 350f) * markerSelectedBitmap.getWidth();
-        h = (density / 350f) * markerSelectedBitmap.getHeight();
+        w = (density / divider) * markerSelectedBitmap.getWidth();
+        h = (density / divider) * markerSelectedBitmap.getHeight();
         markerSelectedBitmap = Bitmap.createScaledBitmap(markerSelectedBitmap, (int) w, (int) h, true);
     }
 
@@ -332,6 +338,14 @@ public class MapView extends SubsamplingScaleImageView {
 
         paint.reset();
         paint.setAntiAlias(true);
+    }
+
+    private float pixelToDp(float pixel) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixel, getResources().getDisplayMetrics());
+    }
+
+    private float pixelToSp(float pixel) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, pixel, getResources().getDisplayMetrics());
     }
 
     private void log(String message) {
