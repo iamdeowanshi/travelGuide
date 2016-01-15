@@ -26,10 +26,6 @@
         <activity android:name=".ui.activity.TourDetailActivity"/>
         <activity android:name=".ui.activity.TourPlayerActivity" android:launchMode="singleTop"/>
         <activity android:name=".ui.activity.TourGalleryActivity"/>
-        <activity android:name=".ui.activity.test.TestActivity"/>
-        <activity android:name=".ui.activity.test.ApiTestActivity"/>
-        <activity android:name=".ui.activity.test.ApiTestResultActivity"/>
-        <activity android:name=".ui.activity.test.UiTestActivity"/>
         <activity android:name=".ui.activity.LoginActivity"/>
         <activity android:name=".ui.activity.RegistrationActivity"/>
         <activity android:name=".ui.activity.PasswordResetActivity"/>

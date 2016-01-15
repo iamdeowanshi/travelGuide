@@ -44,8 +44,6 @@ import com.ithakatales.android.ui.activity.TourGalleryActivity;
 import com.ithakatales.android.ui.activity.TourPlayerActivity;
 import com.ithakatales.android.ui.activity.UserOnBoardActivity;
 import com.ithakatales.android.ui.activity.VerifyAccountActivity;
-import com.ithakatales.android.ui.activity.test.ApiTestActivity;
-import com.ithakatales.android.ui.activity.test.TestActivity;
 import com.ithakatales.android.ui.adapter.GalleryPagerAdapter;
 import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
@@ -87,8 +85,6 @@ import dagger.Provides;
 
         // Activities
         BaseActivity.class,
-        TestActivity.class,
-        ApiTestActivity.class,
         LaunchActivity.class,
         UserOnBoardActivity.class,
         SocialLoginEnabledActivity.class,

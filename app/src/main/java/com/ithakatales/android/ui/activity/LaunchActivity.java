@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.User;
-import com.ithakatales.android.ui.activity.test.TestActivity;
 import com.ithakatales.android.util.PreferenceUtil;
 import com.ithakatales.android.util.UserPreference;
 
@@ -51,12 +50,6 @@ public class LaunchActivity extends BaseActivity {
     @OnClick(R.id.button_sneak_peak)
     void onSneakPeakClick() {
         startActivity(HomeActivity.class, null);
-    }
-
-    // TODO: 04/01/16 to remove - only for development purpose
-    @OnClick(R.id.button_dev_options)
-    void onDevOptionsClick() {
-        startActivity(TestActivity.class, null);
     }
 
 }

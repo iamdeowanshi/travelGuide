@@ -313,7 +313,6 @@
     <com.ithakatales.android.ui.custom.NoNetworkView
         android:id="@+id/view_no_network"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:layout_height="match_parent"/>
 
 </android.support.design.widget.CoordinatorLayout>
