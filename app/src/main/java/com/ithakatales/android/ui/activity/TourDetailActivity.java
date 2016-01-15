@@ -97,6 +97,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     private Attraction attraction;
     private int tourAction;
+    private boolean isMapShown = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -257,7 +258,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             }
 
             @Override
-            public void onNetworkNotAvailable() {}
+            public void onNetworkNotAvailable() {
+            }
         });
     }
 
@@ -319,8 +321,6 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     private Target mapViewPicassoTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            mapView.recycle();
-
             mapView.setImage(ImageSource.bitmap(bitmap));
 
             int bitmapWidth = bitmap.getWidth();
@@ -334,6 +334,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                 mapView.addMarker(new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes)));
                 index ++;
             }
+
+            isMapShown = true;
         }
 
         @Override
@@ -348,10 +350,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     };
 
     private void loadPoiMap() {
-        RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction == TourAction.START)
-                ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
-                : Picasso.with(this).load(attraction.getBlueprintUrl());
-       requestCreator.into(mapViewPicassoTarget);
+        if ( ! isMapShown) {
+            RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction == TourAction.START)
+                    ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
+                    : Picasso.with(this).load(attraction.getBlueprintUrl());
+            requestCreator.into(mapViewPicassoTarget);
+        }
     }
 
     private void loadTagTypes() {
