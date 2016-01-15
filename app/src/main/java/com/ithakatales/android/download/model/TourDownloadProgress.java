@@ -154,6 +154,9 @@ public class TourDownloadProgress extends DownloadProgress<TourDownloadProgress>
     }
 
     private boolean verifyCheckSum(String url, String filePath) {
+        // checksum verification not required for preview
+        if (url.contains("decrypted-preview-audio")) return true;
+
         String checkSum = getCheckSumFromUrl(url);
 
         return (checkSum != null) && Checksum.checkSHA1(checkSum, new File(filePath));
