@@ -445,20 +445,26 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
         String dataSource = attraction.getPreviewAudio().getPath();
 
-        if (dataSource == null || ! new File(dataSource).exists()) {
+        if (dataSource == null || !new File(dataSource).exists()) {
             previewPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             dataSource = attraction.getPreviewAudio().getEncUrl();
         }
 
         try {
             previewPlayer.setDataSource(dataSource);
-            previewPlayer.prepare();
-            previewPlayer.start();
+            previewPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        togglePreviewPlayerButton();
+        // preview can be playing from url, that is why prepareAsync and OnPreparedListener
+        previewPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                previewPlayer.start();
+                togglePreviewPlayerButton();
+            }
+        });
     }
 
     private void stopPreview() {
