@@ -10,8 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.Config;
+import com.ithakatales.android.app.IthakaApplication;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.ui.activity.LoginActivity;
 import com.ithakatales.android.ui.activity.SettingsActivity;
@@ -40,6 +43,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (Config.ORIENTATION_PORTRAIT_ONLY) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+
+        trackToGoogleAnalytics();
     }
 
     @Override
@@ -140,6 +145,15 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected View getContentView() {
         return findViewById(android.R.id.content);
+    }
+
+    /**
+     * Google analytics tracker
+     */
+    private void trackToGoogleAnalytics() {
+        Tracker tracker = ((IthakaApplication)getApplication()).getGoogleAnalyticsTracker();
+        tracker.setScreenName(getClass().getSimpleName());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
 }

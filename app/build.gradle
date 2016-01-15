@@ -17,7 +17,7 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         multiDexEnabled true
@@ -94,7 +94,12 @@ dependencies {
 
     //Google Api
     compile 'com.google.android.gms:play-services:8.4.0'
+
+    // crash analytics
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+
 }
+
+apply plugin: 'com.google.gms.google-services'

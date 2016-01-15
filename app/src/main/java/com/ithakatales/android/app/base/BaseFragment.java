@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.ithakatales.android.app.IthakaApplication;
 import com.ithakatales.android.app.di.Injector;
 
 import butterknife.ButterKnife;
@@ -22,6 +25,7 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bindViews(view);
+        trackToGoogleAnalytics();
     }
 
     /**
@@ -71,6 +75,16 @@ public abstract class BaseFragment extends Fragment {
      */
     public String tag() {
         return getClass().getName();
+    }
+
+
+    /**
+     * Google analytics tracker
+     */
+    private void trackToGoogleAnalytics() {
+        Tracker tracker = ((IthakaApplication)getActivity().getApplication()).getGoogleAnalyticsTracker();
+        tracker.setScreenName(getClass().getSimpleName());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
 }

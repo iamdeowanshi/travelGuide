@@ -70,6 +70,7 @@ public class LoginActivity extends SocialLoginEnabledActivity {
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
+        e.printStackTrace();
         bakery.toastShort("Login failed !, Verify email and password");
     }
 
