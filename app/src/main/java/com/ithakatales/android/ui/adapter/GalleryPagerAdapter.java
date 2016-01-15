@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Image;
+import com.ithakatales.android.util.DisplayUtil;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 import java.util.List;
@@ -28,6 +30,7 @@ public class GalleryPagerAdapter extends PagerAdapter {
 
     @Inject Context context;
     @Inject LayoutInflater inflater;
+    @Inject DisplayUtil displayUtil;
 
     private List<Image> images;
     private boolean isLoadFromUrl;
@@ -81,12 +84,13 @@ public class GalleryPagerAdapter extends PagerAdapter {
         public void bindData(Image image) {
             textCaption.setText(image.getCaption());
 
-            if (isLoadFromUrl) {
-                Picasso.with(context).load(image.getUrl()).into(imageView);
-                return;
-            }
+            Picasso picasso = Picasso.with(context);
+            RequestCreator requestCreator = isLoadFromUrl
+                    ? picasso.load(image.getUrl())
+                    : picasso.load(new File(image.getPath()));
 
-            Picasso.with(context).load(new File(image.getPath())).into(imageView);
+            requestCreator.resize(displayUtil.getWidth(), 0)
+                    .into(imageView);
         }
     }
 

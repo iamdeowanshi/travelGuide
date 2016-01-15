@@ -58,6 +58,7 @@ import com.ithakatales.android.ui.fragment.TourListFragment;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.DialogUtil;
+import com.ithakatales.android.util.DisplayUtil;
 import com.ithakatales.android.util.PreferenceUtil;
 import com.ithakatales.android.util.UserPreference;
 
@@ -150,12 +151,13 @@ import dagger.Provides;
         TourDownloadProgressReader.class,
         TourDownloadProgressObserver.class,
 
-        // PlayerDurationUtil
+        // Utils
         PreferenceUtil.class,
         UserPreference.class,
         Bakery.class,
         ConnectivityUtil.class,
         DialogUtil.class,
+        DisplayUtil.class,
     }
 )
 public class RootModule {

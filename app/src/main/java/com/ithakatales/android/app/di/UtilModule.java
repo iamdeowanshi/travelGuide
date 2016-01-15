@@ -5,6 +5,7 @@ import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.DialogUtil;
+import com.ithakatales.android.util.DisplayUtil;
 import com.ithakatales.android.util.PreferenceUtil;
 import com.ithakatales.android.util.UserPreference;
 
@@ -56,6 +57,11 @@ public class UtilModule {
     @Provides
     public DialogUtil provideDialogUtil() {
         return new DialogUtil();
+    }
+
+    @Provides
+    public DisplayUtil provideDisplayUtil() {
+        return new DisplayUtil();
     }
 
 }
