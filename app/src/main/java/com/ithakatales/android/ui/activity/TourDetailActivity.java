@@ -124,6 +124,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     protected void onResume() {
         super.onResume();
         presenter.resume();
+        togglePreviewPlayerButton();
     }
 
     @Override
@@ -141,6 +142,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        stopPreview();
+
         switch (item.getItemId()) {
             case R.id.action_share:
                 shareAttraction();
@@ -148,6 +151,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopPreview();
     }
 
     // required for handling map view interaction
@@ -218,17 +227,19 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                 stopPreview();
                 break;
         }
-
-        togglePreviewPlayerButton();
     }
 
     @OnClick(R.id.button_tour_action)
     void onTourActionClick() {
         TourAction action = (TourAction) buttonTourActon.getTag();
 
-        if (action != null) {
-            action.perform(attraction);
+        if (action == null) return;
+
+        if (action instanceof TourStartAction) {
+            stopPreview();
         }
+
+        action.perform(attraction);
     }
 
     @OnClick(R.id.image_featured)
@@ -446,6 +457,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        togglePreviewPlayerButton();
     }
 
     private void stopPreview() {
@@ -453,6 +466,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             previewPlayer.stop();
             previewPlayer = null;
         }
+
+        togglePreviewPlayerButton();
     }
 
     private void togglePreviewPlayerButton() {
