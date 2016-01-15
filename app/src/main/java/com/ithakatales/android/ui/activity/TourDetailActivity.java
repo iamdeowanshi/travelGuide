@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -53,6 +55,7 @@ import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,6 +70,9 @@ import timber.log.Timber;
  */
 public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor {
 
+    private static final String PREVIEW_BUTTON_TEXT_PLAY = "Play Preview";
+    private static final String PREVIEW_BUTTON_TEXT_STOP = "Stop Preview";
+
     @Inject TourDetailPresenter presenter;
     @Inject Bakery bakery;
 
@@ -79,6 +85,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.text_description) TextView textDescription;
     @Bind(R.id.icon_type) ImageView iconType;
     @Bind(R.id.text_duration) TextView textDuration;
+    @Bind(R.id.button_preview_player) Button buttonPreviewPlayer;
 
     @Bind(R.id.map_view) MapView mapView;
 
@@ -98,6 +105,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     private Attraction attraction;
     private int tourAction;
     private boolean isMapShown = false;
+
+    private MediaPlayer previewPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -199,7 +208,18 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_preview_player)
     void onPreviewPlayerClick() {
-        bakery.toastShort("Under Development !");
+        String buttonText = buttonPreviewPlayer.getText().toString();
+
+        switch (buttonText) {
+            case PREVIEW_BUTTON_TEXT_PLAY:
+                playPreview();
+                break;
+            case PREVIEW_BUTTON_TEXT_STOP:
+                stopPreview();
+                break;
+        }
+
+        togglePreviewPlayerButton();
     }
 
     @OnClick(R.id.button_tour_action)
@@ -269,6 +289,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         loadFeaturedImage();
         loadPoiMap();
         loadTagTypes();
+        togglePreviewPlayerButton();
 
         // load titles
         collapsingToolbarLayout.setTitle(attraction.getName());
@@ -406,6 +427,39 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             default:
                 return null;
         }
+    }
+
+    private void playPreview() {
+        previewPlayer = new MediaPlayer();
+
+        String dataSource = attraction.getPreviewAudio().getPath();
+
+        if (dataSource == null || ! new File(dataSource).exists()) {
+            previewPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            dataSource = attraction.getPreviewAudio().getEncUrl();
+        }
+
+        try {
+            previewPlayer.setDataSource(dataSource);
+            previewPlayer.prepare();
+            previewPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stopPreview() {
+        if (previewPlayer != null && previewPlayer.isPlaying()) {
+            previewPlayer.stop();
+            previewPlayer = null;
+        }
+    }
+
+    private void togglePreviewPlayerButton() {
+        String buttonText = (previewPlayer != null && previewPlayer.isPlaying())
+                ? PREVIEW_BUTTON_TEXT_STOP
+                : PREVIEW_BUTTON_TEXT_PLAY;
+        buttonPreviewPlayer.setText(buttonText);
     }
 
     private void applyPalette(Palette palette) {

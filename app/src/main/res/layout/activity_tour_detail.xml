@@ -126,6 +126,9 @@
                         android:layout_below="@+id/icon_type"
                         android:layout_marginTop="@dimen/spacing_medium"
                         android:background="@drawable/bg_button_teal_rounded"
+                        android:drawableLeft="@drawable/ic_volume_up"
+                        android:paddingLeft="90dp"
+                        android:paddingRight="90dp"
                         android:text="Play Preview"
                         android:textColor="@android:color/white"/>
 
@@ -137,6 +140,7 @@
                         android:layout_centerVertical="true"
                         android:indeterminate="false"
                         android:visibility="invisible"/>
+
 
                 </RelativeLayout>
 
@@ -309,6 +313,7 @@
     <com.ithakatales.android.ui.custom.NoNetworkView
         android:id="@+id/view_no_network"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>
