@@ -10,6 +10,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="2dp" />
 
+    <include layout="@layout/view_tours_empty"/>
+
     <com.ithakatales.android.ui.custom.LoadingView
         android:id="@+id/view_loading"
         android:layout_width="match_parent"

@@ -45,6 +45,7 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
     @Bind(R.id.recycler_tours) RecyclerView recyclerTours;
     @Bind(R.id.view_loading) RelativeLayout viewLoading;
     @Bind(R.id.view_no_network) NoNetworkView viewNoNetwork;
+    @Bind(R.id.layout_tour_empty) RelativeLayout viewTourEmpty;
 
     private ToursListRecyclerAdapter toursListRecyclerAdapter;
 
@@ -83,9 +84,15 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
 
     @Override
     public void attractionsLoaded(List<Attraction> attractions) {
+        viewTourEmpty.setVisibility(View.GONE);
         this.attractions.clear();
         this.attractions.addAll(attractions);
         toursListRecyclerAdapter.notifyDataSetChanged();
+
+        if (attractions.size() <= 0) {
+            viewTourEmpty.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
