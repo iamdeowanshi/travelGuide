@@ -95,8 +95,7 @@
                         android:layout_height="25dp"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_below="@+id/text_description"
-                        android:src="@drawable/ic_tagtype_walk_dark"/>
+                        android:layout_below="@+id/text_description"/>
 
                     <ImageView
                         android:id="@+id/icon_duration"
@@ -131,16 +130,6 @@
                         android:paddingRight="90dp"
                         android:text="Play Preview"
                         android:textColor="@android:color/white"/>
-
-                    <ProgressBar
-                        android:id="@+id/progress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:indeterminate="false"
-                        android:visibility="invisible"/>
-
 
                 </RelativeLayout>
 
@@ -313,6 +302,13 @@
     <com.ithakatales.android.ui.custom.NoNetworkView
         android:id="@+id/view_no_network"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"/>
+
+    <com.ithakatales.android.ui.custom.LoadingView
+        android:id="@+id/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
 </android.support.design.widget.CoordinatorLayout>

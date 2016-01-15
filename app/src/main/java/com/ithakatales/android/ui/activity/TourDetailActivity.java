@@ -21,7 +21,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -98,7 +98,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.view_tag_type_three) View viewTagTypeThree;
 
     @Bind(R.id.button_tour_action) Button buttonTourActon;
-    @Bind(R.id.progress) ProgressBar progress;
+    @Bind(R.id.view_loading) RelativeLayout viewLoading;
 
     @Bind(R.id.view_no_network) NoNetworkView viewNoNetwork;
 
@@ -200,12 +200,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Override
     public void showProgress() {
-        progress.setVisibility(View.VISIBLE);
+        viewLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        progress.setVisibility(View.INVISIBLE);
+        viewLoading.setVisibility(View.GONE);
     }
 
     @Override

@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseFragment;
@@ -43,7 +43,7 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
     @Inject UserPreference preference;
 
     @Bind(R.id.recycler_tours) RecyclerView recyclerTours;
-    @Bind(R.id.progress) ProgressBar progress;
+    @Bind(R.id.view_loading) RelativeLayout viewLoading;
     @Bind(R.id.view_no_network) NoNetworkView viewNoNetwork;
 
     private ToursListRecyclerAdapter toursListRecyclerAdapter;
@@ -90,12 +90,12 @@ public class TourListFragment extends BaseFragment implements TourListViewIntera
 
     @Override
     public void showProgress() {
-        progress.setVisibility(View.VISIBLE);
+        viewLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        progress.setVisibility(View.INVISIBLE);
+        viewLoading.setVisibility(View.GONE);
     }
 
     @Override
