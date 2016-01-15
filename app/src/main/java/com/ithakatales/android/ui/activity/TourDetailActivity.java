@@ -465,6 +465,13 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                 togglePreviewPlayerButton();
             }
         });
+
+        previewPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                stopPreview();
+            }
+        });
     }
 
     private void stopPreview() {
