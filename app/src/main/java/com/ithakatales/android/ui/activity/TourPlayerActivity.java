@@ -71,7 +71,7 @@ import timber.log.Timber;
  * @author Farhan Ali
  */
 public class TourPlayerActivity extends BaseActivity implements PlaylistItemClickListener,
-        MediaPlayer.OnCompletionListener, MapView.MarkerClickListener {
+        MediaPlayer.OnCompletionListener, MapView.MarkerClickListener, GalleryPagerAdapter.NavigationClickListener {
 
     public static final String URL_FORMAT = "http://127.0.0.1:%d%s?key=%s&iv=%s";
 
@@ -174,6 +174,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
         // initialize gallery
         galleryPagerAdapter = new GalleryPagerAdapter(images, false);
+        galleryPagerAdapter.setNavigationClickListener(this);
         galleryPager.setAdapter(galleryPagerAdapter);
 
         // By default play first song
@@ -239,6 +240,16 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             }
             index ++;
         }
+    }
+
+    @Override
+    public void onPreviousClick(int position) {
+        galleryPager.setCurrentItem(position - 1);
+    }
+
+    @Override
+    public void onNextClicked(int position) {
+        galleryPager.setCurrentItem(position + 1);
     }
 
     private void toggleMapAndGalleryOptionVisibility() {

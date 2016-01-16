@@ -24,7 +24,7 @@
         android:textColor="@color/white"/>
 
     <Button
-        android:id="@+id/button_right_swipe"
+        android:id="@+id/button_next"
         android:layout_width="15dp"
         android:layout_height="25dp"
         android:layout_alignParentEnd="true"
@@ -34,7 +34,7 @@
         android:background="@drawable/ic_gallery_right"/>
 
     <Button
-        android:id="@+id/button_left_swipe"
+        android:id="@+id/button_previous"
         android:layout_width="15dp"
         android:layout_height="25dp"
         android:layout_alignParentLeft="true"

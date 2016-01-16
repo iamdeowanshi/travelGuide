@@ -19,7 +19,7 @@ import butterknife.Bind;
 /**
  * @author farhanali
  */
-public class TourGalleryActivity extends BaseActivity {
+public class TourGalleryActivity extends BaseActivity implements GalleryPagerAdapter.NavigationClickListener {
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.view_pager) ViewPager viewPager;
@@ -58,7 +58,18 @@ public class TourGalleryActivity extends BaseActivity {
         }
 
         GalleryPagerAdapter galleryPagerAdapter = new GalleryPagerAdapter(images, isLoadFromUrl);
+        galleryPagerAdapter.setNavigationClickListener(this);
         viewPager.setAdapter(galleryPagerAdapter);
+    }
+
+    @Override
+    public void onPreviousClick(int position) {
+        viewPager.setCurrentItem(position - 1);
+    }
+
+    @Override
+    public void onNextClicked(int position) {
+        viewPager.setCurrentItem(position + 1);
     }
 
 }

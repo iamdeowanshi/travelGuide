@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * @author Farhan Ali
@@ -35,10 +37,16 @@ public class GalleryPagerAdapter extends PagerAdapter {
     private List<Image> images;
     private boolean isLoadFromUrl;
 
+    private NavigationClickListener navigationClickListener;
+
     public GalleryPagerAdapter(List<Image> images, boolean isLoadFromUrl) {
         Injector.instance().inject(this);
         this.images = images;
         this.isLoadFromUrl = isLoadFromUrl;
+    }
+
+    public void setNavigationClickListener(NavigationClickListener navigationClickListener) {
+        this.navigationClickListener = navigationClickListener;
     }
 
     @Override
@@ -61,7 +69,7 @@ public class GalleryPagerAdapter extends PagerAdapter {
         View pageView = inflater.inflate(R.layout.page_item_gallery, view, false);
 
         ViewHolder viewHolder = new ViewHolder(pageView);
-        viewHolder.bindData(images.get(position));
+        viewHolder.bindData(position);
 
         view.addView(pageView, 0);
 
@@ -76,22 +84,59 @@ public class GalleryPagerAdapter extends PagerAdapter {
     public class ViewHolder {
         @Bind(R.id.image_view) ImageView imageView;
         @Bind(R.id.text_caption) TextView textCaption;
+        @Bind(R.id.button_next) Button buttonNext;
+        @Bind(R.id.button_previous) Button buttonPrevious;
+
+        int position;
 
         public ViewHolder(View pageView) {
             ButterKnife.bind(this, pageView);
         }
 
-        public void bindData(Image image) {
+        public void bindData(int position) {
+            this.position = position;
+            Image image = images.get(position);
             textCaption.setText(image.getCaption());
 
             Picasso picasso = Picasso.with(context);
             RequestCreator requestCreator = isLoadFromUrl
                     ? picasso.load(image.getUrl())
                     : picasso.load(new File(image.getPath()));
-
             requestCreator.resize(displayUtil.getWidth(), 0)
                     .into(imageView);
+
+            validateNavigationButton();
         }
+
+        @OnClick(R.id.button_next)
+        void onNextClick() {
+            if (navigationClickListener != null) {
+                navigationClickListener.onNextClicked(position);
+            }
+        }
+
+        @OnClick(R.id.button_previous)
+        void onPreviousClick() {
+            if (navigationClickListener != null) {
+                navigationClickListener.onPreviousClick(position);
+            }
+        }
+
+        private void validateNavigationButton() {
+            int buttonNextVisibility = (position >= images.size() - 1) ? View.GONE : View.VISIBLE;
+            buttonNext.setVisibility(buttonNextVisibility);
+
+            int buttonPreviousVisibility = (position <= 0) ? View.GONE : View.VISIBLE;
+            buttonPrevious.setVisibility(buttonPreviousVisibility);
+        }
+    }
+
+    public static interface NavigationClickListener {
+
+        void onPreviousClick(int position);
+
+        void onNextClicked(int position);
+
     }
 
 }
