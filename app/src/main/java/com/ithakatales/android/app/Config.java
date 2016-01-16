@@ -16,13 +16,13 @@ public class Config {
     // API related constants/configurations - used in ApiModule & Api class,
     // prefix with API_
     //--------------------------------------------------------------------------------
-    public static final String API_BASE_URL_PRODUCTION  = "http://admin.ithakatales.com/v1";
-    public static final String API_BASE_URL_DEVELOP     = "http://52.77.211.228:1337/v1";
-    //public static final String API_BASE_URL_DEVELOP     = "http://52.74.156.9:1337/v1/";
-    public static final String API_BASE_URL_MOCK        = "http://ithaka-mobile.getsandbox.com";
+    public static final String API_BASE_URL_PRODUCTION      = "http://admin.ithakatales.com/v1";
+    public static final String API_BASE_URL_MOBILE_DEVELOP  = "http://52.77.211.228:1337/v1";
+    public static final String API_BASE_URL_WEB_DEVELOP     = "http://52.74.156.9:1337/v1/";
+    public static final String API_BASE_URL_MOCK            = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
-    public static final String API_BASE_URL = API_BASE_URL_DEVELOP;
+    public static final String API_BASE_URL = API_BASE_URL_MOBILE_DEVELOP;
 
     // authentication related apis
 
