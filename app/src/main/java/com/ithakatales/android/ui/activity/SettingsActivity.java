@@ -197,16 +197,22 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
             @Override
             public void onPositiveClick() {
-                tourDownloader.deleteAll();
-                bakery.toastShort("All tours deleted");
+                if (tourDownloader.deleteAll()) {
+                    bakery.toastShort("All tours deleted");
+                    startActivityClearTop(HomeActivity.class, null);
+                    return;
+                }
+
+                bakery.toastShort("There is no tours to delete");
             }
 
             @Override
-            public void onNegativeClick() {}
+            public void onNegativeClick() {
+            }
         });
 
         dialogUtil.setTitle("Delete Tours")
-                .setMessage("Are you sure to delete all downloaded tours ?")
+                .setMessage("Are you sure to delete all downloaded tours ? Deletion will navigate you to home.")
                 .setPositiveButtonText("Delete")
                 .setNegativeButtonText("Cancel")
                 .show(this);
