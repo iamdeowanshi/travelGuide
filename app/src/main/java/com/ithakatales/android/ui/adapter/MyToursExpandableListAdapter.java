@@ -60,12 +60,11 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
     @Inject AttractionRepository attractionRepo;
     @Inject AttractionUpdateRepository attractionUpdateRepo;
 
-    private TourActionClickListener tourActionClickListener;
-
     @Inject Bakery bakery;
 
-    private List<Attraction> attractions;
+    private TourActionClickListener tourActionClickListener;
     private Map<Long, TourDownloadProgress> downloadProgressMap = new HashMap<>();
+    private List<Attraction> attractions;
 
     public MyToursExpandableListAdapter() {
         Injector.instance().inject(this);
@@ -203,7 +202,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         AudioDownloadProgress audioDownload;
         try {
             audioDownload = (AudioDownloadProgress) getChild(groupPosition, childPosition - 1);
-            } catch (Exception e) {
+        } catch (Exception e) {
             /*
              * will get exception on last row, which is used to show total image download progress,
              * so binding a dummy audio download object
@@ -226,12 +225,14 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         @Bind(R.id.layout_item_container) RelativeLayout layoutItemContainer;
         @Bind(R.id.text_name) TextView textName;
         @Bind(R.id.text_caption) TextView textCaption;
+        @Bind(R.id.text_city) TextView textCity;
         @Bind(R.id.text_progress) TextView textProgress;
         @Bind(R.id.progress) ProgressBar progress;
         @Bind(R.id.button_tour_action) Button buttonTourAction;
 
         private Attraction attraction;
         private int tourAction;
+        private boolean isItemListenersSet = false;
 
         public GroupViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
@@ -242,6 +243,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
 
             textName.setText(attraction.getName());
             textCaption.setText(attraction.getCaption());
+            textCity.setText(attraction.getCity().getName());
 
             RequestCreator requestCreator = Picasso.with(context).load(new File(attraction.getFeaturedImage().getPath()));
             TourDownloadProgress download = downloadProgressMap.get(attraction.getId());
@@ -250,15 +252,18 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
                 case DownloadManager.STATUS_SUCCESSFUL:
                     tourAction = checkForUpdateOrDelete(attraction);
                     showTourActionButton("Start Tour", R.drawable.ic_button_start_tour, R.drawable.bg_button_teal_rounded, android.R.color.white);
+                    setItemClickListeners();
                     break;
                 case DownloadManager.STATUS_FAILED:
                     tourAction = TourAction.RETRY;
                     showTourActionButton("Retry", R.drawable.ic_button_retry, R.drawable.bg_button_gray_rounded, R.color.primary);
+                    setItemClickListeners();
                     break;
                 case DownloadManager.STATUS_RUNNING:
                     tourAction = TourAction.DOWNLOADING;
                     requestCreator = Picasso.with(context).load(attraction.getFeaturedImage().getUrl());
                     showProgressView(download.getProgress());
+                    removeItemClickListeners();
                     break;
             }
 
@@ -339,6 +344,42 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             textProgress.setVisibility(View.GONE);
             progress.setVisibility(View.GONE);
         }
+
+        private void setItemClickListeners() {
+            if (isItemListenersSet) return;
+
+            layoutItemContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (tourActionClickListener != null) {
+                        tourActionClickListener.onTourClick(attraction);
+                    }
+                }
+            });
+
+            layoutItemContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (tourActionClickListener != null) {
+                        tourActionClickListener.onTourLongClick(attraction);
+                    }
+
+                    return false;
+                }
+            });
+
+            isItemListenersSet = true;
+        }
+
+        private void removeItemClickListeners() {
+            if ( ! isItemListenersSet) return;
+
+            layoutItemContainer.setClickable(false);
+            layoutItemContainer.setOnClickListener(null);
+            layoutItemContainer.setOnLongClickListener(null);
+
+            isItemListenersSet = false;
+        }
     }
 
     public class ChildViewHolder {
@@ -375,6 +416,8 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
 
     public static interface TourActionClickListener {
         void onTourActionClick(Attraction attraction, int tourAction);
+        void onTourClick(Attraction attraction);
+        void onTourLongClick(Attraction attraction);
     }
 
 }

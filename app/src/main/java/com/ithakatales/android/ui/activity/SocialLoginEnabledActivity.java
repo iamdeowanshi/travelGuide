@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.User;
+import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.presenter.LoginPresenter;
 import com.ithakatales.android.presenter.LoginViewInteractor;
 import com.ithakatales.android.util.Bakery;
@@ -26,6 +27,7 @@ import timber.log.Timber;
 public abstract class SocialLoginEnabledActivity extends BaseActivity implements SocialAuthCallback, LoginViewInteractor {
 
     @Inject LoginPresenter loginPresenter;
+    @Inject TourDownloader tourDownloader;
     @Inject UserPreference userPreference;
     @Inject Bakery bakery;
 
@@ -63,12 +65,17 @@ public abstract class SocialLoginEnabledActivity extends BaseActivity implements
     public void onAuthError(Throwable e) {
         hideProgress();
         Timber.e(e.getMessage(), e);
-        bakery.snackShort(getContentView(), "Authentication Failed");
+        bakery.toastShort("Authentication Failed");
     }
 
     @Override
     public void onLoginSuccess(User user) {
         userPreference.saveUser(user);
+
+        if ( ! userPreference.isUserEqualPreviousUser()) {
+            tourDownloader.deleteAll();
+        }
+
         Class<? extends Activity> activityClass = user.isVerified()
                 ? HomeActivity.class
                 : VerifyAccountActivity.class;

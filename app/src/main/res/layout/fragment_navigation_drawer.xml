@@ -1,43 +1,49 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_drawer"
+    android:background="@drawable/bg_navigation_drawer"
     android:padding="@dimen/spacing_medium">
 
-    <ImageView
-        android:id="@+id/icon_globe"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
-        android:src="@drawable/img_globe_light" />
+        android:layout_alignParentTop="true">
 
-    <TextView
-        android:id="@+id/text_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/icon_globe"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/icon_globe"
-        android:layout_toRightOf="@+id/icon_globe"
-        android:gravity="center|start"
-        android:text="Cities"
-        android:textAllCaps="true"
-        android:textColor="@color/pink_normal"
-        android:textSize="22sp" />
+        <ImageView
+            android:id="@+id/icon_globe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/spacing_tiny"
+            android:layout_marginEnd="@dimen/spacing_tiny"
+            android:src="@drawable/img_globe_light"/>
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cities"
+            android:textAllCaps="true"
+            android:textColor="@color/pink_normal"
+            android:textSize="24sp"
+            android:layout_alignTop="@+id/icon_globe"
+            android:layout_toRightOf="@+id/icon_globe"
+            android:layout_toEndOf="@+id/icon_globe"/>
+
+    </RelativeLayout>
 
     <View
         android:id="@+id/view_horizontal_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/icon_globe"
+        android:layout_below="@+id/header"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
-        android:background="@color/pink_pressed" />
+        android:background="@color/pink_pressed"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_cities"
@@ -46,7 +52,7 @@
         android:layout_below="@+id/view_horizontal_divider"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"/>
 
     <ProgressBar
         android:id="@+id/progress"
@@ -55,6 +61,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:indeterminate="false"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
 </RelativeLayout>

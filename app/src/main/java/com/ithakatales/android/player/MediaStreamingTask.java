@@ -101,7 +101,7 @@ class MediaStreamingTask {
             headers += "HTTP/1.1 206 Partial Content\r\n";
             headers += "Content-Type: " + dataSource.getContentType() + "\r\n";
             headers += "Accept-Ranges: bytes\r\n";
-            headers += "Content-Length: " + (fileSize - cbSkip) + "\r\n";
+            //headers += "Content-Length: " + (fileSize - cbSkip) + "\r\n";
             headers += "Content-Range: bytes " + cbSkip + "-" + (fileSize - 1) + "/" + fileSize + "\r\n";
             headers += "Connection: Keep-Alive\r\n";
             headers += "\r\n";
@@ -115,20 +115,21 @@ class MediaStreamingTask {
         }
 
         Timber.i("headers: " + headers);
-        OutputStream output = null;
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
         byte[] buff = new byte[64 * 1024];
         try { 
-            output = new BufferedOutputStream(client.getOutputStream(), 64 * 1024);
-            output.write(headers.getBytes());
-            InputStream data = dataSource.getInputStream();
+            outputStream = new BufferedOutputStream(client.getOutputStream(), 32 * 1024);
+            outputStream.write(headers.getBytes());
+            inputStream = dataSource.getInputStream();
 
             // TODO: 01/01/16 missing last few seconds
-            //dataSource.skipFully(data, cbSkip);//try to skip as much as possible
+            dataSource.skipFully(inputStream, cbSkip);//try to skip as much as possible
 
             // Loop as long as there's stuff to send and client has not closed
             int cbRead;
-            while ( ! client.isClosed() && (cbRead = data.read(buff, 0, buff.length)) != -1) {
-                output.write(buff, 0, cbRead);
+            while ( ! client.isClosed() && (cbRead = inputStream.read(buff, 0, buff.length)) != -1) {
+                outputStream.write(buff, 0, cbRead);
             }
         } catch (SocketException socketException) {
             Timber.e("SocketException() thrown, proxy client has probably closed. This can exit harmlessly");
@@ -139,10 +140,15 @@ class MediaStreamingTask {
 
         finally {
             try {
-                if (output != null) output.close();
+                if (outputStream != null) {
+                    outputStream.flush();
+                    outputStream.close();
+                }
+                if (inputStream != null) inputStream.close();
                 if (client != null) client.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                Timber.e(e.getMessage(), e);
             }
         }
     }

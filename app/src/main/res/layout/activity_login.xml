@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -23,9 +22,9 @@
         <EditText
             android:id="@+id/input_email"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/img_logo"
-            android:layout_marginTop="@dimen/spacing_extra_large"
+            android:layout_marginTop="@dimen/spacing_large"
             android:background="@drawable/bg_text_box"
             android:hint="Email"
             android:inputType="textEmailAddress"
@@ -35,9 +34,9 @@
         <EditText
             android:id="@+id/input_password"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/input_email"
-            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_small"
             android:background="@drawable/bg_text_box"
             android:hint="Password"
             android:inputType="textPassword"
@@ -72,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/button_login"
-            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_medium"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -106,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_or"
-            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_medium"
             android:orientation="horizontal">
 
             <Button
@@ -132,12 +131,13 @@
     <TextView
         android:id="@+id/text_signup"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@color/black_transparent_50"
         android:gravity="center"
         android:text="New? Start your journey here"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
 
     <com.ithakatales.android.ui.custom.NoNetworkView
         android:id="@+id/view_no_network"

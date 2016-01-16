@@ -70,13 +70,13 @@ public class PasswordResetActivity extends BaseActivity implements PasswordReset
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.snackShort(getContentView(), "Reset failed !, Confirm inputs are correct");
+        bakery.toastShort("Reset failed !, Confirm inputs are correct");
     }
 
     @OnClick(R.id.button_reset)
     void onResetClick() {
         if ( ! connectivityUtil.isConnected()) {
-            bakery.snackShort(getContentView(), "No network connection !");
+            bakery.toastShort("No network connection !");
             return;
         }
 
@@ -89,6 +89,11 @@ public class PasswordResetActivity extends BaseActivity implements PasswordReset
 
         String email = getIntent().getExtras().getString("email");
         presenter.resetPassword(email, inputTempPassword.getText().toString(), inputNewPassword.getText().toString());
+    }
+
+    @OnClick(R.id.text_back)
+    void onBackClick() {
+        startActivityClearTop(LoginActivity.class, null);
     }
 
 }

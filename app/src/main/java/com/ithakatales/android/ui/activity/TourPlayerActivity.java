@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -21,18 +23,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.ithakatales.android.R;
+import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.Audio;
 import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.repository.AttractionRepository;
-import com.ithakatales.android.data.repository.AudioRepository;
 import com.ithakatales.android.data.repository.ImageRepository;
+import com.ithakatales.android.download.TourStorage;
 import com.ithakatales.android.map.MapView;
 import com.ithakatales.android.map.Marker;
 import com.ithakatales.android.player.EncryptedAudioHttpServer;
@@ -41,15 +45,18 @@ import com.ithakatales.android.ui.adapter.GalleryPagerAdapter;
 import com.ithakatales.android.ui.adapter.PlayListRecyclerAdapter;
 import com.ithakatales.android.ui.adapter.PlaylistItemClickListener;
 import com.ithakatales.android.ui.custom.VerticalSpaceItemDecoration;
+import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,24 +71,24 @@ import timber.log.Timber;
  * @author Farhan Ali
  */
 public class TourPlayerActivity extends BaseActivity implements PlaylistItemClickListener,
-        MediaPlayer.OnCompletionListener, MapView.MarkerClickListener {
+        MediaPlayer.OnCompletionListener, MapView.MarkerClickListener, GalleryPagerAdapter.NavigationClickListener {
 
     public static final String URL_FORMAT = "http://127.0.0.1:%d%s?key=%s&iv=%s";
-    public static final String KEY = "tecsolsoftwarepvtltdbangalorekar";
-    public static final String IV = "tecsolbangalorek";
 
     private static final int NOTIFICATION_ID = 999;
+    private static final int REQUEST_CAMERA  = 100;
 
     @Inject Bakery bakery;
     @Inject ImageRepository imageRepo;
-    @Inject AudioRepository audioRepo;
     @Inject AttractionRepository attractionRepo;
+    @Inject TourStorage tourStorage;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.gallery_view_pager) ViewPager galleryPager;
     @Bind(R.id.map_view) MapView mapView;
     @Bind(R.id.recycler_audio_list) RecyclerView recyclerAudioList;
 
+    @Bind(R.id.layout_poi_info) RelativeLayout layoutPoiInfo;
     @Bind(R.id.text_poi_name) TextView textPoiName;
     @Bind(R.id.text_poi_progress) TextView textPoiProgress;
 
@@ -96,13 +103,16 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     @Bind(R.id.button_playlist) Button buttonPlayList;
 
     private Menu menu;
-    private Attraction attraction;
+
     private Map<Marker, Poi> markerPoiMap = new HashMap<>();
+    private List<Poi> pois = new ArrayList<>();
     private List<Audio> audios = new ArrayList<>();
     private List<Image> images = new ArrayList<>();
+
     private GalleryPagerAdapter galleryPagerAdapter;
     private PlayListRecyclerAdapter playlistAdapter;
 
+    private Attraction attraction;
     private int currentAudioIndex = 0;
     private int seekBackwardTime = 10000; // milliseconds
 
@@ -156,19 +166,20 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         loadPoiMap();
 
         // initialize audio list
-        audios = audioRepo.readByAttractionId(attraction.getId());
+        audios = AttractionUtil.getAllAudioExceptPreview(attraction);
         recyclerAudioList.setLayoutManager(new LinearLayoutManager(this));
         recyclerAudioList.addItemDecoration(new VerticalSpaceItemDecoration(5));
         playlistAdapter = new PlayListRecyclerAdapter(audios, this);
         recyclerAudioList.setAdapter(playlistAdapter);
 
         // initialize gallery
-        galleryPagerAdapter = new GalleryPagerAdapter(images);
+        galleryPagerAdapter = new GalleryPagerAdapter(images, false);
+        galleryPagerAdapter.setNavigationClickListener(this);
         galleryPager.setAdapter(galleryPagerAdapter);
 
         // By default play first song
         if (audios.size() > 0) {
-            playAudio(0);
+            playAudio(currentAudioIndex);
         }
     }
 
@@ -187,7 +198,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_camera:
-                bakery.toastShort("camera clicked");
+                startCameraIntent();
                 break;
             case R.id.action_map:
                 toggleMapAndGalleryOptionVisibility();
@@ -217,7 +228,10 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     }
 
     @Override
-    public void markerClicked(Marker marker) {
+    public void onMarkerClicked(Marker marker) {}
+
+    @Override
+    public void onMarkerPopoverClicked(Marker marker) {
         int index = 0;
         for (Audio audio : audios) {
             if (audio.getId() == markerPoiMap.get(marker).getAudio().getId()) {
@@ -226,6 +240,16 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             }
             index ++;
         }
+    }
+
+    @Override
+    public void onPreviousClick(int position) {
+        galleryPager.setCurrentItem(position - 1);
+    }
+
+    @Override
+    public void onNextClicked(int position) {
+        galleryPager.setCurrentItem(position + 1);
     }
 
     private void toggleMapAndGalleryOptionVisibility() {
@@ -261,7 +285,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             int bitmapHeight = bitmap.getHeight();
 
             // copy poi list to another list to detach from realm, then sort based on audio priority
-            List<Poi> pois = new ArrayList<>();
             pois.addAll(attraction.getPois());
             Collections.sort(pois, new Comparator<Poi>() {
                 @Override
@@ -274,7 +297,9 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             for (Poi poi : pois) {
                 float x = (float) (poi.getxPercent() * bitmapWidth / 100);
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
-                Marker marker = new Marker(index, x, y, poi.getName(), PlayerDurationUtil.secondsToTimer(poi.getAudio().getDuration()));
+                long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
+                Marker marker = new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes));
+                mapView.addMarker(marker);
                 mapView.addMarker(marker);
                 markerPoiMap.put(marker, poi);
                 index ++;
@@ -298,6 +323,15 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
                 .into(mapViewPicassoTarget);
     }
 
+    private void updateMapMarkerSelection(Audio audio) {
+        for (Marker marker : markerPoiMap.keySet()) {
+            if (markerPoiMap.get(marker).getAudio().getId() == audio.getId()) {
+                mapView.setSelectedMarker(marker);
+                break;
+            }
+        }
+    }
+
     private void updateGallery(Audio audio) {
         images.clear();
         images.addAll(imageRepo.readByAudioId(audio.getId()));
@@ -305,8 +339,32 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     }
 
     private void updateHeaderTexts(Audio audio, int index) {
-        textPoiName.setText(audio.getName());
-        textPoiProgress.setText(String.format("%d of %d Audios", index + 1, audios.size()));
+        if (audio.getPoiId() <= 0) {
+            layoutPoiInfo.setVisibility(View.GONE);
+            return;
+        }
+
+        int poiPosition = 0;
+        for (Poi poi : pois) {
+            poiPosition ++;
+
+            if (poi.getAudio().getId() != audio.getId()) continue;
+
+            layoutPoiInfo.setVisibility(View.VISIBLE);
+            textPoiName.setText(poi.getName());
+            textPoiProgress.setText(String.format("%d of %d Pois", poiPosition, pois.size()));
+            break;
+        }
+    }
+
+    private void startCameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String imageName = "ITK_" + dateFormat.format(new Date()) + ".jpg";
+        Uri imageUri = Uri.fromFile(new File(tourStorage.getIthakaCapturedImageDir(), imageName));
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     //----------------------------------------------------------------------------------
@@ -316,8 +374,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     @Override
     public void onAudioItemClick(int position) {
         togglePlayListVisibility();
-        currentAudioIndex = position;
-        playAudio(currentAudioIndex);
+        playAudio(position);
     }
 
     @OnClick(R.id.button_playlist)
@@ -350,11 +407,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         // check if next song is there or not
         if (currentAudioIndex < (audios.size() - 1)) {
             playAudio(currentAudioIndex + 1);
-            currentAudioIndex = currentAudioIndex + 1;
-        } else {
-            // play first song
-            playAudio(0);
-            currentAudioIndex = 0;
         }
     }
 
@@ -381,13 +433,15 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
     // @Override
     public void onCompletion(MediaPlayer mp) {
-        if (currentAudioIndex < (audios.size() - 1)) {
-            playAudio(currentAudioIndex + 1);
-            currentAudioIndex ++;
+        if (currentAudioIndex == audios.size() - 1) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("attraction_id", attraction.getId());
+            bundle.putString("attraction_name", attraction.getName());
+            startActivity(TourFinishActivity.class, bundle);
             return;
         }
 
-        currentAudioIndex = 0;
+        playAudio(currentAudioIndex + 1);
     }
 
     private void playAudio(int audioIndex) {
@@ -405,11 +459,12 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         showNotification(audio);
         updateGallery(audio);
         updateHeaderTexts(audio, audioIndex);
+        updateMapMarkerSelection(audio);
         playlistAdapter.setSelectedItemPosition(audioIndex);
 
         try {
             String filePath = audio.getPath();
-            String url = String.format(URL_FORMAT, EncryptedAudioHttpServer.SERVER_PORT, filePath, KEY, IV);
+            String url = String.format(URL_FORMAT, EncryptedAudioHttpServer.SERVER_PORT, filePath, Config.ENCRYPTION_KEY, Config.ENCRYPTION_IV);
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
             mediaPlayer.start();
@@ -426,6 +481,8 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Timber.e(e.getMessage(), e);
         }
+
+        currentAudioIndex = audioIndex;
     }
 
     private void stopPlayer() {

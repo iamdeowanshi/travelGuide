@@ -5,11 +5,11 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
+import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.app.di.RootModule;
-import com.ithakatales.android.util.Bakery;
-
-import javax.inject.Inject;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
@@ -19,7 +19,8 @@ import timber.log.Timber;
  */
 public class IthakaApplication extends Application {
 
-    @Inject Bakery bakery;
+    private Tracker googleAnalyticsTracker;
+
 
     @Override
     public void onCreate() {
@@ -40,5 +41,19 @@ public class IthakaApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+    /**
+     * Gets the default {@link Tracker} for this {@link Application}.
+     * @return tracker
+     */
+    synchronized public Tracker getGoogleAnalyticsTracker() {
+        if (googleAnalyticsTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            googleAnalyticsTracker = analytics.newTracker(R.xml.global_tracker);
+        }
+
+        return googleAnalyticsTracker;
+    }
+
 
 }

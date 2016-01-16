@@ -43,7 +43,7 @@ public class TourDeleteAction extends TourAction {
 
             @Override
             public void onNegativeClick() {
-                bakery.toastShort("Under Development !");
+                startTour(attraction);
             }
         });
 

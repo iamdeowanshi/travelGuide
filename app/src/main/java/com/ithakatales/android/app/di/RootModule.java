@@ -9,6 +9,7 @@ import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AttractionUpdateRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.AudioRepositoryRealm;
 import com.ithakatales.android.data.repository.realm.ImageRepositoryRealm;
+import com.ithakatales.android.data.repository.realm.PoiRepositoryRealm;
 import com.ithakatales.android.download.TourDownloadProgressObserver;
 import com.ithakatales.android.download.TourDownloadProgressReader;
 import com.ithakatales.android.download.TourDownloader;
@@ -20,6 +21,7 @@ import com.ithakatales.android.presenter.concrete.RegistrationPresenterImpl;
 import com.ithakatales.android.presenter.concrete.SamplePresenterImpl;
 import com.ithakatales.android.presenter.concrete.SettingsPresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourDetailPresenterImpl;
+import com.ithakatales.android.presenter.concrete.TourFinishPresenterImpl;
 import com.ithakatales.android.presenter.concrete.TourListPresenterImpl;
 import com.ithakatales.android.presenter.concrete.VerifyAccountPresenterImpl;
 import com.ithakatales.android.ui.actions.TourAction;
@@ -37,10 +39,11 @@ import com.ithakatales.android.ui.activity.RegistrationActivity;
 import com.ithakatales.android.ui.activity.SettingsActivity;
 import com.ithakatales.android.ui.activity.SocialLoginEnabledActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
+import com.ithakatales.android.ui.activity.TourFinishActivity;
+import com.ithakatales.android.ui.activity.TourGalleryActivity;
 import com.ithakatales.android.ui.activity.TourPlayerActivity;
+import com.ithakatales.android.ui.activity.UserOnBoardActivity;
 import com.ithakatales.android.ui.activity.VerifyAccountActivity;
-import com.ithakatales.android.ui.activity.test.ApiTestActivity;
-import com.ithakatales.android.ui.activity.test.TestActivity;
 import com.ithakatales.android.ui.adapter.GalleryPagerAdapter;
 import com.ithakatales.android.ui.adapter.MyToursExpandableListAdapter;
 import com.ithakatales.android.ui.adapter.NavigationDrawerAdapter;
@@ -55,6 +58,7 @@ import com.ithakatales.android.ui.fragment.TourListFragment;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.ConnectivityUtil;
 import com.ithakatales.android.util.DialogUtil;
+import com.ithakatales.android.util.DisplayUtil;
 import com.ithakatales.android.util.PreferenceUtil;
 import com.ithakatales.android.util.UserPreference;
 
@@ -82,9 +86,8 @@ import dagger.Provides;
 
         // Activities
         BaseActivity.class,
-        TestActivity.class,
-        ApiTestActivity.class,
         LaunchActivity.class,
+        UserOnBoardActivity.class,
         SocialLoginEnabledActivity.class,
         LoginActivity.class,
         RegistrationActivity.class,
@@ -95,6 +98,8 @@ import dagger.Provides;
         HomeActivity.class,
         TourDetailActivity.class,
         TourPlayerActivity.class,
+        TourGalleryActivity.class,
+        TourFinishActivity.class,
 
         // Fragments
         NavigationDrawerFragment.class,
@@ -132,10 +137,12 @@ import dagger.Provides;
         NavigationDrawerPresenterImpl.class,
         TourListPresenterImpl.class,
         TourDetailPresenterImpl.class,
+        TourFinishPresenterImpl.class,
 
         // Repositories
         AttractionRepositoryRealm.class,
         AttractionUpdateRepositoryRealm.class,
+        PoiRepositoryRealm.class,
         AudioRepositoryRealm.class,
         ImageRepositoryRealm.class,
 
@@ -144,12 +151,13 @@ import dagger.Provides;
         TourDownloadProgressReader.class,
         TourDownloadProgressObserver.class,
 
-        // PlayerDurationUtil
+        // Utils
         PreferenceUtil.class,
         UserPreference.class,
         Bakery.class,
         ConnectivityUtil.class,
         DialogUtil.class,
+        DisplayUtil.class,
     }
 )
 public class RootModule {

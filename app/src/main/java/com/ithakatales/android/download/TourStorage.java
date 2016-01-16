@@ -56,6 +56,12 @@ public class TourStorage {
         return getIthakaExternalDir();
     }
 
+    public File getIthakaCapturedImageDir() {
+        File dir = new File(getIthakaDir().getAbsolutePath() + "/Captured");
+
+        return makeIfNotExist(dir);
+    }
+
     public void removeTour(long tourId) {
         delete(getTourDir(tourId));
     }

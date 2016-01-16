@@ -11,7 +11,8 @@ import javax.inject.Inject;
  */
 public class UserPreference {
 
-    public static final String USER = "_USER" ;
+    public static final String USER             = "_USER" ;
+    public static final String USER_PREVIOUS    = "_USER_PREVIOUS" ;
 
     @Inject PreferenceUtil preferenceUtil;
     @Inject Gson gson;
@@ -39,7 +40,19 @@ public class UserPreference {
     }
 
     public void removeUser() {
+        preferenceUtil.save(USER_PREVIOUS, readUser());
         preferenceUtil.remove(USER);
+    }
+
+    public boolean isLoggedIn() {
+        return readUser() != null;
+    }
+
+    public boolean isUserEqualPreviousUser() {
+        User existingUser = readUser();
+        User previousUser = (User) preferenceUtil.read(USER_PREVIOUS, User.class);
+
+        return existingUser != null && previousUser != null && existingUser.getId() == previousUser.getId();
     }
 
 }

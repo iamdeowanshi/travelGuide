@@ -1,5 +1,6 @@
 package com.ithakatales.android.ui.adapter;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,8 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     private List<City> cities;
     private RecyclerItemClickListener<City> itemClickListener;
 
+    private TextView lastSelectedText;
+
     public NavigationDrawerAdapter(List<City> cities, RecyclerItemClickListener<City> itemClickListener) {
         Injector.instance().inject(this);
         this.cities = cities;
@@ -42,7 +45,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindData(cities.get(position));
+        holder.bindData(position);
     }
 
     @Override
@@ -64,13 +67,23 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 @Override
                 public void onClick(View v) {
                     itemClickListener.onItemClick(city);
+                    if (lastSelectedText != null) {
+                        lastSelectedText.setTypeface(null, Typeface.NORMAL);
+                        textTitle.setTypeface(null, Typeface.BOLD);
+                    }
+
+                    lastSelectedText = textTitle;
                 }
             });
         }
 
-        public void bindData(City city) {
-            this.city = city;
+        public void bindData(int position) {
+            if (position == 0 && lastSelectedText == null) {
+                lastSelectedText = textTitle;
+                lastSelectedText.setTypeface(null, Typeface.BOLD);
+            }
 
+            this.city = cities.get(position);
             textTitle.setText(city.getName());
         }
     }

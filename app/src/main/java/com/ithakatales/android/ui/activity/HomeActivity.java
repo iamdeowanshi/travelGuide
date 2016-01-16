@@ -48,8 +48,6 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
 
     private Map<Integer, Fragment> pageFragmentMap = new HashMap<>();
 
-    private City selectedCity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +62,11 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
 
     @Override
     public void onDrawerItemSelected(City city) {
-        selectedCity = city;
         TourListFragment tourListFragment = (TourListFragment) homePageAdapter.getFragment(POSITION_TOUR_LIST);
 
-        if (tourListFragment != null && selectedCity != null) {
-            getSupportActionBar().setTitle(selectedCity.getName());
-            tourListFragment.onCitySelectionChanged(selectedCity);
+        if (tourListFragment != null && city != null) {
+            getSupportActionBar().setTitle(city.getName());
+            tourListFragment.onCitySelectionChanged(city);
         }
     }
 
@@ -111,7 +108,7 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
         MyToursFragment myToursFragment = (MyToursFragment) homePageAdapter.getFragment(POSITION_MY_TOURS);
 
         if (myToursFragment != null) {
-            myToursFragment.updateAdapter();
+            myToursFragment.refreshAdapterAndView();
         }
     }
 

@@ -2,6 +2,7 @@ package com.ithakatales.android.app.base;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.Config;
+import com.ithakatales.android.app.IthakaApplication;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.ui.activity.LoginActivity;
 import com.ithakatales.android.ui.activity.SettingsActivity;
@@ -30,6 +34,18 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Inject Bakery bakery;
     @Inject UserPreference preference;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        injectDependencies();
+
+        if (Config.ORIENTATION_PORTRAIT_ONLY) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
+        trackToGoogleAnalytics();
+    }
 
     @Override
     public void setContentView(int layoutResID) {
@@ -106,12 +122,12 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void startActivityClearTop(Class<? extends Activity> activityClass, Bundle bundle) {
         Intent intent = new Intent(this, activityClass);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         if (bundle != null) intent.putExtras(bundle);
 
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     /**
@@ -129,6 +145,15 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected View getContentView() {
         return findViewById(android.R.id.content);
+    }
+
+    /**
+     * Google analytics tracker
+     */
+    private void trackToGoogleAnalytics() {
+        Tracker tracker = ((IthakaApplication)getApplication()).getGoogleAnalyticsTracker();
+        tracker.setScreenName(getClass().getSimpleName());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
 }

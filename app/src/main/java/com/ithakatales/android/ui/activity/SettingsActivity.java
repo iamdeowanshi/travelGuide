@@ -1,8 +1,15 @@
 package com.ithakatales.android.ui.activity;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
@@ -20,8 +27,12 @@ import com.ithakatales.android.download.TourDownloader;
 import com.ithakatales.android.presenter.SettingsPresenter;
 import com.ithakatales.android.presenter.SettingsViewInteractor;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.DialogUtil;
 import com.ithakatales.android.util.UserPreference;
 import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -34,9 +45,14 @@ import timber.log.Timber;
  */
 public class SettingsActivity extends BaseActivity implements SettingsViewInteractor {
 
+    private static final int REQUEST_CAMERA     = 100;
+    private static final int REQUEST_GALLERY    = 101;
+    private static final int REQUEST_CROP       = 102;
+
     @Inject SettingsPresenter presenter;
     @Inject TourDownloader tourDownloader;
     @Inject UserPreference preference;
+    @Inject DialogUtil dialogUtil;
     @Inject Bakery bakery;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
@@ -49,6 +65,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
     @Bind(R.id.progress) ProgressBar progress;
 
     private User user;
+    private Uri imageCaptureUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,15 +99,44 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        Uri uri = null;
+        switch (requestCode) {
+            case REQUEST_CAMERA:
+                performCrop(imageCaptureUri);
+                break;
+            case REQUEST_GALLERY:
+                performCrop(data.getData());
+                break;
+            case REQUEST_CROP:
+                uri = saveCroppedPic(data.getExtras());
+                break;
+        }
+
+        if (uri != null) {
+            File imageFile = new File(getRealPathFromURI(uri));
+            Picasso.with(this).load(imageFile).into(imageUser);
+            presenter.uploadProfilePic(user, imageFile);
+        }
+    }
+
+    @Override
     public void onProfilePicUploadSuccess(String url) {
-        bakery.snackLong(getContentView(), "Profile pic uploaded");
+        bakery.toastShort("Profile pic uploaded");
         user.setAvatar(url);
         presenter.updateProfile(user);
     }
 
     @Override
     public void onProfileUpdateSuccess(User user) {
-        bakery.snackLong(getContentView(), "Profile updated");
+        bakery.toastShort("Profile updated");
+        preference.saveUser(user);
+        this.user = preference.readUser();
+        loadUserInfo();
     }
 
     @Override
@@ -106,17 +152,38 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.snackLong(getContentView(), "Update failed !, Confirm inputs are correct");
-    }
-
-    @OnClick(R.id.image_user)
-    void onUerImageClick() {
-        bakery.toastShort("Under development !");
+        bakery.toastShort("Update failed !, Confirm inputs are correct");
     }
 
     @OnClick(R.id.button_upload)
     void onUploadClick() {
-        bakery.toastShort("Under development !");
+        dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
+            @Override
+            public void onPositiveClick() {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                imageCaptureUri = Uri.fromFile(new File(Environment
+                        .getExternalStorageDirectory(), "tmp_avatar_"
+                        + String.valueOf(System.currentTimeMillis())
+                        + ".jpg"));
+                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+                        imageCaptureUri);
+                intent.putExtra("return-data", true);
+                startActivityForResult(intent, REQUEST_CAMERA);
+            }
+
+            @Override
+            public void onNegativeClick() {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "Select Photo"), REQUEST_GALLERY);
+            }
+        });
+
+        dialogUtil.setTitle("Update profile")
+                .setMessage("Choose a photo using")
+                .setPositiveButtonText("Camera")
+                .setNegativeButtonText("Gallery")
+                .show(this);
     }
 
     @OnClick(R.id.button_save)
@@ -127,8 +194,28 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
 
     @OnClick(R.id.button_delete_downloads)
     void onDeleteDownloadsClick() {
-        tourDownloader.deleteAll();
-        bakery.snackLong(getContentView(), "All tours deleted !");
+        dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
+            @Override
+            public void onPositiveClick() {
+                if (tourDownloader.deleteAll()) {
+                    bakery.toastShort("All tours deleted");
+                    startActivityClearTop(HomeActivity.class, null);
+                    return;
+                }
+
+                bakery.toastShort("There is no tours to delete");
+            }
+
+            @Override
+            public void onNegativeClick() {
+            }
+        });
+
+        dialogUtil.setTitle("Delete Tours")
+                .setMessage("Are you sure to delete all downloaded tours ? Deletion will navigate you to home.")
+                .setPositiveButtonText("Delete")
+                .setNegativeButtonText("Cancel")
+                .show(this);
     }
 
     @OnClick(R.id.button_logout)
@@ -159,6 +246,46 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
             textName.setText(user.getFullName());
             textEmail.setText(user.getEmail());
         }
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] projections = { MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(this, contentUri, projections, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+
+        return result;
+    }
+
+    private void performCrop(Uri picUri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(picUri, "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 500);
+            cropIntent.putExtra("outputY", 500);
+            cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, REQUEST_CROP);
+        } catch (ActivityNotFoundException e) {
+            bakery.toastShort("This device doesn't support the crop action!");
+        }
+    }
+
+    private Uri saveCroppedPic(Bundle extras) {
+        Bitmap bitmap = (Bitmap) extras.get("data");
+
+        if (bitmap == null) return null;
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "IthakatalesProfile", null);
+
+        return Uri.parse(path);
     }
 
 }

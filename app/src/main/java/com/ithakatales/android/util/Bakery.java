@@ -16,6 +16,8 @@ public class Bakery {
 
     @Inject Context context;
 
+    private Snackbar snackbar;
+
     public Bakery() {
         Injector.instance().inject(this);
     }
@@ -85,7 +87,32 @@ public class Bakery {
      * @param message
      */
     public void snack(View view, String message, int length) {
-        Snackbar.make(view, message, length).show();
+        snackbar = Snackbar.make(view, message, length);
+        snackbar.show();
+    }
+
+    /**
+     * Show snack bar with action.
+     *
+     * @param view
+     * @param message
+     * @param length
+     * @param action
+     * @param actionListener
+     */
+    public void snack(View view, String message, int length, String action, View.OnClickListener actionListener) {
+        snackbar = Snackbar.make(view, message, length)
+                .setAction(action, actionListener);
+        snackbar.show();
+    }
+
+    /**
+     * Dismiss snack bar
+     */
+    public void dismiss() {
+        if (snackbar != null) {
+            snackbar.dismiss();
+        }
     }
 
 }

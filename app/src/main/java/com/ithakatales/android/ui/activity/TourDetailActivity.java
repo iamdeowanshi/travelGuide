@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -19,7 +21,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -28,6 +30,7 @@ import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
+import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.model.TagType;
 import com.ithakatales.android.download.model.TourDownloadProgress;
@@ -43,6 +46,7 @@ import com.ithakatales.android.ui.actions.TourStartAction;
 import com.ithakatales.android.ui.actions.TourUpdateAction;
 import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.custom.NoNetworkView;
+import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
@@ -51,6 +55,9 @@ import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -62,6 +69,9 @@ import timber.log.Timber;
  * @author Farhan Ali
  */
 public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor {
+
+    private static final String PREVIEW_BUTTON_TEXT_PLAY = "Play Preview";
+    private static final String PREVIEW_BUTTON_TEXT_STOP = "Stop Preview";
 
     @Inject TourDetailPresenter presenter;
     @Inject Bakery bakery;
@@ -75,6 +85,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.text_description) TextView textDescription;
     @Bind(R.id.icon_type) ImageView iconType;
     @Bind(R.id.text_duration) TextView textDuration;
+    @Bind(R.id.button_preview_player) Button buttonPreviewPlayer;
 
     @Bind(R.id.map_view) MapView mapView;
 
@@ -87,12 +98,15 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.view_tag_type_three) View viewTagTypeThree;
 
     @Bind(R.id.button_tour_action) Button buttonTourActon;
-    @Bind(R.id.progress) ProgressBar progress;
+    @Bind(R.id.view_loading) RelativeLayout viewLoading;
 
     @Bind(R.id.view_no_network) NoNetworkView viewNoNetwork;
 
     private Attraction attraction;
     private int tourAction;
+    private boolean isMapShown = false;
+
+    private MediaPlayer previewPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,6 +124,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     protected void onResume() {
         super.onResume();
         presenter.resume();
+        togglePreviewPlayerButton();
     }
 
     @Override
@@ -127,6 +142,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        stopPreview();
+
         switch (item.getItemId()) {
             case R.id.action_share:
                 shareAttraction();
@@ -134,6 +151,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopPreview();
     }
 
     // required for handling map view interaction
@@ -165,6 +188,11 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     }
 
     @Override
+    public void onDownloadComplete(long attractionId) {
+        presenter.loadAttraction(attractionId);
+    }
+
+    @Override
     public void onNoNetwork() {
         bakery.toastShort("No network !");
         viewNoNetwork.show();
@@ -172,12 +200,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Override
     public void showProgress() {
-        progress.setVisibility(View.VISIBLE);
+        viewLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        progress.setVisibility(View.INVISIBLE);
+        viewLoading.setVisibility(View.GONE);
     }
 
     @Override
@@ -189,16 +217,49 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_preview_player)
     void onPreviewPlayerClick() {
-        bakery.snackShort(getContentView(), "Under Development !");
+        String buttonText = buttonPreviewPlayer.getText().toString();
+
+        switch (buttonText) {
+            case PREVIEW_BUTTON_TEXT_PLAY:
+                playPreview();
+                break;
+            case PREVIEW_BUTTON_TEXT_STOP:
+                stopPreview();
+                break;
+        }
     }
 
     @OnClick(R.id.button_tour_action)
     void onTourActionClick() {
         TourAction action = (TourAction) buttonTourActon.getTag();
 
-        if (action != null) {
-            action.perform(attraction);
+        if (action == null) return;
+
+        if (action instanceof TourStartAction) {
+            stopPreview();
         }
+
+        action.perform(attraction);
+    }
+
+    @OnClick(R.id.image_featured)
+    void onFeaturedImageClick() {
+        if (attraction == null) return;
+
+        HashMap<String, String> imageCaptionMap = new HashMap<>();
+        boolean isLoadFromUrl = tourAction != TourAction.START;
+        List<Image> images = AttractionUtil.getAllImages(attraction);
+
+        for (Image image : images) {
+            String url = isLoadFromUrl ? image.getUrl() : image.getPath();
+            imageCaptionMap.put(url, image.getCaption());
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("attraction_name", attraction.getName());
+        bundle.putBoolean("is_load_from_url", isLoadFromUrl);
+        bundle.putSerializable("image_caption_map", imageCaptionMap);
+        startActivity(TourGalleryActivity.class, bundle);
     }
 
     private void initialize() {
@@ -228,7 +289,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             }
 
             @Override
-            public void onNetworkNotAvailable() {}
+            public void onNetworkNotAvailable() {
+            }
         });
     }
 
@@ -238,6 +300,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         loadFeaturedImage();
         loadPoiMap();
         loadTagTypes();
+        togglePreviewPlayerButton();
 
         // load titles
         collapsingToolbarLayout.setTitle(attraction.getName());
@@ -290,13 +353,6 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     private Target mapViewPicassoTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            mapView.recycle();
-
-            if (bitmap == null || bitmap.isRecycled()) {
-                loadPoiMap();
-                return;
-            }
-
             mapView.setImage(ImageSource.bitmap(bitmap));
 
             int bitmapWidth = bitmap.getWidth();
@@ -306,9 +362,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             for (Poi poi : attraction.getPois()) {
                 float x = (float) (poi.getxPercent() * bitmapWidth / 100);
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
-                mapView.addMarker(new Marker(index, x, y, poi.getName(), "5 Min"));
+                long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
+                mapView.addMarker(new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes)));
                 index ++;
             }
+
+            isMapShown = true;
         }
 
         @Override
@@ -323,10 +382,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     };
 
     private void loadPoiMap() {
-        RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction != TourAction.DOWNLOADING)
-                ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
-                : Picasso.with(this).load(attraction.getBlueprintUrl());
-       requestCreator.into(mapViewPicassoTarget);
+        if ( ! isMapShown) {
+            RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction == TourAction.START)
+                    ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
+                    : Picasso.with(this).load(attraction.getBlueprintUrl());
+            requestCreator.into(mapViewPicassoTarget);
+        }
     }
 
     private void loadTagTypes() {
@@ -379,6 +440,56 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
     }
 
+    private void playPreview() {
+        previewPlayer = new MediaPlayer();
+
+        String dataSource = attraction.getPreviewAudio().getPath();
+
+        if (dataSource == null || !new File(dataSource).exists()) {
+            previewPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            dataSource = attraction.getPreviewAudio().getEncUrl();
+        }
+
+        try {
+            previewPlayer.setDataSource(dataSource);
+            previewPlayer.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // preview can be playing from url, that is why prepareAsync and OnPreparedListener
+        previewPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                previewPlayer.start();
+                togglePreviewPlayerButton();
+            }
+        });
+
+        previewPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                stopPreview();
+            }
+        });
+    }
+
+    private void stopPreview() {
+        if (previewPlayer != null && previewPlayer.isPlaying()) {
+            previewPlayer.stop();
+            previewPlayer = null;
+        }
+
+        togglePreviewPlayerButton();
+    }
+
+    private void togglePreviewPlayerButton() {
+        String buttonText = (previewPlayer != null && previewPlayer.isPlaying())
+                ? PREVIEW_BUTTON_TEXT_STOP
+                : PREVIEW_BUTTON_TEXT_PLAY;
+        buttonPreviewPlayer.setText(buttonText);
+    }
+
     private void applyPalette(Palette palette) {
         int primaryDark = ContextCompat.getColor(this, R.color.primary_dark);
         int primary = ContextCompat.getColor(this, R.color.primary);
@@ -388,7 +499,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     private void shareAttraction() {
         if (attraction == null) {
-            bakery.snackShort(getContentView(), "Nothing to share !");
+            bakery.toastShort("Nothing to share !");
             return;
         }
 
@@ -396,7 +507,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_SUBJECT, "Ithaka Tales - " + attraction.getName());
         i.putExtra(Intent.EXTRA_TEXT, Config.SHARE_TOUR_URL_BASE + attraction.getId());
-        startActivity(Intent.createChooser(i, "Ithaka Tales - " + attraction.getName()));
+        startActivity(Intent.createChooser(i, "Share Ithaka - " + attraction.getName()));
     }
 
 }

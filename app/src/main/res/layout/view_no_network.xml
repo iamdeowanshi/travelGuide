@@ -6,35 +6,35 @@
     android:background="@android:color/white">
 
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:id="@+id/imageView"
-        android:src="@mipmap/app_icon"
-        android:scaleType="fitXY"
-        android:layout_above="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="19dp"/>
-
-    <TextView
+        android:id="@+id/image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="No network connection.. !"
-        android:id="@+id/textView"
-        android:layout_centerVertical="true"
+        android:layout_above="@+id/textView"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/app_icon_exclamation"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="No network connection.. !"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/teal_normal"
         android:textSize="22sp"/>
 
     <Button
+        android:id="@+id/button_retry"
         android:layout_width="70dp"
         android:layout_height="35dp"
-        android:text="Retry"
-        android:id="@+id/button_retry"
-        android:background="@drawable/bg_button_teal_rounded"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="18dp"
         android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_button_teal_rounded"
+        android:text="Retry"
+        android:textColor="@android:color/white"/>
 
 </RelativeLayout>

@@ -13,15 +13,16 @@ public class Config {
     public static final boolean DEBUG = true;
 
     //--------------------------------------------------------------------------------
-    // API related constants/configurations - used in ApiModule & Api class, prefix with API_
+    // API related constants/configurations - used in ApiModule & Api class,
+    // prefix with API_
     //--------------------------------------------------------------------------------
-    public static final String API_BASE_URL_PRODUCTION  = "";
-    //public static final String API_BASE_URL_DEVELOP     = "http://52.77.211.228:1337/v1";
-    public static final String API_BASE_URL_DEVELOP     = "http://52.74.156.9:1337/v1/";
-    public static final String API_BASE_URL_MOCK        = "http://ithaka-mobile.getsandbox.com";
+    public static final String API_BASE_URL_PRODUCTION      = "http://admin.ithakatales.com/v1";
+    public static final String API_BASE_URL_MOBILE_DEVELOP  = "http://52.77.211.228:1337/v1";
+    public static final String API_BASE_URL_WEB_DEVELOP     = "http://52.74.156.9:1337/v1/";
+    public static final String API_BASE_URL_MOCK            = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
-    public static final String API_BASE_URL = API_BASE_URL_DEVELOP;
+    public static final String API_BASE_URL = API_BASE_URL_MOBILE_DEVELOP;
 
     // authentication related apis
 
@@ -65,7 +66,7 @@ public class Config {
     // Headers required to be added by interceptor
     public static final Map<String, String> API_HEADERS = new HashMap<String, String>() {{
         put("User-Agent", "Ithaka-Tales-Android-App");
-        put("Content-Type", "application/json");
+        //put("Content-Type", "application/json");
     }};
 
     //--------------------------------------------------------------------------------
@@ -85,15 +86,20 @@ public class Config {
     public static final boolean STORAGE_HIDE_FILES      = false;
 
     //--------------------------------------------------------------------------------
-    // // TODO: 06/01/16 commenting
+    // App generic configurations
     //--------------------------------------------------------------------------------
 
-    public static final String LINK_PRIVACY_POLICY  = "http://www.google.com";
-    public static final String LINK_TERMS           = "http://www.google.com";
+    public static final String LINK_PRIVACY_POLICY  = "http://www.ithakatales.com/privacy.html";
+    public static final String LINK_TERMS           = "http://www.ithakatales.com/terms.html";
 
     public static final String SHARE_TOUR_URL_BASE  = "http://www.ithakatales.com/tours/";
 
     public static final String FEEDBACK_EMAIL_TO    = "ithakatales@gmail.com";
     public static final String FEEDBACK_SUBJECT     = "Ithakatales Feedback";
+
+    public static final boolean ORIENTATION_PORTRAIT_ONLY = true;
+
+    public static final String ENCRYPTION_KEY       = "tecsolsoftwarepvtltdbangalorekar";
+    public static final String ENCRYPTION_IV        = "tecsolbangalorek";
 
 }

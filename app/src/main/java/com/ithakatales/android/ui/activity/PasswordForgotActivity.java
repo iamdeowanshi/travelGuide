@@ -52,6 +52,7 @@ public class PasswordForgotActivity extends BaseActivity implements PasswordForg
     public void onPasswordForgotRequested() {
         Bundle bundle = new Bundle();
         bundle.putString("email", email);
+        bakery.toastLong("Please reset password using temporary password send to your email");
         startActivity(PasswordResetActivity.class, bundle);
     }
 
@@ -68,13 +69,13 @@ public class PasswordForgotActivity extends BaseActivity implements PasswordForg
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.snackShort(getContentView(), "Request failed !, Confirm email is correct");
+        bakery.toastShort("Request failed !, Confirm email is correct");
     }
 
     @OnClick(R.id.button_continue)
     void onContinueClick() {
         if ( ! connectivityUtil.isConnected()) {
-            bakery.snackShort(getContentView(), "No network connection !");
+            bakery.toastShort("No network connection !");
             return;
         }
 
@@ -82,6 +83,11 @@ public class PasswordForgotActivity extends BaseActivity implements PasswordForg
 
         email = inputEmail.getText().toString();
         presenter.requestPasswordForgot(email);
+    }
+
+    @OnClick(R.id.text_back)
+    void onBackClick() {
+        startActivityClearTop(LoginActivity.class, null);
     }
 
 }
