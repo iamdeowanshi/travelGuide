@@ -79,12 +79,13 @@ public class RegistrationActivity extends SocialLoginEnabledActivity implements 
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.toastShort("Failed !, Verify email is not existing already");
+        bakery.toastShort("Failed !, Verify email is not already existing");
     }
 
     @Override
     public void onRegistrationSuccess(User user) {
         userPreference.saveUser(user);
+        bakery.toastLong("Please verify your account with code send to your email");
         startActivityClearTop(VerifyAccountActivity.class, null);
     }
 

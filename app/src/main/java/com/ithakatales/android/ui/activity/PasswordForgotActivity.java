@@ -52,6 +52,7 @@ public class PasswordForgotActivity extends BaseActivity implements PasswordForg
     public void onPasswordForgotRequested() {
         Bundle bundle = new Bundle();
         bundle.putString("email", email);
+        bakery.toastLong("Please reset password using temporary password send to your email");
         startActivity(PasswordResetActivity.class, bundle);
     }
 
