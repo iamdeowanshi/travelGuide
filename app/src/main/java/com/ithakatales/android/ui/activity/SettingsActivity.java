@@ -79,7 +79,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Settings");
+            getSupportActionBar().setTitle("My Account");
         }
 
         user = preference.readUser();
@@ -212,7 +212,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         });
 
         dialogUtil.setTitle("Delete Tours")
-                .setMessage("Are you sure to delete all downloaded tours ? Deletion will navigate you to home.")
+                .setMessage("Do you want to delete all the tours?")
                 .setPositiveButtonText("Delete")
                 .setNegativeButtonText("Cancel")
                 .show(this);

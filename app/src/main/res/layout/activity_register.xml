@@ -73,7 +73,8 @@
             android:layout_below="@id/input_password"
             android:layout_marginTop="@dimen/spacing_small"
             android:background="@drawable/bg_button_teal_rounded"
-            android:text="Signup"
+            android:text="JoinUs"
+            android:textAllCaps="false"
             android:textColor="@color/white"/>
 
         <LinearLayout

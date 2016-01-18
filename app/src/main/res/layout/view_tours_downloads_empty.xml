@@ -22,7 +22,7 @@
         android:layout_below="@+id/image_icon1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/spacing_medium"
-        android:text="You have not downloaded any IthakaTale !"
+        android:text="No tales downloaded yet!"
         android:textSize="14dp"/>
 
 </RelativeLayout>

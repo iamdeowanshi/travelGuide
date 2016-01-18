@@ -285,6 +285,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             int bitmapHeight = bitmap.getHeight();
 
             // copy poi list to another list to detach from realm, then sort based on audio priority
+
             pois.addAll(attraction.getPois());
             Collections.sort(pois, new Comparator<Poi>() {
                 @Override
@@ -352,7 +353,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
             layoutPoiInfo.setVisibility(View.VISIBLE);
             textPoiName.setText(poi.getName());
-            textPoiProgress.setText(String.format("%d of %d Pois", poiPosition, pois.size()));
+            textPoiProgress.setText(String.format("%d of %d", poiPosition, pois.size()));
             break;
         }
     }

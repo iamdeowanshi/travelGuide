@@ -12,7 +12,6 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="@dimen/spacing_medium"
         android:gravity="center"
-        android:textAllCaps="true"
         android:textSize="18dp" />
 
     <com.ithakatales.android.ui.custom.ScrollParentGridView

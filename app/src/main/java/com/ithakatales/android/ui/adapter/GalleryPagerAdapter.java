@@ -105,7 +105,7 @@ public class GalleryPagerAdapter extends PagerAdapter {
             requestCreator.resize(displayUtil.getWidth(), 0)
                     .into(imageView);
 
-            validateNavigationButton();
+            validateNavigationButton(position);
         }
 
         @OnClick(R.id.button_next)
@@ -122,7 +122,7 @@ public class GalleryPagerAdapter extends PagerAdapter {
             }
         }
 
-        private void validateNavigationButton() {
+        private void validateNavigationButton(int position) {
             int buttonNextVisibility = (position >= images.size() - 1) ? View.GONE : View.VISIBLE;
             buttonNext.setVisibility(buttonNextVisibility);
 

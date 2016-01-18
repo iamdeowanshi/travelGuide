@@ -71,7 +71,7 @@ public class LoginActivity extends SocialLoginEnabledActivity {
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
         e.printStackTrace();
-        bakery.toastShort("Login failed !, Verify email and password");
+        bakery.toastShort("Please enter registered email address and password");
     }
 
     // onClick actions

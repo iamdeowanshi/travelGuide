@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:text="Did this IthakaTale\nTake you places?"
+        android:text="Did this IthakaTale\ntake you places?"
         android:textColor="@color/black"
         android:textSize="24sp"/>
 
@@ -79,6 +79,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/bg_button_teal_rounded"
         android:text="Share"
+        android:textAllCaps="false"
         android:textColor="@color/white"/>
 
     <TextView

@@ -52,7 +52,7 @@ public class PasswordForgotActivity extends BaseActivity implements PasswordForg
     public void onPasswordForgotRequested() {
         Bundle bundle = new Bundle();
         bundle.putString("email", email);
-        bakery.toastLong("Please reset password using temporary password send to your email");
+        bakery.toastLong("Please check your email for reset password");
         startActivity(PasswordResetActivity.class, bundle);
     }
 
@@ -69,7 +69,7 @@ public class PasswordForgotActivity extends BaseActivity implements PasswordForg
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.toastShort("Request failed !, Confirm email is correct");
+        bakery.toastShort("The email address entered does not exist in the system, please re-enter the password");
     }
 
     @OnClick(R.id.button_continue)

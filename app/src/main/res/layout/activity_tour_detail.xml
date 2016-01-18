@@ -154,7 +154,8 @@
                         android:drawableLeft="@drawable/ic_volume_up"
                         android:paddingLeft="90dp"
                         android:paddingRight="90dp"
-                        android:text="Play Preview"
+                        android:textAllCaps="false"
+                        android:text="Preview IthakaTale"
                         android:textColor="@android:color/white"/>
 
                 </RelativeLayout>
@@ -185,7 +186,6 @@
                         android:layout_alignParentTop="true"
                         android:gravity="center"
                         android:text="Know More"
-                        android:textAllCaps="true"
                         android:textSize="18dp"/>
 
                     <com.ms.square.android.expandabletextview.ExpandableTextView
@@ -233,7 +233,6 @@
                         android:layout_alignParentTop="true"
                         android:gravity="center"
                         android:text="Before You Go"
-                        android:textAllCaps="true"
                         android:textSize="18dp"/>
 
                     <WebView
@@ -278,8 +277,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:gravity="center"
-                        android:text="Behind The Scenes"
-                        android:textAllCaps="true"
+                        android:text="Behind the Scenes"
                         android:textSize="18dp"/>
 
                     <com.ms.square.android.expandabletextview.ExpandableTextView
@@ -319,7 +317,7 @@
             android:background="@drawable/bg_button_pink"
             android:enabled="false"
             android:text="Begin Ithakatale"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
 

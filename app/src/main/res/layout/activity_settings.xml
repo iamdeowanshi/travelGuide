@@ -102,9 +102,9 @@
                     android:layout_below="@+id/txt_travel"
                     android:background="@color/gray_extra_light"
                     android:gravity="top"
-                    android:minLines="3"
+                    android:minLines="5"
                     android:padding="5dp"
-                    android:text="@string/lorem_ipsum_medium"
+                    android:hint="Share your travel motivations.."
                     android:textColor="@color/black_transparent_70"
                     android:textSize="11sp"/>
 
