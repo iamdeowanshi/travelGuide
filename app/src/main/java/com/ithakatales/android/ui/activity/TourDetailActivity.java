@@ -215,8 +215,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         viewNoNetwork.show();
     }
 
-    @OnClick(R.id.button_preview_player)
-    void onPreviewPlayerClick() {
+    @OnClick(R.id.button_preview_player) void onPreviewPlayerClick() {
         String buttonText = buttonPreviewPlayer.getText().toString();
 
         switch (buttonText) {
@@ -229,8 +228,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
     }
 
-    @OnClick(R.id.button_tour_action)
-    void onTourActionClick() {
+    @OnClick(R.id.button_tour_action) void onTourActionClick() {
         TourAction action = (TourAction) buttonTourActon.getTag();
 
         if (action == null) return;
@@ -242,8 +240,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         action.perform(attraction);
     }
 
-    @OnClick(R.id.image_featured)
-    void onFeaturedImageClick() {
+    @OnClick(R.id.image_featured) void onFeaturedImageClick() {
         if (attraction == null) return;
 
         HashMap<String, String> imageCaptionMap = new HashMap<>();
@@ -334,7 +331,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         @Override
-        public void onError() {}
+        public void onError() {
+        }
     };
 
     private void loadFeaturedImage() {
@@ -364,7 +362,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
                 long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
                 mapView.addMarker(new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes)));
-                index ++;
+                index++;
             }
 
             isMapShown = true;
@@ -382,7 +380,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     };
 
     private void loadPoiMap() {
-        if ( ! isMapShown) {
+        if (!isMapShown) {
             RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction == TourAction.START)
                     ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
                     : Picasso.with(this).load(attraction.getBlueprintUrl());
@@ -428,7 +426,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             case TourAction.DOWNLOAD:
                 return new TourDownloadAction(buttonTourActon, presenter);
             case TourAction.START:
-                return new TourStartAction(buttonTourActon);
+                //TODo : If audio is not present toast an error message.
+                return ( validAudio()) ? new TourStartAction(buttonTourActon) : null;
             case TourAction.RETRY:
                 return new TourDownloadRetryAction(buttonTourActon, presenter);
             case TourAction.UPDATE:
@@ -438,6 +437,16 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             default:
                 return null;
         }
+    }
+//TODo : checking each poi for audio.
+    private boolean validAudio() {
+        for (Poi poi : attraction.getPois()) {
+            if (poi.getAudio() == null) {
+                bakery.toastShort("Data error");
+                return false;
+            }
+        }
+        return true;
     }
 
     private void playPreview() {
