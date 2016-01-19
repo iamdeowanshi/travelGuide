@@ -46,6 +46,7 @@
         android:layout_below="@+id/txt_2"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/spacing_small"
+        android:stepSize="1"
         android:progressDrawable="@drawable/rating_star"
         android:rating="5"/>
 

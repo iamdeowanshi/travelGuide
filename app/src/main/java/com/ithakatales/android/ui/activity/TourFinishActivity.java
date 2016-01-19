@@ -76,7 +76,7 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
             return;
         }
 
-        presenter.rateTour(user, attractionId, ratingBar.getNumStars());
+        presenter.rateTour(user, attractionId, (int) ratingBar.getRating());
     }
 
     private void shareAttraction() {
