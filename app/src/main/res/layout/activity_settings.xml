@@ -225,7 +225,7 @@
                     android:layout_below="@+id/button_delete_downloads"
                     android:background="@color/gray_normal"/>
 
-                <Button
+                <ImageView
                     android:id="@+id/button_logout"
                     android:layout_width="110dp"
                     android:layout_height="35dp"

@@ -16,6 +16,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "606240215039-sodo6n3tf11ecu352rc7uvpn1om99210.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ithakatales.android",
+            "certificate_hash": "1D99A7F892164B4850D05124C774083D8C9E7F44"
+          }
+        },
+        {
           "client_id": "606240215039-uga096kinpdlu0vlu0ae2oe3cf482ao8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

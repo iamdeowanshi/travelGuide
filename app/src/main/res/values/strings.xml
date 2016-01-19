@@ -14,6 +14,8 @@
     <string name="action_gallery">Gallery</string>
     <string name="privacy"><u>Privacy Policy</u></string>
     <string name="terms"><u>Terms of Use</u></string>
+    <string name="Email"><i>Email</i></string>
+    <string name="Password"><i>Password</i></string>
 
     <string name="about_ithaka">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur ipsum in placerat molestie. Fusce quis mauris a enim sollicitudin ultrices non eget velit. Aliquam eu pulvinar enim. Praesent libero nisl, ultricies vel maximus eu.</string>
 
