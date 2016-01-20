@@ -212,7 +212,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         });
 
         dialogUtil.setTitle("Delete Tours")
-                .setMessage("Do you want to delete all the tours?")
+                .setMessage("Do you want to delete all the downloaded tours?\n\nTo delete a specific tour long press on the tour in Downloads. ")
                 .setPositiveButtonText("Delete")
                 .setNegativeButtonText("Cancel")
                 .show(this);
@@ -220,8 +220,20 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
 
     @OnClick(R.id.button_logout)
     void onLogoutClick() {
-        preference.removeUser();
-        startActivityClearTop(LaunchActivity.class, null);
+        dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
+            @Override public void onPositiveClick() {
+                preference.removeUser();
+                startActivityClearTop(LaunchActivity.class, null);
+            }
+
+            @Override public void onNegativeClick() {
+            }
+        });
+        dialogUtil.setTitle("Logout")
+                .setMessage("Your downloaded tours will be deleted upon new user login, are you sure you want to logout?")
+                .setPositiveButtonText("Logout")
+                .setNegativeButtonText("Cancel")
+                .show(this);
     }
 
     @OnClick(R.id.text_privacy_link)

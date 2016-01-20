@@ -319,7 +319,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             buttonTourAction.setTextColor(ContextCompat.getColor(context, textColorId));
             buttonTourAction.setAllCaps(false);
 
-            Spannable buttonLabel = new SpannableString("   " + text.toUpperCase());
+            Spannable buttonLabel = new SpannableString("   " + text/*+ text.toUpperCase()*/);
             buttonLabel.setSpan(new ImageSpan(context, leftDrawableId,
                     ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             buttonTourAction.setText(buttonLabel);

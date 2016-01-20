@@ -148,7 +148,7 @@ public class MyToursFragment extends BaseFragment implements TourDetailViewInter
         });
 
         dialogUtil.setTitle("Tour Delete")
-                .setMessage(String.format("Are you sure to delete tour %s ?", attraction.getName()))
+                .setMessage(String.format("Are you sure, you want to delete the %s from the downloads. Once deleted it will not be accessible in offline mode", attraction.getName()))
                 .setPositiveButtonText("Delete")
                 .setNegativeButtonText("Cancel")
                 .show(getActivity());
