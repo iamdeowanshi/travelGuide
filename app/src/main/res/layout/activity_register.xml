@@ -4,7 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_login_activity">
-
+<ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="50dp"
+    android:id="@+id/scroll">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -137,7 +141,7 @@
         </LinearLayout>
 
     </RelativeLayout>
-
+</ScrollView>
     <TextView
         android:id="@+id/text_login"
         android:layout_width="match_parent"
