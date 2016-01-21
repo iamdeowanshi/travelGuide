@@ -438,6 +438,8 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             Bundle bundle = new Bundle();
             bundle.putLong("attraction_id", attraction.getId());
             bundle.putString("attraction_name", attraction.getName());
+            //TODo : to remove notification
+            cancelNotification();
             startActivity(TourFinishActivity.class, bundle);
             return;
         }
