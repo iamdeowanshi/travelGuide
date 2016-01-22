@@ -374,7 +374,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
     @Override
     public void onAudioItemClick(int position) {
-        togglePlayListVisibility();
+      //  togglePlayListVisibility();
         playAudio(position);
     }
 
