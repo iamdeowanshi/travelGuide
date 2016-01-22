@@ -215,7 +215,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         viewNoNetwork.show();
     }
 
-    @OnClick(R.id.button_preview_player) void onPreviewPlayerClick() {
+    @OnClick(R.id.button_preview_player)
+    void onPreviewPlayerClick() {
         String buttonText = buttonPreviewPlayer.getText().toString();
 
         switch (buttonText) {
@@ -228,7 +229,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
     }
 
-    @OnClick(R.id.button_tour_action) void onTourActionClick() {
+    @OnClick(R.id.button_tour_action)
+    void onTourActionClick() {
         TourAction action = (TourAction) buttonTourActon.getTag();
 
         if (action == null) return;
@@ -240,7 +242,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         action.perform(attraction);
     }
 
-    @OnClick(R.id.image_featured) void onFeaturedImageClick() {
+    @OnClick(R.id.image_featured)
+    void onFeaturedImageClick() {
         if (attraction == null) return;
 
         HashMap<String, String> imageCaptionMap = new HashMap<>();

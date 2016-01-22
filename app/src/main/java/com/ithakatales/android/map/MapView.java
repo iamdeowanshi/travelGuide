@@ -120,7 +120,8 @@ public class MapView extends SubsamplingScaleImageView {
         float density = getResources().getDisplayMetrics().densityDpi;
         if (density >= DisplayMetrics.DENSITY_XHIGH) {
             divider = pixelToDp(180);
-        } else if (density >= DisplayMetrics.DENSITY_XXHIGH) {
+        }
+        if (density >= DisplayMetrics.DENSITY_XXHIGH) {
             divider = pixelToDp(250);
         }
 
@@ -174,7 +175,7 @@ public class MapView extends SubsamplingScaleImageView {
 
         // draw title
         resetPaint();
-        paint.setColor(Color.DKGRAY);
+        paint.setColor(Color.BLACK);
         paint.setTextSize(32);
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(selectedMarker.getTitle(), rect.left + rect.width() / 2, rect.top + 50, paint);

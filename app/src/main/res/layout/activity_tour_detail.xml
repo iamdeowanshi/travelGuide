@@ -157,7 +157,7 @@
                         android:drawableLeft="@drawable/ic_volume_up"
                         android:paddingLeft="90dp"
                         android:paddingRight="90dp"
-                        android:textAllCaps="false"
+                        android:textAllCaps="true"
                         android:text="Preview IthakaTale"
                         android:textColor="@android:color/white"/>
 

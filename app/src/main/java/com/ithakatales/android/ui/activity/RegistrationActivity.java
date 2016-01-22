@@ -79,7 +79,7 @@ public class RegistrationActivity extends SocialLoginEnabledActivity implements 
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.toastShort("This email address is an existing member of Ithaka, please select  'Login Now' link to access the Login page");
+        bakery.toastShort("This email address is an existing member of Ithaka, please select 'Login Now' link to access the Login page");
     }
 
     @Override

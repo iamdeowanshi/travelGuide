@@ -251,7 +251,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             switch (download.getStatus()) {
                 case DownloadManager.STATUS_SUCCESSFUL:
                     tourAction = checkForUpdateOrDelete(attraction);
-                    showTourActionButton("Begin IthakaTale", R.drawable.ic_button_start_tour, R.drawable.bg_button_pink_rounded, android.R.color.white);
+                    showTourActionButton("BEGIN ITHAKATALE", R.drawable.ic_button_start_tour, R.drawable.bg_button_pink_rounded, android.R.color.white);
                     setItemClickListeners();
                     break;
                 case DownloadManager.STATUS_FAILED:

@@ -48,7 +48,7 @@
         android:layout_margin="@dimen/spacing_small"
         android:stepSize="1"
         android:progressDrawable="@drawable/rating_star"
-        android:rating="5"/>
+        android:rating="3"/>
 
     <View
         android:id="@+id/view"

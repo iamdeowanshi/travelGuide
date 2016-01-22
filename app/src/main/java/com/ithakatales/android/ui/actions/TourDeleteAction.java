@@ -26,7 +26,7 @@ public class TourDeleteAction extends TourAction {
 
         this.presenter = presenter;
 
-        text = "Begin IthakaTale";
+        text = "BEGIN ITHAKATALE";
         enable = true;
 
         init();

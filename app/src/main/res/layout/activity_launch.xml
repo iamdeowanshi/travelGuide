@@ -22,7 +22,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="40dp"
         android:background="@drawable/bg_button_pink_rounded"
-        android:text="Sneak Peak"
+        android:text="Sneak Peek"
         android:textColor="@android:color/white"/>
 
     <Button
