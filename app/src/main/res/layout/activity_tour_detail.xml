@@ -6,7 +6,8 @@
     xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    xmlns:isPlaying="http://schemas.android.com/tools">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -146,8 +147,17 @@
                         android:paddingTop="5dp"
                         android:textColor="@android:color/black"
                         android:textSize="12sp"/>
+<!--TODO: Changing preview button-->
 
-                    <Button
+                    <com.ithakatales.android.ui.custom.PlayPreviewButton
+                        android:id="@+id/button_preview_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/icon_type"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:background="@drawable/btn_play_preview"/>
+
+                    <!--<Button
                         android:id="@+id/button_preview_player"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -159,7 +169,7 @@
                         android:paddingRight="90dp"
                         android:textAllCaps="true"
                         android:text="Preview IthakaTale"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white"/>-->
 
                 </RelativeLayout>
 

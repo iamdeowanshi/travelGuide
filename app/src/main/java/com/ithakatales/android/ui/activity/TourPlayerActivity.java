@@ -408,6 +408,10 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         // check if next song is there or not
         if (currentAudioIndex < (audios.size() - 1)) {
             playAudio(currentAudioIndex + 1);
+        } else if (currentAudioIndex == audios.size() - 1) {
+            //TODo : Complete Player if last audio
+            stopPlayer();
+            onCompletion(null);
         }
     }
 

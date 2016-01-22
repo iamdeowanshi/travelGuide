@@ -40,6 +40,9 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
         setContentView(R.layout.activity_tour_finish);
         injectDependencies();
 
+        //TODo: Setting view interactor which was ignored by MR. FARHAN ALI (ASHAANEI)
+        presenter.setViewInteractor(this);
+
         attractionName = getIntent().getStringExtra("attraction_name");
         attractionId = getIntent().getLongExtra("attraction_id", 0);
 
@@ -60,6 +63,11 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
     void onShareClick() {
         rateAttraction();
         shareAttraction();
+    }
+
+    @OnClick(R.id.text_submit)
+    void onSubmitClick() {
+        rateAttraction();
     }
 
     @OnClick(R.id.text_skip)
@@ -84,11 +92,13 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
             bakery.toastShort("Nothing to share !");
             return;
         }
+// TODO:  Custom share message
+        String message = "I have rated " + attractionName + " with a " + (int) ratingBar.getRating() + " on 5.\nCheck this out - " + Config.SHARE_TOUR_URL_BASE + attractionId;
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_SUBJECT, "Ithaka Tales - " + attractionName);
-        i.putExtra(Intent.EXTRA_TEXT, Config.SHARE_TOUR_URL_BASE + attractionId);
+        i.putExtra(Intent.EXTRA_TEXT, message);
         startActivity(Intent.createChooser(i, "Share Ithaka - " + attractionName));
     }
 

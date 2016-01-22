@@ -50,14 +50,26 @@
         android:progressDrawable="@drawable/rating_star"
         android:rating="3"/>
 
+    <TextView
+        android:id="@+id/text_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:text="Submit"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/rating_bar"
+        android:layout_below="@+id/text_submit"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:background="@color/black_transparent_50"/>
 
     <TextView

@@ -85,7 +85,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.text_description) TextView textDescription;
     @Bind(R.id.icon_type) ImageView iconType;
     @Bind(R.id.text_duration) TextView textDuration;
-    @Bind(R.id.button_preview_player) Button buttonPreviewPlayer;
+    //@Bind(R.id.button_preview_player) Button buttonPreviewPlayer;
+    @Bind(R.id.button_preview_player) com.ithakatales.android.ui.custom.PlayPreviewButton buttonPreviewPlayer;
 
     @Bind(R.id.map_view) MapView mapView;
 
@@ -217,7 +218,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_preview_player)
     void onPreviewPlayerClick() {
-        String buttonText = buttonPreviewPlayer.getText().toString();
+      /*  String buttonText = buttonPreviewPlayer.getText().toString();
 
         switch (buttonText) {
             case PREVIEW_BUTTON_TEXT_PLAY:
@@ -226,6 +227,14 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             case PREVIEW_BUTTON_TEXT_STOP:
                 stopPreview();
                 break;
+        }*/
+// Todo: changing button background
+        boolean isClicked = buttonPreviewPlayer.isPlaying();
+
+        if ( ! isClicked) {
+            playPreview();
+        } else {
+            stopPreview();
         }
     }
 
@@ -469,6 +478,9 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             e.printStackTrace();
         }
 
+// Todo: changing button background
+        buttonPreviewPlayer.setPlaying(true);
+
         // preview can be playing from url, that is why prepareAsync and OnPreparedListener
         previewPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -491,15 +503,20 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             previewPlayer.stop();
             previewPlayer = null;
         }
-
+        // Todo: changing button background
+        buttonPreviewPlayer.setPlaying(false);
         togglePreviewPlayerButton();
     }
 
     private void togglePreviewPlayerButton() {
-        String buttonText = (previewPlayer != null && previewPlayer.isPlaying())
+        /*String buttonText = (previewPlayer != null && previewPlayer.isPlaying())
                 ? PREVIEW_BUTTON_TEXT_STOP
                 : PREVIEW_BUTTON_TEXT_PLAY;
-        buttonPreviewPlayer.setText(buttonText);
+        buttonPreviewPlayer.setText(buttonText);*/
+         int buttonId = (previewPlayer != null && previewPlayer.isPlaying())
+                ? R.drawable.btn_stop_preview
+                : R.drawable.btn_play_preview;
+        buttonPreviewPlayer.setBackgroundResource(buttonId);
     }
 
     private void applyPalette(Palette palette) {
@@ -514,11 +531,13 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             bakery.toastShort("Nothing to share !");
             return;
         }
+        //TODO:  Custom share message
+        String message = "Check this out\n" + Config.SHARE_TOUR_URL_BASE + attraction.getId();
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_SUBJECT, "Ithaka Tales - " + attraction.getName());
-        i.putExtra(Intent.EXTRA_TEXT, Config.SHARE_TOUR_URL_BASE + attraction.getId());
+        i.putExtra(Intent.EXTRA_TEXT, message);
         startActivity(Intent.createChooser(i, "Share Ithaka - " + attraction.getName()));
     }
 
