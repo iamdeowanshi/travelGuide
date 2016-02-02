@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_id": "ithaka-tales-243f3",
-    "project_number": "606240215039",
-    "name": "Ithaka Tales"
+    "project_id": "ithaka-ce582",
+    "project_number": "182779467892",
+    "name": "Ithaka"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:606240215039:android:c67d152d264d2695",
+        "mobilesdk_app_id": "1:182779467892:android:c67d152d264d2695",
         "client_id": "android:com.ithakatales.android",
         "client_type": 1,
         "android_client_info": {
@@ -16,19 +16,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "606240215039-sodo6n3tf11ecu352rc7uvpn1om99210.apps.googleusercontent.com",
+          "client_id": "182779467892-oi6gv6haf3cjrcp59jhja264orqrplnm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ithakatales.android",
             "certificate_hash": "1D99A7F892164B4850D05124C774083D8C9E7F44"
-          }
-        },
-        {
-          "client_id": "606240215039-uga096kinpdlu0vlu0ae2oe3cf482ao8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ithakatales.android",
-            "certificate_hash": "FBDBA6BE8D4B58D24C9349AAFB27355F8AACD31A"
           }
         }
       ],
@@ -37,7 +29,7 @@
         "analytics_service": {
           "status": 2,
           "analytics_property": {
-            "tracking_id": "UA-71428318-2"
+            "tracking_id": "UA-72940097-1"
           }
         },
         "cloud_messaging_service": {

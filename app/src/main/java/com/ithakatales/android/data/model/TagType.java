@@ -1,14 +1,23 @@
 package com.ithakatales.android.data.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.ithakatales.android.data.model.ParcelConverter.TagParcelConverter;
+
+import org.parceler.Parcel;
+import org.parceler.ParcelPropertyConverter;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.TagTypeRealmProxy;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * @author Farhan Ali
  */
+@Parcel(value = Parcel.Serialization.BEAN,
+        analyze = { TagType.class }
+        ,implementations = { TagTypeRealmProxy.class}
+)
 public class TagType extends RealmObject {
 
     @PrimaryKey
@@ -59,6 +68,7 @@ public class TagType extends RealmObject {
         return tags;
     }
 
+    @ParcelPropertyConverter(TagParcelConverter.class)
     public void setTags(RealmList<Tag> tags) {
         this.tags = tags;
     }

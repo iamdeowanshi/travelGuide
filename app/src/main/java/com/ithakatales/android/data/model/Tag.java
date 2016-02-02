@@ -2,12 +2,19 @@ package com.ithakatales.android.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 import io.realm.RealmObject;
+import io.realm.TagRealmProxy;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * @author Farhan Ali
  */
+@Parcel(value = Parcel.Serialization.BEAN,
+        analyze = { Tag.class }
+        ,implementations = { TagRealmProxy.class}
+)
 public class Tag extends RealmObject {
 
     public static final long WALKING            = 1;

@@ -91,6 +91,7 @@ public class Config {
 
     public static final String LINK_PRIVACY_POLICY  = "http://www.ithakatales.com/privacy.html";
     public static final String LINK_TERMS           = "http://www.ithakatales.com/terms.html";
+    public static final String LINK_FAQs            = "http://www.ithakatales.com/faq.html";
 
     public static final String SHARE_TOUR_URL_BASE  = "http://www.ithakatales.com/tours/";
 

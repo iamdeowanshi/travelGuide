@@ -1,7 +1,16 @@
 package com.ithakatales.android.data.model;
 
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.SerializedName;
+import com.ithakatales.android.data.model.ParcelConverter.AudioParcelConverter;
+import com.ithakatales.android.data.model.ParcelConverter.ImageParcelConverter;
+import com.ithakatales.android.data.model.ParcelConverter.PoiParcelConverter;
+import com.ithakatales.android.data.model.ParcelConverter.TagTypeParcelConverter;
+
+import org.parceler.Parcel;
+import org.parceler.ParcelPropertyConverter;
+
+import io.realm.AttractionRealmProxy;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -9,6 +18,10 @@ import io.realm.annotations.PrimaryKey;
 /**
  * @author Farhan Ali
  */
+@Parcel(value = Parcel.Serialization.BEAN,
+        analyze = { Attraction.class }
+        ,implementations = { AttractionRealmProxy.class}
+)
 public class Attraction extends RealmObject {
 
     @PrimaryKey
@@ -265,6 +278,7 @@ public class Attraction extends RealmObject {
         return tagTypes;
     }
 
+    @ParcelPropertyConverter(TagTypeParcelConverter.class)
     public void setTagTypes(RealmList<TagType> tagTypes) {
         this.tagTypes = tagTypes;
     }
@@ -273,6 +287,7 @@ public class Attraction extends RealmObject {
         return pois;
     }
 
+    @ParcelPropertyConverter(PoiParcelConverter.class)
     public void setPois(RealmList<Poi> pois) {
         this.pois = pois;
     }
@@ -281,6 +296,7 @@ public class Attraction extends RealmObject {
         return audios;
     }
 
+    @ParcelPropertyConverter(AudioParcelConverter.class)
     public void setAudios(RealmList<Audio> audios) {
         this.audios = audios;
     }
@@ -289,6 +305,7 @@ public class Attraction extends RealmObject {
         return images;
     }
 
+    @ParcelPropertyConverter(ImageParcelConverter.class)
     public void setImages(RealmList<Image> images) {
         this.images = images;
     }

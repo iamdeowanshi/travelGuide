@@ -58,6 +58,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:clickable="true"
+        android:textAllCaps="true"
         android:text="Submit"
         android:textColor="@color/black"
         android:textSize="16sp"/>
@@ -92,7 +93,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/bg_button_teal_rounded"
         android:text="Share"
-        android:textAllCaps="false"
+        android:textAllCaps="true"
         android:textColor="@color/white"/>
 
     <TextView
@@ -104,6 +105,7 @@
         android:layout_marginTop="20dp"
         android:clickable="true"
         android:text="Skip"
+        android:textAllCaps="true"
         android:textColor="@color/black"
         android:textSize="16sp"/>
 

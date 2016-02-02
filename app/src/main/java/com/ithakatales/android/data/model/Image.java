@@ -2,12 +2,19 @@ package com.ithakatales.android.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+import io.realm.ImageRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * @author Farhan Ali
  */
+@Parcel(value = Parcel.Serialization.BEAN,
+        analyze = { Image.class }
+        ,implementations = { ImageRealmProxy.class}
+)
 public class Image extends RealmObject {
 
     @PrimaryKey

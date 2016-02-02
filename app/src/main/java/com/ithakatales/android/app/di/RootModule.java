@@ -3,6 +3,7 @@ package com.ithakatales.android.app.di;
 import android.content.Context;
 import android.view.LayoutInflater;
 
+import com.ithakatales.android.ui.activity.TourMapActivity;
 import com.ithakatales.android.app.IthakaApplication;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
@@ -100,6 +101,9 @@ import dagger.Provides;
         TourPlayerActivity.class,
         TourGalleryActivity.class,
         TourFinishActivity.class,
+
+            //Todo: MapView
+            TourMapActivity.class,
 
         // Fragments
         NavigationDrawerFragment.class,

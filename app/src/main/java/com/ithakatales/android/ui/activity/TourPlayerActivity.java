@@ -47,6 +47,7 @@ import com.ithakatales.android.ui.adapter.PlaylistItemClickListener;
 import com.ithakatales.android.ui.custom.VerticalSpaceItemDecoration;
 import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.DialogUtil;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -82,6 +83,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     @Inject ImageRepository imageRepo;
     @Inject AttractionRepository attractionRepo;
     @Inject TourStorage tourStorage;
+    @Inject DialogUtil dialogUtil;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.gallery_view_pager) ViewPager galleryPager;
@@ -151,7 +153,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(attraction.getName());
+            getSupportActionBar().setTitle("");
         }
 
         // hide mapView and audio list initially, show gallery
@@ -218,6 +220,23 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         } catch (NullPointerException e) {
             return false;
         }
+    }
+
+    @Override public void onBackPressed() {
+        dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
+            @Override public void onPositiveClick() {
+                cancelNotification();
+                stopPlayer();
+                finish();
+            }
+            @Override public void onNegativeClick() {
+            }
+        });
+        dialogUtil.setTitle("Exit Player")
+                .setMessage("Exiting this page will stop the narration, are you sure you want to continue.")
+                .setPositiveButtonText("Yes")
+                .setNegativeButtonText("No")
+                .show(this);
     }
 
     @Override

@@ -18,6 +18,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.ithakatales.android.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,6 +125,9 @@ public class MapView extends SubsamplingScaleImageView {
         if (density >= DisplayMetrics.DENSITY_XXHIGH) {
             divider = pixelToDp(250);
         }
+        if (density >= DisplayMetrics.DENSITY_560) {
+            divider = pixelToDp(330);
+        }
 
         float w = (density / divider) * markerBitmap.getWidth();
         float h = (density / divider) * markerBitmap.getHeight();
@@ -186,6 +190,10 @@ public class MapView extends SubsamplingScaleImageView {
         paint.setTextSize(24);
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(selectedMarker.getDuration(), rect.left + rect.width() / 2, rect.top + 80, paint);
+
+        // draw image
+        Bitmap b=BitmapFactory.decodeResource(getResources(), R.drawable.ic_volume_up);
+        canvas.drawBitmap(b, rect.right - b.getWidth() + 7, rect.bottom - b.getHeight() + 7, null);
     }
 
     // Marker touch related

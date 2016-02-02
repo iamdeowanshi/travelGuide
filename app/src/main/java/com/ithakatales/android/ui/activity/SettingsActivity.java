@@ -246,6 +246,11 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         openLink(Config.LINK_TERMS);
     }
 
+    @OnClick(R.id.text_faqs)
+    void onFaqsLinkClick() {
+        openLink(Config.LINK_FAQs);
+    }
+
     private void openLink(String url) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);

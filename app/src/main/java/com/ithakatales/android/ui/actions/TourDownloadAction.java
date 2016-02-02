@@ -62,7 +62,7 @@ public class TourDownloadAction extends TourAction {
         });
 
         dialogUtil.setTitle("Not logged")
-                .setMessage("Please login to download the tour")
+                .setMessage("Please login to download the IthakaTale")
                 .setPositiveButtonText("Login")
                 .setNegativeButtonText("Cancel")
                 .show(button.getContext());

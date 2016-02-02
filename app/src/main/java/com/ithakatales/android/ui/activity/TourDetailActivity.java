@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -48,11 +47,15 @@ import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.PreferenceUtil;
+import com.ithakatales.android.util.UserPreference;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
+
+import org.parceler.Parcels;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +78,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Inject TourDetailPresenter presenter;
     @Inject Bakery bakery;
+    @Inject UserPreference userPreference;
+    @Inject PreferenceUtil preferenceUtil;
 
     @Bind(R.id.layout_coordinator) CoordinatorLayout layoutCoordinator;
     @Bind(R.id.image_featured) ImageView imageFeatured;
@@ -91,7 +96,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.map_view) MapView mapView;
 
     @Bind(R.id.expandable_text_know_more) ExpandableTextView expandableTextKnowMore;
-    @Bind(R.id.web_view_before_you_go) WebView webViewBeforeYouGo;
+    @Bind(R.id.expandable_text_before_you_go) ExpandableTextView expandableTextBeforeYouGo;
+   // @Bind(R.id.web_view_before_you_go) WebView webViewBeforeYouGo;
     @Bind(R.id.expandable_text_credits) ExpandableTextView expandableTextCredits;
 
     @Bind(R.id.view_tag_type_one) View viewTagTypeOne;
@@ -175,8 +181,14 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Override
     public void onAttractionLoaded(Attraction attraction, int tourAction) {
         this.tourAction = tourAction;
+        //Todo: Saving attraction
+        //preferenceUtil.save("attraction", attraction);
         showTourDetails(attraction);
         buttonTourActon.setTag(getTourAction(tourAction));
+
+        if( userPreference.readUser() == null) {
+            buttonTourActon.setTag(getTourAction(1));
+        }
     }
 
     @Override
@@ -237,6 +249,14 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             stopPreview();
         }
     }
+//Todo: Playing with your code
+    @OnClick(R.id.text_view_full)
+    void onMapClick() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("attraction", Parcels.wrap(attraction));
+        startActivity(TourMapActivity.class, bundle);
+    }
+
 
     @OnClick(R.id.button_tour_action)
     void onTourActionClick() {
@@ -325,8 +345,10 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         // load text details
         textDescription.setText(attraction.getShortDescription());
         expandableTextKnowMore.setText(attraction.getLongDescription());
-        webViewBeforeYouGo.setBackgroundColor(Color.TRANSPARENT);
-        webViewBeforeYouGo.loadData(attraction.getBeforeYouGo(), "text/html", "UTF-8");
+        /*webViewBeforeYouGo.setBackgroundColor(Color.TRANSPARENT);
+        webViewBeforeYouGo.loadData(attraction.getBeforeYouGo(), "text/html", "UTF-8");*/
+        expandableTextBeforeYouGo.setBackgroundColor(Color.TRANSPARENT);
+        expandableTextBeforeYouGo.setText(attraction.getBeforeYouGo());
         expandableTextCredits.setText(attraction.getCredits());
     }
 
@@ -391,7 +413,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
     };
 
-    private void loadPoiMap() {
+    private void  loadPoiMap() {
         if (!isMapShown) {
             RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction == TourAction.START)
                     ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))

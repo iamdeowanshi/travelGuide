@@ -2,7 +2,6 @@ package com.ithakatales.android.app.base;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -40,9 +39,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         injectDependencies();
 
-        if (Config.ORIENTATION_PORTRAIT_ONLY) {
+        /*if (Config.ORIENTATION_PORTRAIT_ONLY) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        }*/
 
         trackToGoogleAnalytics();
     }
