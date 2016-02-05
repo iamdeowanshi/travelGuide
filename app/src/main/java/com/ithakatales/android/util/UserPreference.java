@@ -39,6 +39,10 @@ public class UserPreference {
         return (User) preferenceUtil.read(UserPreference.USER, User.class);
     }
 
+    public User readPreviousUser() {
+        return (User) preferenceUtil.read(UserPreference.USER, User.class);
+    }
+
     public void removeUser() {
         preferenceUtil.save(USER_PREVIOUS, readUser());
         preferenceUtil.remove(USER);

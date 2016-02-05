@@ -10,9 +10,13 @@ import com.google.android.gms.analytics.Tracker;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.app.di.RootModule;
+import com.ithakatales.android.download.TourDownloader;
+import com.ithakatales.android.util.UserPreference;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import javax.inject.Inject;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
@@ -24,6 +28,8 @@ public class IthakaApplication extends Application {
 
     private Tracker googleAnalyticsTracker;
 
+    @Inject UserPreference userPreference;
+    @Inject TourDownloader tourDownloader;
 
     @Override
     public void onCreate() {
@@ -44,6 +50,11 @@ public class IthakaApplication extends Application {
                 .memoryCache(new WeakMemoryCache()).build();
 
         ImageLoader.getInstance().init(config);
+
+        // removing the tours if any if there is no user
+        if (userPreference.readUser() == null && userPreference.readPreviousUser() == null) {
+            tourDownloader.clearAll();
+        }
     }
 
     @Override
