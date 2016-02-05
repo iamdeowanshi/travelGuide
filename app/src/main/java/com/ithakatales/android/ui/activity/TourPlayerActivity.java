@@ -419,12 +419,14 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             buttonPlayPause.setBackground(ContextCompat.getDrawable(this, R.drawable.player_button_play));
+            showNotification(audios.get(currentAudioIndex), true);
             return;
         }
 
         // resume if paused
         mediaPlayer.start();
         buttonPlayPause.setBackground(ContextCompat.getDrawable(this, R.drawable.player_button_pause));
+        showNotification(audios.get(currentAudioIndex), false);
     }
 
     @OnClick(R.id.button_skip)
@@ -487,7 +489,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         mediaPlayer.setOnCompletionListener(this);
         Audio audio = audios.get(audioIndex);
 
-        showNotification(audio);
+        showNotification(audio, false);
         updateGallery(audio);
         updateHeaderTexts(audio, audioIndex);
         updateMapMarkerSelection(audio);
@@ -540,12 +542,12 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         buttonPlayList.setBackground(playlistButtonBackground);
     }
 
-    private void showNotification(Audio audio) {
+    private void showNotification(Audio audio, boolean isPaused) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.app_icon)
                         .setContentTitle(attraction.getName())
-                        .setContentText(audio.getName() + " is playing");
+                        .setContentText(audio.getName() + (isPaused ? " is paused" : " is playing"));
 
         Intent toLaunch = new Intent(getApplicationContext(), TourPlayerActivity.class);
         toLaunch.setAction("android.intent.action.MAIN");
