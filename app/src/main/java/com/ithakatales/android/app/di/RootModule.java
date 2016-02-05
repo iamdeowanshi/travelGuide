@@ -3,7 +3,6 @@ package com.ithakatales.android.app.di;
 import android.content.Context;
 import android.view.LayoutInflater;
 
-import com.ithakatales.android.ui.activity.TourMapActivity;
 import com.ithakatales.android.app.IthakaApplication;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.repository.realm.AttractionRepositoryRealm;
@@ -42,6 +41,7 @@ import com.ithakatales.android.ui.activity.SocialLoginEnabledActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.TourFinishActivity;
 import com.ithakatales.android.ui.activity.TourGalleryActivity;
+import com.ithakatales.android.ui.activity.TourMapActivity;
 import com.ithakatales.android.ui.activity.TourPlayerActivity;
 import com.ithakatales.android.ui.activity.UserOnBoardActivity;
 import com.ithakatales.android.ui.activity.VerifyAccountActivity;

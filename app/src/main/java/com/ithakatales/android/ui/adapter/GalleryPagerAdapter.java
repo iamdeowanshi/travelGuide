@@ -16,8 +16,6 @@ import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.util.DisplayUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 import java.util.List;

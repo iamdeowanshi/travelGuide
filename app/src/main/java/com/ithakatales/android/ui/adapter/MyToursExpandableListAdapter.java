@@ -2,9 +2,6 @@ package com.ithakatales.android.ui.adapter;
 
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
@@ -35,7 +32,6 @@ import com.ithakatales.android.ui.actions.TourAction;
 import com.ithakatales.android.util.Bakery;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.HashMap;
