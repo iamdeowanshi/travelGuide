@@ -2,6 +2,8 @@ package com.ithakatales.android.ui.activity;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -60,6 +62,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -291,20 +294,12 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     private Target mapViewPicassoTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            mapView.recycle();
-
-            if (bitmap == null || bitmap.isRecycled()) {
-                loadPoiMap();
-                return;
-            }
-
             mapView.setImage(ImageSource.bitmap(bitmap));
 
             int bitmapWidth = bitmap.getWidth();
             int bitmapHeight = bitmap.getHeight();
 
             // copy poi list to another list to detach from realm, then sort based on audio priority
-
             pois.addAll(attraction.getPois());
             Collections.sort(pois, new Comparator<Poi>() {
                 @Override
@@ -317,9 +312,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             for (Poi poi : pois) {
                 float x = (float) (poi.getxPercent() * bitmapWidth / 100);
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
-                long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
-                Marker marker = new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes));
-                mapView.addMarker(marker);
+                Marker marker = new Marker(index, x, y, poi.getName(), AttractionUtil.audioDurationToString(poi.getAudio().getDuration()));
                 mapView.addMarker(marker);
                 markerPoiMap.put(marker, poi);
                 index ++;
@@ -381,10 +374,23 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         String imageName = "ITK_" + dateFormat.format(new Date()) + ".jpg";
-        Uri imageUri = Uri.fromFile(new File(tourStorage.getIthakaCapturedImageDir(), imageName));
+        File imageFile = new File(tourStorage.getIthakaCapturedImageDir(), imageName);
+        Uri imageUri = Uri.fromFile(imageFile);
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, REQUEST_CAMERA);
+
+        // to show up in gallery
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, imageName);
+        values.put(MediaStore.Images.Media.DESCRIPTION, imageName);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.ImageColumns.BUCKET_ID, imageFile.toString().toLowerCase(Locale.US).hashCode());
+        values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, imageFile.getName().toLowerCase(Locale.US));
+        values.put("_data", imageFile.getAbsolutePath());
+
+        ContentResolver cr = getContentResolver();
+        cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     //----------------------------------------------------------------------------------
@@ -393,7 +399,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
     @Override
     public void onAudioItemClick(int position) {
-      //  togglePlayListVisibility();
         playAudio(position);
     }
 

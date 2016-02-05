@@ -1,6 +1,7 @@
 package com.ithakatales.android.ui.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.util.DisplayUtil;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -98,12 +101,15 @@ public class GalleryPagerAdapter extends PagerAdapter {
             Image image = images.get(position);
             textCaption.setText(image.getCaption());
 
-            Picasso picasso = Picasso.with(context);
-            RequestCreator requestCreator = isLoadFromUrl
-                    ? picasso.load(image.getUrl())
-                    : picasso.load(new File(image.getPath()));
-            requestCreator.resize(displayUtil.getWidth(), 0)
-                    .into(imageView);
+            ImageLoader imageLoader = ImageLoader.getInstance();
+            DisplayImageOptions options = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true)
+                    .build();
+
+            String imageUriString = isLoadFromUrl
+                    ? image.getUrl()
+                    : Uri.fromFile(new File(image.getPath())).toString();
+            imageLoader.displayImage(imageUriString, imageView, options);
 
             validateNavigationButton(position);
         }

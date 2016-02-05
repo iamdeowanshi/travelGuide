@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ithakatales</string>
+    <string name="app_name">Ithaka</string>
     <string name="app_description">Audio tour assistant system.</string>
 
     <string name="drawer_open">Open</string>

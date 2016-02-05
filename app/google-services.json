@@ -16,12 +16,24 @@
       },
       "oauth_client": [
         {
+          "client_id": "182779467892-19rnvrq1e8ja2o8n1b2nvqnd2a4q9713.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ithakatales.android",
+            "certificate_hash": "FBDBA6BE8D4B58D24C9349AAFB27355F8AACD31A"
+          }
+        },
+        {
           "client_id": "182779467892-oi6gv6haf3cjrcp59jhja264orqrplnm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ithakatales.android",
             "certificate_hash": "1D99A7F892164B4850D05124C774083D8C9E7F44"
           }
+        },
+        {
+          "client_id": "182779467892-e2s0mv0m4u42ilhthppk0qvqaqa8tsci.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [],
@@ -29,7 +41,7 @@
         "analytics_service": {
           "status": 2,
           "analytics_property": {
-            "tracking_id": "UA-72940097-1"
+            "tracking_id": "UA-67677016-3"
           }
         },
         "cloud_messaging_service": {

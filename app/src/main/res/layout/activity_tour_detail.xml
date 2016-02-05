@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    xmlns:isPlaying="http://schemas.android.com/tools">
+    >
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -34,7 +34,7 @@
                 <ImageView
                     android:id="@+id/image_featured"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="300dp"
                     android:clickable="true"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
@@ -121,18 +121,18 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_marginTop="2dp"
                         android:layout_below="@+id/text_description"
+                        android:layout_marginTop="2dp"
                         android:src="@drawable/ic_clock_dark"/>
 
                     <ImageView
                         android:id="@+id/icon_duration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
                         android:layout_below="@+id/text_description"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
+                        android:layout_marginTop="2dp"
                         android:layout_toLeftOf="@+id/text_duration"
                         android:src="@drawable/ic_clock_dark"/>
 
@@ -146,7 +146,7 @@
                         android:paddingTop="5dp"
                         android:textColor="@android:color/black"
                         android:textSize="12sp"/>
-<!--TODO: Changing preview button-->
+                    <!--TODO: Changing preview button-->
 
                     <com.ithakatales.android.ui.custom.PlayPreviewButton
                         android:id="@+id/button_preview_player"
@@ -156,39 +156,33 @@
                         android:layout_marginTop="@dimen/spacing_medium"
                         android:background="@drawable/btn_play_preview"/>
 
-                    <!--<Button
-                        android:id="@+id/button_preview_player"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/icon_type"
-                        android:layout_marginTop="@dimen/spacing_medium"
-                        android:background="@drawable/bg_button_teal_rounded"
-                        android:drawableLeft="@drawable/ic_volume_up"
-                        android:paddingLeft="90dp"
-                        android:paddingRight="90dp"
-                        android:textAllCaps="true"
-                        android:text="Preview IthakaTale"
-                        android:textColor="@android:color/white"/>-->
-
                 </RelativeLayout>
 
                 <!--Blueprint-->
 
-                <com.ithakatales.android.map.MapView
-                    android:id="@+id/map_view"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"/>
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/text_view_full"
-                    android:textColor="@color/teal_normal"
-                    android:text="@string/view_full"
-                    android:layout_marginTop="5dp"
-                    android:paddingRight="5dp"
-                    android:layout_gravity="right"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    <com.ithakatales.android.map.MapView
+                        android:id="@+id/map_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"/>
+
+                    <TextView
+                        android:id="@+id/text_view_full"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/map_view"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="right"
+                        android:padding="@dimen/spacing_medium"
+                        android:gravity="center"
+                        android:text="@string/view_full"
+                        android:textColor="@color/teal_normal"
+                        android:textSize="10sp"/>
+
+                </RelativeLayout>
 
                 <!--Know more-->
 
@@ -237,36 +231,6 @@
                 </RelativeLayout>
 
                 <!--Before you go-->
-
-                <!--<RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/gray_light"
-                    android:paddingBottom="@dimen/spacing_small"
-                    android:paddingEnd="@dimen/spacing_medium"
-                    android:paddingLeft="@dimen/spacing_medium"
-                    android:paddingRight="@dimen/spacing_medium"
-                    android:paddingStart="@dimen/spacing_medium"
-                    android:paddingTop="@dimen/spacing_medium">
-
-                    <TextView
-                        android:id="@+id/text_before_you_go_header"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:gravity="center"
-                        android:text="Before You Go"
-                        android:textSize="18dp"/>
-
-                    <WebView
-                        android:id="@+id/web_view_before_you_go"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_before_you_go_header"
-                        android:layout_marginBottom="@dimen/spacing_small"
-                        android:layout_marginTop="@dimen/spacing_small"/>
-
-                </RelativeLayout>-->
 
                 <RelativeLayout
                     android:layout_width="match_parent"

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.di.Injector;
 import com.ithakatales.android.data.model.Audio;
+import com.ithakatales.android.util.AttractionUtil;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
         @Bind(R.id.text_name) TextView textName;
         @Bind(R.id.text_duration) TextView textDuration;
 
-        private int postion;
+        private int position;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -73,25 +74,24 @@ public class PlayListRecyclerAdapter extends RecyclerView.Adapter<PlayListRecycl
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    itemClickListener.onAudioItemClick(postion);
+                    itemClickListener.onAudioItemClick(position);
                 }
             });
         }
 
         public void bindData(int position) {
-            this.postion = position;
+            this.position = position;
             Audio audio = audios.get(position);
             textName.setText(audio.getName());
-            int durationInMinute = (int) (audio.getDuration() / 60);
-            textDuration.setText(String.format("%d Min", durationInMinute));
+            textDuration.setText(AttractionUtil.audioDurationToString(audio.getDuration()));
 
-            if (position == selectedItemPosition) {
-                updateItemSelection();
-            }
+            updateItemSelection(position);
         }
 
-        private void updateItemSelection() {
-            itemView.setSelected(true);
+        private void updateItemSelection(int position) {
+            itemView.setSelected(position == selectedItemPosition);
+
+            if (position != selectedItemPosition) return;
 
             if (lastItemSelected != null) {
                 lastItemSelected.setSelected(false);

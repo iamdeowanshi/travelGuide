@@ -45,8 +45,8 @@ public class TourDownloadAction extends TourAction {
             return;
         }
 
+        button.setEnabled(false);
         presenter.downloadAttraction(attraction);
-
     }
 
     private void showNotLoggedInDialog() {

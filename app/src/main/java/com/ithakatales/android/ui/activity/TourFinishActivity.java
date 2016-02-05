@@ -40,7 +40,6 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
         setContentView(R.layout.activity_tour_finish);
         injectDependencies();
 
-        //TODo: Setting view interactor which was ignored by MR. FARHAN ALI (ASHAANEI)
         presenter.setViewInteractor(this);
 
         attractionName = getIntent().getStringExtra("attraction_name");
@@ -61,7 +60,6 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
 
     @OnClick(R.id.button_share)
     void onShareClick() {
-        rateAttraction();
         shareAttraction();
     }
 
@@ -92,7 +90,8 @@ public class TourFinishActivity extends BaseActivity implements TourFinishViewIn
             bakery.toastShort("Nothing to share !");
             return;
         }
-// TODO:  Custom share message
+
+        // TODO:  Custom share message
         String message = "I have rated " + attractionName + " with a " + (int) ratingBar.getRating() + " on 5.\nCheck this out - " + Config.SHARE_TOUR_URL_BASE + attractionId;
 
         Intent i = new Intent(Intent.ACTION_SEND);

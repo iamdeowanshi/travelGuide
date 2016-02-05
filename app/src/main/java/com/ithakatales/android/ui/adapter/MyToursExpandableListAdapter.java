@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -221,8 +222,9 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         return false;
     }
 
-    public class GroupViewHolder implements Target {
+    public class GroupViewHolder {
         @Bind(R.id.layout_item_container) RelativeLayout layoutItemContainer;
+        @Bind(R.id.image_featured) ImageView imageFeatured;
         @Bind(R.id.text_name) TextView textName;
         @Bind(R.id.text_caption) TextView textCaption;
         @Bind(R.id.text_city) TextView textCity;
@@ -270,8 +272,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             // TODO: 16/12/15 chance path to be null when downloading
             requestCreator.placeholder(R.drawable.placeholder_ratio_3_2)
                     .error(R.drawable.placeholder_ratio_3_2)
-                    .resize(600, 400)
-                    .into(this);
+                    .into(imageFeatured);
         }
 
         @OnClick(R.id.button_tour_action)
@@ -279,21 +280,6 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             if (tourActionClickListener != null) {
                 tourActionClickListener.onTourActionClick(attraction, tourAction);
             }
-        }
-
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            layoutItemContainer.setBackground(new BitmapDrawable(context.getResources(), bitmap));
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            layoutItemContainer.setBackground(errorDrawable);
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-            layoutItemContainer.setBackground(placeHolderDrawable);
         }
 
         private int checkForUpdateOrDelete(Attraction attraction) {

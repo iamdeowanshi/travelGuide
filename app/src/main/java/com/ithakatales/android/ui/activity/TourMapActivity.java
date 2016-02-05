@@ -15,6 +15,7 @@ import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.map.MapView;
 import com.ithakatales.android.map.Marker;
 import com.ithakatales.android.ui.actions.TourAction;
+import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
 import com.ithakatales.android.util.PreferenceUtil;
 import com.squareup.picasso.Picasso;
@@ -24,6 +25,10 @@ import com.squareup.picasso.Target;
 import org.parceler.Parcels;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -46,7 +51,6 @@ public class TourMapActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_map);
-        //attraction = (Attraction) preferenceUtil.read("attraction", Attraction.class);
         attraction = Parcels.unwrap(this.getIntent().getParcelableExtra("attraction"));
         injectDependencies();
         initialize();
@@ -78,7 +82,6 @@ public class TourMapActivity extends BaseActivity {
         }
     }
 
-
     private void initialize() {
         // initialize toolbar
         setSupportActionBar(toolbar);
@@ -87,14 +90,12 @@ public class TourMapActivity extends BaseActivity {
             getSupportActionBar().setTitle(attraction.getName());
         }
 
-
         // initialize mapView
         mapView.setMarkerDrawable(R.drawable.img_map_marker);
         mapView.setMarkerSelectedDrawable(R.drawable.img_map_marker_selected);
 
         // initialize no network view
         loadPoiMap();
-
     }
 
     private Target mapViewPicassoTarget = new Target() {
@@ -105,12 +106,21 @@ public class TourMapActivity extends BaseActivity {
             int bitmapWidth = bitmap.getWidth();
             int bitmapHeight = bitmap.getHeight();
 
+            // copy poi list to another list to detach from realm if it is loading from db, then sort based on audio priority
+            List<Poi> pois = new ArrayList<>();
+            pois.addAll(attraction.getPois());
+            Collections.sort(pois, new Comparator<Poi>() {
+                @Override
+                public int compare(Poi lhs, Poi rhs) {
+                    return lhs.getAudio().getPriority() - rhs.getAudio().getPriority();
+                }
+            });
+
             int index = 1;
-            for (Poi poi : attraction.getPois()) {
+            for (Poi poi : pois) {
                 float x = (float) (poi.getxPercent() * bitmapWidth / 100);
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
-                long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
-                mapView.addMarker(new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes)));
+                mapView.addMarker(new Marker(index, x, y, poi.getName(), AttractionUtil.attractionDurationToString(poi.getAudio().getDuration())));
                 index++;
             }
 
