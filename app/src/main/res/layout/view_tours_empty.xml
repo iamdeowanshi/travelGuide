@@ -22,7 +22,7 @@
         android:layout_below="@+id/image_icon1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/spacing_medium"
-        android:text="No tours available !"
+        android:text="No tours available!"
         android:textSize="14dp"/>
 
 </RelativeLayout>

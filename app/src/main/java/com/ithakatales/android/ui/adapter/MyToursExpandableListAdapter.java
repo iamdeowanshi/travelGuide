@@ -2,9 +2,6 @@ package com.ithakatales.android.ui.adapter;
 
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,7 +32,6 @@ import com.ithakatales.android.ui.actions.TourAction;
 import com.ithakatales.android.util.Bakery;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.HashMap;
@@ -221,8 +218,9 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
         return false;
     }
 
-    public class GroupViewHolder implements Target {
+    public class GroupViewHolder {
         @Bind(R.id.layout_item_container) RelativeLayout layoutItemContainer;
+        @Bind(R.id.image_featured) ImageView imageFeatured;
         @Bind(R.id.text_name) TextView textName;
         @Bind(R.id.text_caption) TextView textCaption;
         @Bind(R.id.text_city) TextView textCity;
@@ -251,7 +249,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             switch (download.getStatus()) {
                 case DownloadManager.STATUS_SUCCESSFUL:
                     tourAction = checkForUpdateOrDelete(attraction);
-                    showTourActionButton("Start Tour", R.drawable.ic_button_start_tour, R.drawable.bg_button_teal_rounded, android.R.color.white);
+                    showTourActionButton("BEGIN ITHAKATALE", R.drawable.ic_button_start_tour, R.drawable.bg_button_pink_rounded, android.R.color.white);
                     setItemClickListeners();
                     break;
                 case DownloadManager.STATUS_FAILED:
@@ -270,8 +268,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             // TODO: 16/12/15 chance path to be null when downloading
             requestCreator.placeholder(R.drawable.placeholder_ratio_3_2)
                     .error(R.drawable.placeholder_ratio_3_2)
-                    .resize(600, 400)
-                    .into(this);
+                    .into(imageFeatured);
         }
 
         @OnClick(R.id.button_tour_action)
@@ -279,21 +276,6 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             if (tourActionClickListener != null) {
                 tourActionClickListener.onTourActionClick(attraction, tourAction);
             }
-        }
-
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            layoutItemContainer.setBackground(new BitmapDrawable(context.getResources(), bitmap));
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            layoutItemContainer.setBackground(errorDrawable);
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-            layoutItemContainer.setBackground(placeHolderDrawable);
         }
 
         private int checkForUpdateOrDelete(Attraction attraction) {
@@ -319,7 +301,7 @@ public class MyToursExpandableListAdapter extends BaseExpandableListAdapter impl
             buttonTourAction.setTextColor(ContextCompat.getColor(context, textColorId));
             buttonTourAction.setAllCaps(false);
 
-            Spannable buttonLabel = new SpannableString("   " + text.toUpperCase());
+            Spannable buttonLabel = new SpannableString("   " + text/*+ text.toUpperCase()*/);
             buttonLabel.setSpan(new ImageSpan(context, leftDrawableId,
                     ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             buttonTourAction.setText(buttonLabel);

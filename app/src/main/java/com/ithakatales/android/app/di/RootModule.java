@@ -41,6 +41,7 @@ import com.ithakatales.android.ui.activity.SocialLoginEnabledActivity;
 import com.ithakatales.android.ui.activity.TourDetailActivity;
 import com.ithakatales.android.ui.activity.TourFinishActivity;
 import com.ithakatales.android.ui.activity.TourGalleryActivity;
+import com.ithakatales.android.ui.activity.TourMapActivity;
 import com.ithakatales.android.ui.activity.TourPlayerActivity;
 import com.ithakatales.android.ui.activity.UserOnBoardActivity;
 import com.ithakatales.android.ui.activity.VerifyAccountActivity;
@@ -100,6 +101,9 @@ import dagger.Provides;
         TourPlayerActivity.class,
         TourGalleryActivity.class,
         TourFinishActivity.class,
+
+            //Todo: MapView
+            TourMapActivity.class,
 
         // Fragments
         NavigationDrawerFragment.class,

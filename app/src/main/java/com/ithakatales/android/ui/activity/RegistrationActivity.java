@@ -52,7 +52,7 @@ public class RegistrationActivity extends SocialLoginEnabledActivity implements 
 
         validator.addValidation(inputFirstName, ValidationUtil.PERSON_NAME_REGEX, "Invalid First Name");
         validator.addValidation(inputLastName, ValidationUtil.PERSON_NAME_REGEX, "Invalid Last Name");
-        validator.addValidation(inputEmail, Patterns.EMAIL_ADDRESS, "Invalid Email");
+        validator.addValidation(inputEmail, Patterns.EMAIL_ADDRESS, "Please enter valid email address");
         validator.addValidation(inputPassword, ValidationUtil.PASSWORD_REGEX, "Invalid Password");
 
         viewNoNetwork.setNetworkRetryListener(new NoNetworkView.NetworkRetryListener() {
@@ -79,13 +79,13 @@ public class RegistrationActivity extends SocialLoginEnabledActivity implements 
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.toastShort("Failed !, Verify email is not already existing");
+        bakery.toastShort("This email address is an existing member of Ithaka, please select 'Login Now' link to access the Login page");
     }
 
     @Override
     public void onRegistrationSuccess(User user) {
         userPreference.saveUser(user);
-        bakery.toastLong("Please verify your account with code send to your email");
+        bakery.toastLong("Please verify your account with code sent to your email");
         startActivityClearTop(VerifyAccountActivity.class, null);
     }
 
@@ -96,7 +96,10 @@ public class RegistrationActivity extends SocialLoginEnabledActivity implements 
             return;
         }
 
-        if ( ! validator.validate()) return;
+        if ( ! validator.validate()) {
+            bakery.toastShort("Please enter the required fields to complete the membership process");
+            return;
+        }
 
         User user = new User();
         user.setFirstName(inputFirstName.getText().toString());

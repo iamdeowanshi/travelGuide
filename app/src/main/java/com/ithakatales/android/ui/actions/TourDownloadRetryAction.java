@@ -12,7 +12,7 @@ public class TourDownloadRetryAction extends TourAction {
     public TourDownloadRetryAction(Button button, TourDetailPresenter presenter) {
         super(button);
         this.presenter = presenter;
-        text = "Retry Download";
+        text = "RETRY DOWNLOAD";
         enable = true;
         init();
     }

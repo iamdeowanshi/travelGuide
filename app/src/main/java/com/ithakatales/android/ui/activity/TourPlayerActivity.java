@@ -2,6 +2,8 @@ package com.ithakatales.android.ui.activity;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -47,6 +49,7 @@ import com.ithakatales.android.ui.adapter.PlaylistItemClickListener;
 import com.ithakatales.android.ui.custom.VerticalSpaceItemDecoration;
 import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.DialogUtil;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -59,6 +62,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -82,6 +86,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     @Inject ImageRepository imageRepo;
     @Inject AttractionRepository attractionRepo;
     @Inject TourStorage tourStorage;
+    @Inject DialogUtil dialogUtil;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.gallery_view_pager) ViewPager galleryPager;
@@ -151,7 +156,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(attraction.getName());
+            getSupportActionBar().setTitle("");
         }
 
         // hide mapView and audio list initially, show gallery
@@ -220,6 +225,23 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         }
     }
 
+    @Override public void onBackPressed() {
+        dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
+            @Override public void onPositiveClick() {
+                cancelNotification();
+                stopPlayer();
+                finish();
+            }
+            @Override public void onNegativeClick() {
+            }
+        });
+        dialogUtil.setTitle("Exit Player")
+                .setMessage("Exiting this page will stop the narration, are you sure you want to continue.")
+                .setPositiveButtonText("Yes")
+                .setNegativeButtonText("No")
+                .show(this);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -272,13 +294,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     private Target mapViewPicassoTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            mapView.recycle();
-
-            if (bitmap == null || bitmap.isRecycled()) {
-                loadPoiMap();
-                return;
-            }
-
             mapView.setImage(ImageSource.bitmap(bitmap));
 
             int bitmapWidth = bitmap.getWidth();
@@ -297,9 +312,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             for (Poi poi : pois) {
                 float x = (float) (poi.getxPercent() * bitmapWidth / 100);
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
-                long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
-                Marker marker = new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes));
-                mapView.addMarker(marker);
+                Marker marker = new Marker(index, x, y, poi.getName(), AttractionUtil.audioDurationToString(poi.getAudio().getDuration()));
                 mapView.addMarker(marker);
                 markerPoiMap.put(marker, poi);
                 index ++;
@@ -352,7 +365,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
             layoutPoiInfo.setVisibility(View.VISIBLE);
             textPoiName.setText(poi.getName());
-            textPoiProgress.setText(String.format("%d of %d Pois", poiPosition, pois.size()));
+            textPoiProgress.setText(String.format("%d of %d", poiPosition, pois.size()));
             break;
         }
     }
@@ -361,10 +374,23 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         String imageName = "ITK_" + dateFormat.format(new Date()) + ".jpg";
-        Uri imageUri = Uri.fromFile(new File(tourStorage.getIthakaCapturedImageDir(), imageName));
+        File imageFile = new File(tourStorage.getIthakaCapturedImageDir(), imageName);
+        Uri imageUri = Uri.fromFile(imageFile);
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, REQUEST_CAMERA);
+
+        // to show up in gallery
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, imageName);
+        values.put(MediaStore.Images.Media.DESCRIPTION, imageName);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.ImageColumns.BUCKET_ID, imageFile.toString().toLowerCase(Locale.US).hashCode());
+        values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, imageFile.getName().toLowerCase(Locale.US));
+        values.put("_data", imageFile.getAbsolutePath());
+
+        ContentResolver cr = getContentResolver();
+        cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     //----------------------------------------------------------------------------------
@@ -373,7 +399,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
     @Override
     public void onAudioItemClick(int position) {
-        togglePlayListVisibility();
         playAudio(position);
     }
 
@@ -394,12 +419,14 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             buttonPlayPause.setBackground(ContextCompat.getDrawable(this, R.drawable.player_button_play));
+            showNotification(audios.get(currentAudioIndex), true);
             return;
         }
 
         // resume if paused
         mediaPlayer.start();
         buttonPlayPause.setBackground(ContextCompat.getDrawable(this, R.drawable.player_button_pause));
+        showNotification(audios.get(currentAudioIndex), false);
     }
 
     @OnClick(R.id.button_skip)
@@ -407,6 +434,10 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         // check if next song is there or not
         if (currentAudioIndex < (audios.size() - 1)) {
             playAudio(currentAudioIndex + 1);
+        } else if (currentAudioIndex == audios.size() - 1) {
+            //TODo : Complete Player if last audio
+            stopPlayer();
+            onCompletion(null);
         }
     }
 
@@ -437,6 +468,8 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
             Bundle bundle = new Bundle();
             bundle.putLong("attraction_id", attraction.getId());
             bundle.putString("attraction_name", attraction.getName());
+            //TODo : to remove notification
+            cancelNotification();
             startActivity(TourFinishActivity.class, bundle);
             return;
         }
@@ -456,7 +489,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         mediaPlayer.setOnCompletionListener(this);
         Audio audio = audios.get(audioIndex);
 
-        showNotification(audio);
+        showNotification(audio, false);
         updateGallery(audio);
         updateHeaderTexts(audio, audioIndex);
         updateMapMarkerSelection(audio);
@@ -509,12 +542,12 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         buttonPlayList.setBackground(playlistButtonBackground);
     }
 
-    private void showNotification(Audio audio) {
+    private void showNotification(Audio audio, boolean isPaused) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.app_icon)
                         .setContentTitle(attraction.getName())
-                        .setContentText(audio.getName() + " is playing");
+                        .setContentText(audio.getName() + (isPaused ? " is paused" : " is playing"));
 
         Intent toLaunch = new Intent(getApplicationContext(), TourPlayerActivity.class);
         toLaunch.setAction("android.intent.action.MAIN");

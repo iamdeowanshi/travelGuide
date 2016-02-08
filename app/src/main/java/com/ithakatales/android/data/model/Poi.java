@@ -1,7 +1,12 @@
 package com.ithakatales.android.data.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.ithakatales.android.data.model.ParcelConverter.ImageParcelConverter;
 
+import org.parceler.Parcel;
+import org.parceler.ParcelPropertyConverter;
+
+import io.realm.PoiRealmProxy;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -9,6 +14,10 @@ import io.realm.annotations.PrimaryKey;
 /**
  * @author Farhan Ali
  */
+@Parcel(value = Parcel.Serialization.BEAN,
+        analyze = { Poi.class }
+        ,implementations = { PoiRealmProxy.class}
+)
 public class Poi extends RealmObject {
 
     @PrimaryKey
@@ -130,6 +139,7 @@ public class Poi extends RealmObject {
         return images;
     }
 
+    @ParcelPropertyConverter(ImageParcelConverter.class)
     public void setImages(RealmList<Image> images) {
         this.images = images;
     }

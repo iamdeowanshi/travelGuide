@@ -28,7 +28,7 @@ public class TourDownloadAction extends TourAction {
         Injector.instance().inject(this);
 
         this.presenter = presenter;
-        text = "Download Tour";
+        text = "DOWNLOAD";
         enable = true;
         init();
     }
@@ -45,6 +45,7 @@ public class TourDownloadAction extends TourAction {
             return;
         }
 
+        button.setEnabled(false);
         presenter.downloadAttraction(attraction);
     }
 
@@ -60,8 +61,8 @@ public class TourDownloadAction extends TourAction {
             public void onNegativeClick() {}
         });
 
-        dialogUtil.setTitle("Not logged in !")
-                .setMessage("Please login before downloading a tour")
+        dialogUtil.setTitle("Not logged")
+                .setMessage("Please login to download the IthakaTale")
                 .setPositiveButtonText("Login")
                 .setNegativeButtonText("Cancel")
                 .show(button.getContext());

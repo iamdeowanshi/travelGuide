@@ -36,7 +36,6 @@
                     android:layout_height="300dp"
                     android:clickable="true"
                     android:fitsSystemWindows="true"
-                    android:minHeight="80dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/placeholder_ratio_1_1"/>
 
@@ -117,19 +116,22 @@
 
                     <ImageView
                         android:id="@+id/icon_type"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_below="@+id/text_description"/>
+                        android:layout_below="@+id/text_description"
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/ic_clock_dark"/>
 
                     <ImageView
                         android:id="@+id/icon_duration"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/text_description"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
+                        android:layout_marginTop="2dp"
                         android:layout_toLeftOf="@+id/text_duration"
                         android:src="@drawable/ic_clock_dark"/>
 
@@ -143,6 +145,7 @@
                         android:paddingTop="5dp"
                         android:textColor="@android:color/black"
                         android:textSize="12sp"/>
+                    <!--TODO: Changing preview button-->
 
                     <Button
                         android:id="@+id/button_preview_player"
@@ -150,21 +153,35 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/icon_type"
                         android:layout_marginTop="@dimen/spacing_medium"
-                        android:background="@drawable/bg_button_teal_rounded"
-                        android:drawableLeft="@drawable/ic_volume_up"
-                        android:paddingLeft="90dp"
-                        android:paddingRight="90dp"
-                        android:text="Play Preview"
-                        android:textColor="@android:color/white"/>
+                        android:background="@drawable/btn_play_preview"/>
 
                 </RelativeLayout>
 
                 <!--Blueprint-->
 
-                <com.ithakatales.android.map.MapView
-                    android:id="@+id/map_view"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"/>
+                    android:layout_height="wrap_content">
+
+                    <com.ithakatales.android.map.MapView
+                        android:id="@+id/map_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"/>
+
+                    <TextView
+                        android:id="@+id/text_view_full"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/map_view"
+                        android:gravity="center"
+                        android:layout_marginTop="-10dp"
+                        android:padding="@dimen/spacing_small"
+                        android:text="@string/view_full"
+                        android:textColor="@color/teal_normal"
+                        android:textSize="10sp"/>
+
+                </RelativeLayout>
 
                 <!--Know more-->
 
@@ -176,7 +193,7 @@
                     android:paddingLeft="@dimen/spacing_medium"
                     android:paddingRight="@dimen/spacing_medium"
                     android:paddingStart="@dimen/spacing_medium"
-                    android:paddingTop="@dimen/spacing_medium">
+                    android:paddingTop="8dp">
 
                     <TextView
                         android:id="@+id/text_knowmore_header"
@@ -185,7 +202,6 @@
                         android:layout_alignParentTop="true"
                         android:gravity="center"
                         android:text="Know More"
-                        android:textAllCaps="true"
                         android:textSize="18dp"/>
 
                     <com.ms.square.android.expandabletextview.ExpandableTextView
@@ -233,16 +249,30 @@
                         android:layout_alignParentTop="true"
                         android:gravity="center"
                         android:text="Before You Go"
-                        android:textAllCaps="true"
                         android:textSize="18dp"/>
 
-                    <WebView
-                        android:id="@+id/web_view_before_you_go"
+                    <com.ms.square.android.expandabletextview.ExpandableTextView
+                        android:id="@+id/expandable_text_before_you_go"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_before_you_go_header"
-                        android:layout_marginBottom="@dimen/spacing_small"
-                        android:layout_marginTop="@dimen/spacing_small"/>
+                        expandableTextView:animDuration="200"
+                        expandableTextView:maxCollapsedLines="3">
+
+                        <TextView
+                            android:id="@id/expandable_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_medium"/>
+
+                        <ImageButton
+                            android:id="@id/expand_collapse"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center|bottom"
+                            android:background="@android:color/transparent"/>
+
+                    </com.ms.square.android.expandabletextview.ExpandableTextView>
 
                 </RelativeLayout>
 
@@ -278,8 +308,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:gravity="center"
-                        android:text="Behind The Scenes"
-                        android:textAllCaps="true"
+                        android:text="Behind the Scenes"
                         android:textSize="18dp"/>
 
                     <com.ms.square.android.expandabletextview.ExpandableTextView
@@ -319,7 +348,7 @@
             android:background="@drawable/bg_button_pink"
             android:enabled="false"
             android:text="Begin Ithakatale"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
 

@@ -3,8 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:background="@drawable/bg_login_activity">
-
+<ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="50dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,10 +31,9 @@
             android:layout_below="@+id/img_logo"
             android:layout_marginTop="@dimen/spacing_large"
             android:background="@drawable/bg_text_box"
-            android:hint="Email"
+            android:hint="@string/Email"
             android:inputType="textEmailAddress"
-            android:padding="@dimen/spacing_small"
-            android:textStyle="italic"/>
+            android:padding="@dimen/spacing_small"/>
 
         <EditText
             android:id="@+id/input_password"
@@ -38,10 +42,9 @@
             android:layout_below="@+id/input_email"
             android:layout_marginTop="@dimen/spacing_small"
             android:background="@drawable/bg_text_box"
-            android:hint="Password"
+            android:hint="@string/Password"
             android:inputType="textPassword"
-            android:padding="@dimen/spacing_small"
-            android:textStyle="italic"/>
+            android:padding="@dimen/spacing_small"/>
 
         <TextView
             android:id="@+id/text_forgot_password"
@@ -108,14 +111,14 @@
             android:layout_marginTop="@dimen/spacing_medium"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/button_fb_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/login_button_fb"/>
 
-            <Button
+            <ImageView
                 android:id="@+id/button_google_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,11 +130,11 @@
         </LinearLayout>
 
     </RelativeLayout>
-
+</ScrollView>
     <TextView
         android:id="@+id/text_signup"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/black_transparent_50"
         android:gravity="center"

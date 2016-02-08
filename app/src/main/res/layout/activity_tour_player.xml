@@ -21,7 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_player_control"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/bg_no_images"/>
 
     <!-- MapView to show poi map -->
     <com.ithakatales.android.map.MapView
@@ -173,6 +174,7 @@
             android:layout_alignParentStart="true"
             android:background="@android:color/transparent"
             android:text=">>"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:textSize="12sp"/>
 

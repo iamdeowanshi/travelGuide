@@ -6,6 +6,7 @@ import android.os.Environment;
 import com.ithakatales.android.app.Config;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -28,8 +29,9 @@ public class TourStorage {
     public File getTourDir(long tourId) {
         File toursDir = getTourDir();
         File tourDir = new File(toursDir.getAbsolutePath() + "/" + tourId);
+        makeGalleryHidden(makeIfNotExist(tourDir));
 
-        return makeIfNotExist(tourDir);
+        return tourDir;
     }
 
     // return ithaka/tours/{tourId}/audios dir
@@ -44,8 +46,9 @@ public class TourStorage {
     public File getImagesDir(long tourId) {
         File tourDir = getTourDir(tourId);
         File imagesDir = new File(tourDir.getAbsolutePath() + "/images");
+        makeGalleryHidden(makeIfNotExist(imagesDir));
 
-        return makeIfNotExist(imagesDir);
+        return imagesDir;
     }
 
     public File getIthakaDir() {
@@ -109,6 +112,17 @@ public class TourStorage {
         }
 
         file.delete();
+    }
+
+    private void makeGalleryHidden(File folder) {
+        File noMediaFile = new File(folder + "/.nomedia");
+        if( ! noMediaFile.exists()){
+            try {
+                noMediaFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

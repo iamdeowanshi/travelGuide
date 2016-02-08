@@ -102,9 +102,9 @@
                     android:layout_below="@+id/txt_travel"
                     android:background="@color/gray_extra_light"
                     android:gravity="top"
-                    android:minLines="3"
+                    android:minLines="5"
                     android:padding="5dp"
-                    android:text="@string/lorem_ipsum_medium"
+                    android:hint="Share your travel motivations.."
                     android:textColor="@color/black_transparent_70"
                     android:textSize="11sp"/>
 
@@ -148,7 +148,7 @@
                     android:id="@+id/txt_about_ithaka"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="About Ithaka"
+                    android:text="Our Philosophy"
                     android:textColor="@color/pink_normal"
                     android:textSize="22sp"/>
 
@@ -178,10 +178,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/text_privacy_link"
-                    android:layout_marginBottom="15dp"
                     android:layout_marginTop="5dp"
                     android:clickable="true"
                     android:text="@string/terms"
+                    android:textColor="@color/teal_normal"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:id="@+id/text_faqs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_terms_link"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="5dp"
+                    android:clickable="true"
+                    android:text="@string/faqs"
                     android:textColor="@color/teal_normal"
                     android:textSize="11sp"/>
 
@@ -225,7 +236,7 @@
                     android:layout_below="@+id/button_delete_downloads"
                     android:background="@color/gray_normal"/>
 
-                <Button
+                <ImageView
                     android:id="@+id/button_logout"
                     android:layout_width="110dp"
                     android:layout_height="35dp"

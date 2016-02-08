@@ -16,7 +16,7 @@ public class TourStartAction extends TourAction {
         super(button);
         Injector.instance().inject(this);
 
-        text = "Start Tour";
+        text = "BEGIN ITHAKATALE";
         enable = true;
 
         init();

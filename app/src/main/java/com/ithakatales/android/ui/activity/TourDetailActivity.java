@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -30,7 +29,6 @@ import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
-import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.model.TagType;
 import com.ithakatales.android.download.model.TourDownloadProgress;
@@ -48,15 +46,22 @@ import com.ithakatales.android.ui.adapter.TagGridAdapter;
 import com.ithakatales.android.ui.custom.NoNetworkView;
 import com.ithakatales.android.util.AttractionUtil;
 import com.ithakatales.android.util.Bakery;
+import com.ithakatales.android.util.DialogUtil;
+import com.ithakatales.android.util.PreferenceUtil;
+import com.ithakatales.android.util.UserPreference;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
+import org.parceler.Parcels;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -70,11 +75,11 @@ import timber.log.Timber;
  */
 public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor {
 
-    private static final String PREVIEW_BUTTON_TEXT_PLAY = "Play Preview";
-    private static final String PREVIEW_BUTTON_TEXT_STOP = "Stop Preview";
-
     @Inject TourDetailPresenter presenter;
     @Inject Bakery bakery;
+    @Inject UserPreference userPreference;
+    @Inject PreferenceUtil preferenceUtil;
+    @Inject DialogUtil dialogUtil;
 
     @Bind(R.id.layout_coordinator) CoordinatorLayout layoutCoordinator;
     @Bind(R.id.image_featured) ImageView imageFeatured;
@@ -90,7 +95,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.map_view) MapView mapView;
 
     @Bind(R.id.expandable_text_know_more) ExpandableTextView expandableTextKnowMore;
-    @Bind(R.id.web_view_before_you_go) WebView webViewBeforeYouGo;
+    @Bind(R.id.expandable_text_before_you_go) ExpandableTextView expandableTextBeforeYouGo;
     @Bind(R.id.expandable_text_credits) ExpandableTextView expandableTextCredits;
 
     @Bind(R.id.view_tag_type_one) View viewTagTypeOne;
@@ -104,7 +109,9 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     private Attraction attraction;
     private int tourAction;
+    private int lastProgress;
     private boolean isMapShown = false;
+    private boolean isPreviewPlaying;
 
     private MediaPlayer previewPlayer;
 
@@ -173,18 +180,32 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @Override
     public void onAttractionLoaded(Attraction attraction, int tourAction) {
+        this.attraction = attraction;
+
+        if ( ! isAttractionValid()) {
+            showAttractionError();
+            return;
+        }
+
         this.tourAction = tourAction;
-        showTourDetails(attraction);
+        showTourDetails();
         buttonTourActon.setTag(getTourAction(tourAction));
+
+        if( userPreference.readUser() == null) {
+            buttonTourActon.setTag(getTourAction(1));
+        }
     }
 
     @Override
     public void onDownloadProgressChange(final TourDownloadProgress download) {
-        buttonTourActon.setEnabled(false);
+        if (download.getProgress() < lastProgress) return;
+
         buttonTourActon.setText(String.format("Downloading (%d%%)", download.getProgress()));
         Timber.d(String.format("total: %d | downloaded: %d | progress: %d | status: %d",
                 download.getBytesTotal(), download.getBytesDownloaded(),
                 download.getProgress(), download.getStatus()));
+
+        lastProgress = download.getProgress();
     }
 
     @Override
@@ -217,16 +238,19 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_preview_player)
     void onPreviewPlayerClick() {
-        String buttonText = buttonPreviewPlayer.getText().toString();
-
-        switch (buttonText) {
-            case PREVIEW_BUTTON_TEXT_PLAY:
-                playPreview();
-                break;
-            case PREVIEW_BUTTON_TEXT_STOP:
-                stopPreview();
-                break;
+        if (isPreviewPlaying) {
+            stopPreview();
+            return;
         }
+
+        playPreview();
+    }
+
+    @OnClick(R.id.text_view_full)
+    void onMapClick() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("attraction", Parcels.wrap(attraction));
+        startActivity(TourMapActivity.class, bundle);
     }
 
     @OnClick(R.id.button_tour_action)
@@ -246,19 +270,10 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     void onFeaturedImageClick() {
         if (attraction == null) return;
 
-        HashMap<String, String> imageCaptionMap = new HashMap<>();
-        boolean isLoadFromUrl = tourAction != TourAction.START;
-        List<Image> images = AttractionUtil.getAllImages(attraction);
-
-        for (Image image : images) {
-            String url = isLoadFromUrl ? image.getUrl() : image.getPath();
-            imageCaptionMap.put(url, image.getCaption());
-        }
-
         Bundle bundle = new Bundle();
-        bundle.putString("attraction_name", attraction.getName());
+        bundle.putParcelable("attraction", Parcels.wrap(attraction));
+        boolean isLoadFromUrl = tourAction != TourAction.START;
         bundle.putBoolean("is_load_from_url", isLoadFromUrl);
-        bundle.putSerializable("image_caption_map", imageCaptionMap);
         startActivity(TourGalleryActivity.class, bundle);
     }
 
@@ -294,9 +309,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         });
     }
 
-    private void showTourDetails(Attraction attraction) {
-        this.attraction = attraction;
-
+    private void showTourDetails() {
         loadFeaturedImage();
         loadPoiMap();
         loadTagTypes();
@@ -310,14 +323,13 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         iconType.setImageResource(IconMap.tourTypeDark.get(attraction.getType().getId()));
 
         // load duration
-        int durationInMinutes = (int) (attraction.getDuration() / 60);
-        textDuration.setText(String.format("%d Mins", durationInMinutes));
+        textDuration.setText(AttractionUtil.attractionDurationToString(attraction.getDuration()));
 
         // load text details
         textDescription.setText(attraction.getShortDescription());
         expandableTextKnowMore.setText(attraction.getLongDescription());
-        webViewBeforeYouGo.setBackgroundColor(Color.TRANSPARENT);
-        webViewBeforeYouGo.loadData(attraction.getBeforeYouGo(), "text/html", "UTF-8");
+        expandableTextBeforeYouGo.setBackgroundColor(Color.TRANSPARENT);
+        expandableTextBeforeYouGo.setText(attraction.getBeforeYouGo());
         expandableTextCredits.setText(attraction.getCredits());
     }
 
@@ -334,7 +346,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
 
         @Override
-        public void onError() {}
+        public void onError() {
+        }
     };
 
     private void loadFeaturedImage() {
@@ -344,7 +357,6 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
         requestCreator.placeholder(R.drawable.placeholder_ratio_1_1)
                 .error(R.drawable.placeholder_ratio_1_1)
-                .resize(600, 600)
                 .into(imageFeatured, featuredImageLoadCallback);
     }
 
@@ -358,13 +370,22 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             int bitmapWidth = bitmap.getWidth();
             int bitmapHeight = bitmap.getHeight();
 
+            // copy poi list to another list to detach from realm if it is loading from db, then sort based on audio priority
+            List<Poi> pois = new ArrayList<>();
+            pois.addAll(attraction.getPois());
+            Collections.sort(pois, new Comparator<Poi>() {
+                @Override
+                public int compare(Poi lhs, Poi rhs) {
+                    return lhs.getAudio().getPriority() - rhs.getAudio().getPriority();
+                }
+            });
+
             int index = 1;
-            for (Poi poi : attraction.getPois()) {
+            for (Poi poi : pois) {
                 float x = (float) (poi.getxPercent() * bitmapWidth / 100);
                 float y = (float) (poi.getyPercent() * bitmapHeight / 100);
-                long durationInMinutes = poi.getAudio() != null ? poi.getAudio().getDuration() / 60 : 0;
-                mapView.addMarker(new Marker(index, x, y, poi.getName(), String.format("%d Min", durationInMinutes)));
-                index ++;
+                mapView.addMarker(new Marker(index, x, y, poi.getName(), AttractionUtil.attractionDurationToString(poi.getAudio().getDuration())));
+                index++;
             }
 
             isMapShown = true;
@@ -381,8 +402,8 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
     };
 
-    private void loadPoiMap() {
-        if ( ! isMapShown) {
+    private void  loadPoiMap() {
+        if (!isMapShown) {
             RequestCreator requestCreator = (attraction.getBluePrintPath() != null && tourAction == TourAction.START)
                     ? Picasso.with(this).load(new File(attraction.getBluePrintPath()))
                     : Picasso.with(this).load(attraction.getBlueprintUrl());
@@ -440,6 +461,30 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         }
     }
 
+    private boolean isAttractionValid() {
+        for (Poi poi : attraction.getPois()) {
+            if (poi.getAudio() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void showAttractionError() {
+        dialogUtil.setTitle("Data Error")
+                .setMessage("Opps ! Seems we had hiccup, but things will return to normal soon! Hang in there !")
+                .setPositiveButtonText("Ok")
+                .setDialogClickListener(new DialogUtil.DialogClickListener() {
+                    @Override
+                    public void onPositiveClick() {
+                        finish();
+                    }
+
+                    @Override
+                    public void onNegativeClick() {}
+                }).show(this);
+    }
+
     private void playPreview() {
         previewPlayer = new MediaPlayer();
 
@@ -462,6 +507,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             @Override
             public void onPrepared(MediaPlayer mp) {
                 previewPlayer.start();
+                isPreviewPlaying = true;
                 togglePreviewPlayerButton();
             }
         });
@@ -478,16 +524,17 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         if (previewPlayer != null && previewPlayer.isPlaying()) {
             previewPlayer.stop();
             previewPlayer = null;
+            isPreviewPlaying = false;
         }
 
         togglePreviewPlayerButton();
     }
 
     private void togglePreviewPlayerButton() {
-        String buttonText = (previewPlayer != null && previewPlayer.isPlaying())
-                ? PREVIEW_BUTTON_TEXT_STOP
-                : PREVIEW_BUTTON_TEXT_PLAY;
-        buttonPreviewPlayer.setText(buttonText);
+         int buttonId = (previewPlayer != null && previewPlayer.isPlaying())
+                ? R.drawable.btn_stop_preview
+                : R.drawable.btn_play_preview;
+        buttonPreviewPlayer.setBackgroundResource(buttonId);
     }
 
     private void applyPalette(Palette palette) {
@@ -502,11 +549,13 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             bakery.toastShort("Nothing to share !");
             return;
         }
+        //TODO:  Custom share message
+        String message = "Check this out\n" + Config.SHARE_TOUR_URL_BASE + attraction.getId();
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_SUBJECT, "Ithaka Tales - " + attraction.getName());
-        i.putExtra(Intent.EXTRA_TEXT, Config.SHARE_TOUR_URL_BASE + attraction.getId());
+        i.putExtra(Intent.EXTRA_TEXT, message);
         startActivity(Intent.createChooser(i, "Share Ithaka - " + attraction.getName()));
     }
 

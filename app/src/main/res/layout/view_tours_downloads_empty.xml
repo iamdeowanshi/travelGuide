@@ -20,9 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image_icon1"
+        android:gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/spacing_medium"
-        android:text="You have not downloaded any IthakaTale !"
+        android:text="No tales downloaded yet!\nSwipe right to start discovering."
         android:textSize="14dp"/>
 
 </RelativeLayout>

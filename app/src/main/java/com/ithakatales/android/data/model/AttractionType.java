@@ -2,12 +2,19 @@ package com.ithakatales.android.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+import io.realm.AttractionTypeRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * @author Farhan Ali
  */
+@Parcel(value = Parcel.Serialization.BEAN,
+        analyze = { AttractionType.class }
+        ,implementations = { AttractionTypeRealmProxy.class}
+)
 public class AttractionType extends RealmObject {
 
     public static final long WALKING     = 1;

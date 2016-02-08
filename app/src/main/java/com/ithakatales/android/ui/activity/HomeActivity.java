@@ -160,9 +160,9 @@ public class HomeActivity extends BaseActivity implements NavigationDrawerFragme
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case POSITION_TOUR_LIST:
-                    return "Tours";
+                    return "IthakaTales";
                 case POSITION_MY_TOURS:
-                    return "My Tours";
+                    return "Downloads";
             }
 
             return null;

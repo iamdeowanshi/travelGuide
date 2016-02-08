@@ -1,19 +1,23 @@
 <resources>
-    <string name="app_name">Ithakatales</string>
+    <string name="app_name">Ithaka</string>
     <string name="app_description">Audio tour assistant system.</string>
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="action_send_feedback">Send Feedback</string>
+    <string name="action_settings">My Account</string>
+    <string name="action_send_feedback">Share Feedback</string>
     <string name="action_login">Login/Join Us</string>
     <string name="action_share">Share</string>
     <string name="action_camera">Camera</string>
     <string name="action_map">Map</string>
     <string name="action_gallery">Gallery</string>
-    <string name="privacy"><u>Privacy policy</u></string>
-    <string name="terms"><u>Terms &amp; Conditions</u></string>
+    <string name="privacy"><u>Privacy Policy</u></string>
+    <string name="terms"><u>Terms of Use</u></string>
+    <string name="Email"><i>Email</i></string>
+    <string name="Password"><i>Password</i></string>
+    <string name="view_full"><u>Full Screen</u></string>
+    <string name="faqs"><u>FAQs</u></string>
 
     <string name="about_ithaka">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur ipsum in placerat molestie. Fusce quis mauris a enim sollicitudin ultrices non eget velit. Aliquam eu pulvinar enim. Praesent libero nisl, ultricies vel maximus eu.</string>
 
@@ -22,5 +26,5 @@
     <string name="lorem_ipsum_small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur ipsum in placerat molestie.</string>
     <string name="lorem_ipsum_tiny">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
 
-    <string name="facebook_app_id">1641419146121424</string>
+    <string name="facebook_app_id">1064157540301647</string>
 </resources>

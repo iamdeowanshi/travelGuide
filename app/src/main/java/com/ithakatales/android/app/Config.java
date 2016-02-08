@@ -22,7 +22,7 @@ public class Config {
     public static final String API_BASE_URL_MOCK            = "http://ithaka-mobile.getsandbox.com";
 
     // Active base url
-    public static final String API_BASE_URL = API_BASE_URL_MOBILE_DEVELOP;
+    public static final String API_BASE_URL = API_BASE_URL_PRODUCTION;
 
     // authentication related apis
 
@@ -91,6 +91,7 @@ public class Config {
 
     public static final String LINK_PRIVACY_POLICY  = "http://www.ithakatales.com/privacy.html";
     public static final String LINK_TERMS           = "http://www.ithakatales.com/terms.html";
+    public static final String LINK_FAQs            = "http://www.ithakatales.com/faq.html";
 
     public static final String SHARE_TOUR_URL_BASE  = "http://www.ithakatales.com/tours/";
 

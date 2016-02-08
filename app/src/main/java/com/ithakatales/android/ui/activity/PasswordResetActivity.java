@@ -54,6 +54,7 @@ public class PasswordResetActivity extends BaseActivity implements PasswordReset
     @Override
     public void onPasswordResetSuccess(User user) {
         userPreference.saveUser(user);
+        bakery.toastShort("Your password has been successfully reset");
         startActivityClearTop(HomeActivity.class, null);
     }
 
@@ -70,7 +71,7 @@ public class PasswordResetActivity extends BaseActivity implements PasswordReset
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.toastShort("Reset failed !, Confirm inputs are correct");
+        bakery.toastShort("Passwords do not match, please re-enter the passwords");
     }
 
     @OnClick(R.id.button_reset)

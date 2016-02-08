@@ -50,6 +50,7 @@ public class VerifyAccountActivity extends BaseActivity implements VerifyAccount
     @Override
     public void onAccountVerificationSuccess(User user) {
         userPreference.saveUser(user);
+        bakery.toastShort("Welcome to Ithaka, let us help you travel deeper!");
         startActivityClearTop(HomeActivity.class, null);
     }
 
@@ -66,7 +67,7 @@ public class VerifyAccountActivity extends BaseActivity implements VerifyAccount
     @Override
     public void onNetworkError(Throwable e) {
         Timber.e(e.getMessage(), e);
-        bakery.toastShort("Verification failed !, Confirm code is correct");
+        bakery.toastShort("Verification code is invalid");
     }
 
     @OnClick(R.id.button_verify)

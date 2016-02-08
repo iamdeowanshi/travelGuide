@@ -79,7 +79,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Settings");
+            getSupportActionBar().setTitle("My Account");
         }
 
         user = preference.readUser();
@@ -212,7 +212,7 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
         });
 
         dialogUtil.setTitle("Delete Tours")
-                .setMessage("Are you sure to delete all downloaded tours ? Deletion will navigate you to home.")
+                .setMessage("Do you want to delete all the downloaded tours?\n\nTo delete a specific tour long press on the tour in Downloads. ")
                 .setPositiveButtonText("Delete")
                 .setNegativeButtonText("Cancel")
                 .show(this);
@@ -220,8 +220,20 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
 
     @OnClick(R.id.button_logout)
     void onLogoutClick() {
-        preference.removeUser();
-        startActivityClearTop(LaunchActivity.class, null);
+        dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
+            @Override public void onPositiveClick() {
+                preference.removeUser();
+                startActivityClearTop(LaunchActivity.class, null);
+            }
+
+            @Override public void onNegativeClick() {
+            }
+        });
+        dialogUtil.setTitle("Logout")
+                .setMessage("Your downloaded tours will be deleted upon new user login, are you sure you want to logout?")
+                .setPositiveButtonText("Logout")
+                .setNegativeButtonText("Cancel")
+                .show(this);
     }
 
     @OnClick(R.id.text_privacy_link)
@@ -232,6 +244,11 @@ public class SettingsActivity extends BaseActivity implements SettingsViewIntera
     @OnClick(R.id.text_terms_link)
     void onTermsLinkClick() {
         openLink(Config.LINK_TERMS);
+    }
+
+    @OnClick(R.id.text_faqs)
+    void onFaqsLinkClick() {
+        openLink(Config.LINK_FAQs);
     }
 
     private void openLink(String url) {

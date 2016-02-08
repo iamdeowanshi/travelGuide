@@ -2,12 +2,19 @@ package com.ithakatales.android.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+import io.realm.CityRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * @author Farhan Ali
  */
+@Parcel(value = Parcel.Serialization.BEAN,
+        analyze = { City.class }
+        ,implementations = { CityRealmProxy.class}
+)
 public class City extends RealmObject {
 
     @PrimaryKey
