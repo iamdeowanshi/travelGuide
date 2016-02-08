@@ -29,7 +29,6 @@ import com.ithakatales.android.app.Config;
 import com.ithakatales.android.app.base.BaseActivity;
 import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.IconMap;
-import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.data.model.Poi;
 import com.ithakatales.android.data.model.TagType;
 import com.ithakatales.android.download.model.TourDownloadProgress;
@@ -63,7 +62,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -76,9 +74,6 @@ import timber.log.Timber;
  * @author Farhan Ali
  */
 public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor {
-
-    private static final String PREVIEW_BUTTON_TEXT_PLAY = "Play Preview";
-    private static final String PREVIEW_BUTTON_TEXT_STOP = "Stop Preview";
 
     @Inject TourDetailPresenter presenter;
     @Inject Bakery bakery;
@@ -95,8 +90,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     @Bind(R.id.text_description) TextView textDescription;
     @Bind(R.id.icon_type) ImageView iconType;
     @Bind(R.id.text_duration) TextView textDuration;
-    //@Bind(R.id.button_preview_player) Button buttonPreviewPlayer;
-    @Bind(R.id.button_preview_player) com.ithakatales.android.ui.custom.PlayPreviewButton buttonPreviewPlayer;
+    @Bind(R.id.button_preview_player) Button buttonPreviewPlayer;
 
     @Bind(R.id.map_view) MapView mapView;
 
@@ -117,6 +111,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     private int tourAction;
     private int lastProgress;
     private boolean isMapShown = false;
+    private boolean isPreviewPlaying;
 
     private MediaPlayer previewPlayer;
 
@@ -243,13 +238,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
 
     @OnClick(R.id.button_preview_player)
     void onPreviewPlayerClick() {
-        boolean isClicked = buttonPreviewPlayer.isPlaying();
-
-        if ( ! isClicked) {
-            playPreview();
-        } else {
+        if (isPreviewPlaying) {
             stopPreview();
+            return;
         }
+
+        playPreview();
     }
 
     @OnClick(R.id.text_view_full)
@@ -276,19 +270,10 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     void onFeaturedImageClick() {
         if (attraction == null) return;
 
-        HashMap<String, String> imageCaptionMap = new HashMap<>();
-        boolean isLoadFromUrl = tourAction != TourAction.START;
-        List<Image> images = AttractionUtil.getAllImages(attraction);
-
-        for (Image image : images) {
-            String url = isLoadFromUrl ? image.getUrl() : image.getPath();
-            imageCaptionMap.put(url, image.getCaption());
-        }
-
         Bundle bundle = new Bundle();
-        bundle.putString("attraction_name", attraction.getName());
+        bundle.putParcelable("attraction", Parcels.wrap(attraction));
+        boolean isLoadFromUrl = tourAction != TourAction.START;
         bundle.putBoolean("is_load_from_url", isLoadFromUrl);
-        bundle.putSerializable("image_caption_map", imageCaptionMap);
         startActivity(TourGalleryActivity.class, bundle);
     }
 
@@ -517,13 +502,12 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
             e.printStackTrace();
         }
 
-        buttonPreviewPlayer.setPlaying(true);
-
         // preview can be playing from url, that is why prepareAsync and OnPreparedListener
         previewPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 previewPlayer.start();
+                isPreviewPlaying = true;
                 togglePreviewPlayerButton();
             }
         });
@@ -540,9 +524,9 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         if (previewPlayer != null && previewPlayer.isPlaying()) {
             previewPlayer.stop();
             previewPlayer = null;
+            isPreviewPlaying = false;
         }
-        // Todo: changing button background
-        buttonPreviewPlayer.setPlaying(false);
+
         togglePreviewPlayerButton();
     }
 

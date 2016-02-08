@@ -6,13 +6,14 @@ import android.support.v7.widget.Toolbar;
 
 import com.ithakatales.android.R;
 import com.ithakatales.android.app.base.BaseActivity;
+import com.ithakatales.android.data.model.Attraction;
 import com.ithakatales.android.data.model.Image;
 import com.ithakatales.android.ui.adapter.GalleryPagerAdapter;
+import com.ithakatales.android.util.AttractionUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.parceler.Parcels;
+
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 
@@ -24,8 +25,6 @@ public class TourGalleryActivity extends BaseActivity implements GalleryPagerAda
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.view_pager) ViewPager viewPager;
 
-    private List<Image> images = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,28 +32,15 @@ public class TourGalleryActivity extends BaseActivity implements GalleryPagerAda
 
         injectDependencies();
 
-        Map<String, String> imageCaptionMap = (HashMap<String, String>) getIntent().getSerializableExtra("image_caption_map");
+        Attraction attraction = Parcels.unwrap(this.getIntent().getParcelableExtra("attraction"));
         boolean isLoadFromUrl = getIntent().getBooleanExtra("is_load_from_url", false);
-        String attractionName = getIntent().getStringExtra("attraction_name");
+        List<Image> images = AttractionUtil.getAllImages(attraction);
 
         // setup toolbar
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(attractionName);
-        }
-
-        for (Map.Entry<String, String> entry : imageCaptionMap.entrySet()) {
-            Image image = new Image();
-            image.setCaption(entry.getValue());
-
-            if (isLoadFromUrl) {
-                image.setUrl(entry.getKey());
-            } else {
-                image.setPath(entry.getKey());
-            }
-
-            images.add(image);
+            getSupportActionBar().setTitle(attraction.getName());
         }
 
         GalleryPagerAdapter galleryPagerAdapter = new GalleryPagerAdapter(images, isLoadFromUrl);

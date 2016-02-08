@@ -27,7 +27,6 @@ public class AttractionUtil {
     public static List<Image> getAllImagesExceptFeatured(Attraction attraction) {
         List<Image> images = new ArrayList<>();
 
-        images.add(attraction.getFeaturedImage());
         images.addAll(attraction.getImages());
 
         for (Audio audio : attraction.getAudios()) {
