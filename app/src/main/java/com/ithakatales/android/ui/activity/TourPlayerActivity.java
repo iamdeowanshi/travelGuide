@@ -225,14 +225,18 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         }
     }
 
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         dialogUtil.setDialogClickListener(new DialogUtil.DialogClickListener() {
-            @Override public void onPositiveClick() {
+            @Override
+            public void onPositiveClick() {
                 cancelNotification();
                 stopPlayer();
                 finish();
             }
-            @Override public void onNegativeClick() {
+
+            @Override
+            public void onNegativeClick() {
             }
         });
         dialogUtil.setTitle("Exit Player")
@@ -348,6 +352,13 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     private void updateGallery(Audio audio) {
         images.clear();
         images.addAll(imageRepo.readByAudioId(audio.getId()));
+
+        if (images.size() <= 0) {
+            galleryPager.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_no_images));
+        } else {
+            galleryPager.setBackgroundColor(ContextCompat.getColor(this, R.color.black));
+        }
+
         galleryPagerAdapter.notifyDataSetChanged();
     }
 
@@ -396,6 +407,20 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     //----------------------------------------------------------------------------------
     // Audio player related methods
     //----------------------------------------------------------------------------------
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        if (currentAudioIndex == audios.size() - 1) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("attraction_id", attraction.getId());
+            bundle.putString("attraction_name", attraction.getName());
+            cancelNotification();
+            startActivity(TourFinishActivity.class, bundle);
+            return;
+        }
+
+        playAudio(currentAudioIndex + 1);
+    }
 
     @Override
     public void onAudioItemClick(int position) {
@@ -460,21 +485,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         } else {
             mediaPlayer.seekTo(mediaPlayer.getDuration());
         }
-    }
-
-    // @Override
-    public void onCompletion(MediaPlayer mp) {
-        if (currentAudioIndex == audios.size() - 1) {
-            Bundle bundle = new Bundle();
-            bundle.putLong("attraction_id", attraction.getId());
-            bundle.putString("attraction_name", attraction.getName());
-            //TODo : to remove notification
-            cancelNotification();
-            startActivity(TourFinishActivity.class, bundle);
-            return;
-        }
-
-        playAudio(currentAudioIndex + 1);
     }
 
     private void playAudio(int audioIndex) {

@@ -43,7 +43,7 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
     @Inject UserPreference preference;
     @Inject Bakery bakery;
 
-    private boolean isPaused;
+    private boolean isProgressTrackingStop;
 
     private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
@@ -58,11 +58,11 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
                 public void run() {
                     viewInteractor.onDownloadProgressChange(tourDownloadProgress);
 
-                    if (isPaused || tourDownloadProgress.getProgress() >= 100) {
+                    if (isProgressTrackingStop || tourDownloadProgress.getProgress() >= 100) {
                         tourDownloader.stopProgressListening(tourDownloadProgress.getAttractionId());
                     }
 
-                    if ( ! isPaused && tourDownloadProgress.getProgress() >= 100) {
+                    if ( !isProgressTrackingStop && tourDownloadProgress.getProgress() >= 100) {
                         viewInteractor.onDownloadComplete(tourDownloadProgress.getAttractionId());
                     }
                 }
@@ -75,15 +75,8 @@ public class TourDetailPresenterImpl extends BaseNetworkPresenter<TourDetailView
     }
 
     @Override
-    public void pause() {
-        super.pause();
-        isPaused = true;
-    }
-
-    @Override
-    public void resume() {
-        super.resume();
-        isPaused = false;
+    public void stopProgressTracking() {
+        isProgressTrackingStop = true;
     }
 
     @Override
