@@ -164,6 +164,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     public void onBackPressed() {
         super.onBackPressed();
         stopPreview();
+        presenter.stopProgressTracking();
     }
 
     // required for handling map view interaction

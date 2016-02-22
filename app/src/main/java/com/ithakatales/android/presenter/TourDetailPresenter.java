@@ -18,4 +18,6 @@ public interface TourDetailPresenter extends Presenter<TourDetailViewInteractor>
 
     void deleteAttraction(Attraction attraction);
 
+    void stopProgressTracking();
+
 }
