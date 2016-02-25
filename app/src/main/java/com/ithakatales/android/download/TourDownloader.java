@@ -215,7 +215,7 @@ public class TourDownloader {
     }
 
     private String getImagePath(Image image, long tourId) {
-        String imageName = image.getName().replace(" ", "_");
+        String imageName = image.getName().replace(" ", "_").replace("&", "_and_");
         return tourStorage.getImagesDir(tourId)
                 .getAbsolutePath() + "/" + image.getId() + "_" + imageName + getExtensionFromUrl(image.getUrl());
     }
