@@ -73,7 +73,7 @@ import timber.log.Timber;
 /**
  * @author Farhan Ali
  */
-public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor {
+public class TourDetailActivity extends BaseActivity implements TourDetailViewInteractor, MapView.MarkerClickListener {
 
     @Inject TourDetailPresenter presenter;
     @Inject Bakery bakery;
@@ -193,6 +193,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         buttonTourActon.setTag(getTourAction(tourAction));
 
         if( userPreference.readUser() == null) {
+            tourAction = TourAction.DOWNLOAD;
             buttonTourActon.setTag(getTourAction(1));
         }
     }
@@ -236,6 +237,23 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         Timber.e(e.getMessage(), e);
         viewNoNetwork.show();
     }
+
+    // map view marker click listener methods
+
+    @Override
+    public void onMarkerClicked(Marker marker) {
+        switch (tourAction) {
+            case TourAction.DOWNLOAD :
+                bakery.toastShort("Download to Access the Narration");
+                break;
+            case TourAction.START:
+                bakery.toastShort("Click Begin IthakaTale to Access the Narration");
+                break;
+        }
+    }
+
+    @Override
+    public void onMarkerPopoverClicked(Marker marker) {}
 
     @OnClick(R.id.button_preview_player)
     void onPreviewPlayerClick() {
@@ -295,6 +313,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
         // initialize mapView
         mapView.setMarkerDrawable(R.drawable.img_map_marker);
         mapView.setMarkerSelectedDrawable(R.drawable.img_map_marker_selected);
+        mapView.setMarkerClickListener(this);
 
         // initialize no network view
         viewNoNetwork.hide();
