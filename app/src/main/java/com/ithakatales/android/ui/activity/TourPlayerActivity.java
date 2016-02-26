@@ -82,6 +82,8 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     private static final int NOTIFICATION_ID = 999;
     private static final int REQUEST_CAMERA  = 100;
 
+    private static final int SEEK_TIME = 10000; // milliseconds
+
     @Inject Bakery bakery;
     @Inject ImageRepository imageRepo;
     @Inject AttractionRepository attractionRepo;
@@ -104,7 +106,7 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
     @Bind(R.id.text_audio_name) TextView textAudioName;
     @Bind(R.id.button_play_pause) Button buttonPlayPause;
     @Bind(R.id.button_rewind) Button buttonRewind;
-    @Bind(R.id.button_skip) Button buttonSkip;
+    @Bind(R.id.button_forward) Button buttonSkip;
     @Bind(R.id.button_playlist) Button buttonPlayList;
 
     private Menu menu;
@@ -119,7 +121,6 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
 
     private Attraction attraction;
     private int currentAudioIndex = 0;
-    private int seekBackwardTime = 10000; // milliseconds
 
     private MediaPlayer mediaPlayer;
     private Handler progressHandler = new Handler();
@@ -454,37 +455,22 @@ public class TourPlayerActivity extends BaseActivity implements PlaylistItemClic
         showNotification(audios.get(currentAudioIndex), false);
     }
 
-    @OnClick(R.id.button_skip)
-    void onButtonSkipClick() {
-        // check if next song is there or not
-        if (currentAudioIndex < (audios.size() - 1)) {
-            playAudio(currentAudioIndex + 1);
-        } else if (currentAudioIndex == audios.size() - 1) {
-            //TODo : Complete Player if last audio
-            stopPlayer();
-            onCompletion(null);
-        }
-    }
-
     @OnClick(R.id.button_rewind)
     void onButtonRewindClick() {
         int currentPosition = mediaPlayer.getCurrentPosition();
-        if (currentPosition - seekBackwardTime >= 0) {
-            mediaPlayer.seekTo(currentPosition - seekBackwardTime);
-        } else {
-            mediaPlayer.seekTo(0);
-        }
+        int seekPosition = (currentPosition - SEEK_TIME >= 0)
+                ? currentPosition - SEEK_TIME
+                : 0;
+        mediaPlayer.seekTo(seekPosition);
     }
 
-    // TODO: 04/01/16 to remove - only for development purpose
     @OnClick(R.id.button_forward)
     void onButtonForwardClick() {
         int currentPosition = mediaPlayer.getCurrentPosition();
-        if (currentPosition + 10000 <= mediaPlayer.getDuration()) {
-            mediaPlayer.seekTo(currentPosition + 10000);
-        } else {
-            mediaPlayer.seekTo(mediaPlayer.getDuration());
-        }
+        int seekPosition = (currentPosition + SEEK_TIME <= mediaPlayer.getDuration())
+                ? currentPosition + SEEK_TIME
+                : mediaPlayer.getDuration();
+        mediaPlayer.seekTo(seekPosition);
     }
 
     private void playAudio(int audioIndex) {
