@@ -34,13 +34,15 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 
-public class TourMapActivity extends BaseActivity {
+/**
+ * @author Farhan Ali
+ */
+public class TourMapActivity extends BaseActivity implements MapView.MarkerClickListener {
 
     @Inject Bakery bakery;
     @Inject PreferenceUtil preferenceUtil;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
-
     @Bind(R.id.map_view) MapView mapView;
 
     private Attraction attraction;
@@ -51,25 +53,10 @@ public class TourMapActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_map);
-        attraction = Parcels.unwrap(this.getIntent().getParcelableExtra("attraction"));
+        attraction = Parcels.unwrap(getIntent().getParcelableExtra("attraction"));
+        tourAction = getIntent().getIntExtra("tourAction", TourAction.DOWNLOAD);
         injectDependencies();
         initialize();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
     }
 
     // required for handling map view interaction
@@ -82,6 +69,21 @@ public class TourMapActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onMarkerClicked(Marker marker) {
+        switch (tourAction) {
+            case TourAction.DOWNLOAD :
+                bakery.toastShort("Download to Access the Narration");
+                break;
+            case TourAction.START:
+                bakery.toastShort("Click Begin IthakaTale to Access the Narration");
+                break;
+        }
+    }
+
+    @Override
+    public void onMarkerPopoverClicked(Marker marker) {}
+
     private void initialize() {
         // initialize toolbar
         setSupportActionBar(toolbar);
@@ -93,6 +95,7 @@ public class TourMapActivity extends BaseActivity {
         // initialize mapView
         mapView.setMarkerDrawable(R.drawable.img_map_marker);
         mapView.setMarkerSelectedDrawable(R.drawable.img_map_marker_selected);
+        mapView.setMarkerClickListener(this);
 
         // initialize no network view
         loadPoiMap();
