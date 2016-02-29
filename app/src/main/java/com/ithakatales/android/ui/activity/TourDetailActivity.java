@@ -269,6 +269,7 @@ public class TourDetailActivity extends BaseActivity implements TourDetailViewIn
     void onMapClick() {
         Bundle bundle = new Bundle();
         bundle.putParcelable("attraction", Parcels.wrap(attraction));
+        bundle.putInt("tourAction", tourAction);
         startActivity(TourMapActivity.class, bundle);
     }
 
